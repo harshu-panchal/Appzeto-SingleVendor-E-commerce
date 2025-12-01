@@ -1,19 +1,33 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FiMapPin, FiPhone, FiMail, FiCreditCard, FiTruck } from 'react-icons/fi';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { FiMapPin, FiPhone, FiMail, FiCreditCard, FiTruck, FiCheck, FiX, FiPlus } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '../store/useStore';
+import { useAuthStore } from '../store/authStore';
+import { useAddressStore } from '../store/addressStore';
+import { useOrderStore } from '../store/orderStore';
 import { formatPrice } from '../utils/helpers';
 import toast from 'react-hot-toast';
 import Header from '../components/Layout/Header';
 import Navbar from '../components/Layout/Navbar';
 import Footer from '../components/Layout/Footer';
 import PageTransition from '../components/PageTransition';
+import Breadcrumbs from '../components/Layout/Breadcrumbs';
 
 const Checkout = () => {
   const navigate = useNavigate();
   const { items, getTotal, clearCart } = useCartStore();
+  const { user, isAuthenticated } = useAuthStore();
+  const { addresses, getDefaultAddress, addAddress } = useAddressStore();
+  const { createOrder } = useOrderStore();
+  
   const [step, setStep] = useState(1);
+  const [isGuest, setIsGuest] = useState(false);
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [showAddressForm, setShowAddressForm] = useState(false);
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [shippingOption, setShippingOption] = useState('standard');
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -21,13 +35,123 @@ const Checkout = () => {
     address: '',
     city: '',
     zipCode: '',
+    state: '',
+    country: '',
     paymentMethod: 'card',
   });
 
+  // Pre-fill form data from user profile
+  useEffect(() => {
+    if (isAuthenticated && user && !isGuest) {
+      setFormData((prev) => ({
+        ...prev,
+        name: user.name || '',
+        email: user.email || '',
+        phone: user.phone || '',
+      }));
+      
+      // Try to get default address
+      const defaultAddress = getDefaultAddress();
+      if (defaultAddress) {
+        setSelectedAddressId(defaultAddress.id);
+        setFormData((prev) => ({
+          ...prev,
+          name: defaultAddress.fullName || user.name || '',
+          email: user.email || '',
+          phone: defaultAddress.phone || user.phone || '',
+          address: defaultAddress.address || '',
+          city: defaultAddress.city || '',
+          zipCode: defaultAddress.zipCode || '',
+          state: defaultAddress.state || '',
+          country: defaultAddress.country || '',
+        }));
+      }
+    }
+  }, [isAuthenticated, user, isGuest, getDefaultAddress]);
+
+  // Calculate shipping cost
+  const calculateShipping = () => {
+    const total = getTotal();
+    const freeShippingThreshold = 100;
+    
+    if (appliedCoupon?.type === 'freeship') {
+      return 0;
+    }
+    
+    if (total >= freeShippingThreshold) {
+      return 0;
+    }
+    
+    if (shippingOption === 'express') {
+      return 100;
+    }
+    
+    return 50; // Standard shipping
+  };
+
   const total = getTotal();
-  const shipping = 50;
+  const shipping = calculateShipping();
   const tax = total * 0.1;
-  const finalTotal = total + shipping + tax;
+  const discount = appliedCoupon ? (appliedCoupon.type === 'percentage' 
+    ? total * (appliedCoupon.value / 100) 
+    : appliedCoupon.value) : 0;
+  const finalTotal = Math.max(0, total + shipping + tax - discount);
+
+  // Coupon validation
+  const validateCoupon = (code) => {
+    const coupons = {
+      'SAVE10': { type: 'percentage', value: 10, name: '10% Off' },
+      'FREESHIP': { type: 'freeship', value: 0, name: 'Free Shipping' },
+      'WELCOME20': { type: 'percentage', value: 20, name: '20% Off' },
+      'SAVE50': { type: 'fixed', value: 50, name: '$50 Off' },
+    };
+    
+    return coupons[code.toUpperCase()] || null;
+  };
+
+  const handleApplyCoupon = () => {
+    if (!couponCode.trim()) {
+      toast.error('Please enter a coupon code');
+      return;
+    }
+    
+    const coupon = validateCoupon(couponCode);
+    if (coupon) {
+      setAppliedCoupon(coupon);
+      toast.success(`Coupon "${coupon.name}" applied!`);
+    } else {
+      toast.error('Invalid coupon code');
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode('');
+    toast.success('Coupon removed');
+  };
+
+  // Handle address selection
+  const handleSelectAddress = (address) => {
+    setSelectedAddressId(address.id);
+    setFormData({
+      ...formData,
+      name: address.fullName,
+      phone: address.phone,
+      address: address.address,
+      city: address.city,
+      zipCode: address.zipCode,
+      state: address.state,
+      country: address.country,
+    });
+  };
+
+  // Handle new address from form
+  const handleNewAddress = (addressData) => {
+    const newAddress = addAddress(addressData);
+    handleSelectAddress(newAddress);
+    setShowAddressForm(false);
+    toast.success('Address added and selected!');
+  };
 
   if (items.length === 0) {
     return (
@@ -64,9 +188,31 @@ const Checkout = () => {
       setStep(3);
     } else {
       // Place order
+      const order = createOrder({
+        userId: isAuthenticated ? user?.id : null,
+        items: items,
+        shippingAddress: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          address: formData.address,
+          city: formData.city,
+          zipCode: formData.zipCode,
+          state: formData.state,
+          country: formData.country,
+        },
+        paymentMethod: formData.paymentMethod,
+        subtotal: total,
+        shipping: shipping,
+        tax: tax,
+        discount: discount,
+        total: finalTotal,
+        couponCode: appliedCoupon ? couponCode : null,
+      });
+      
       clearCart();
       toast.success('Order placed successfully!');
-      navigate('/');
+      navigate(`/order-confirmation/${order.id}`);
     }
   };
 
@@ -77,7 +223,34 @@ const Checkout = () => {
         <Navbar />
         <main className="w-full overflow-x-hidden">
           <div className="container mx-auto px-2 sm:px-4 py-8">
+          <Breadcrumbs />
           <h1 className="text-3xl font-bold text-gray-800 mb-8">Checkout</h1>
+
+          {/* Guest Checkout Option */}
+          {!isAuthenticated && !isGuest && (
+            <div className="glass-card rounded-2xl p-6 mb-6">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-lg font-bold text-gray-800 mb-2">Have an account?</h3>
+                  <p className="text-sm text-gray-600">Sign in for faster checkout and order tracking</p>
+                </div>
+                <div className="flex gap-3">
+                  <Link
+                    to="/login"
+                    className="px-6 py-3 gradient-green text-white rounded-xl font-semibold hover:shadow-glow-green transition-all duration-300"
+                  >
+                    Sign In
+                  </Link>
+                  <button
+                    onClick={() => setIsGuest(true)}
+                    className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
+                  >
+                    Continue as Guest
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Progress Steps */}
           <div className="flex items-center justify-center mb-8">
@@ -120,6 +293,91 @@ const Checkout = () => {
                       <FiTruck className="text-green-500" />
                       Shipping Information
                     </h2>
+
+                    {/* Saved Addresses Selection */}
+                    {isAuthenticated && addresses.length > 0 && (
+                      <div className="mb-6">
+                        <h3 className="text-lg font-semibold text-gray-700 mb-4">Saved Addresses</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                          {addresses.map((address) => (
+                            <div
+                              key={address.id}
+                              className={`p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                                selectedAddressId === address.id
+                                  ? 'border-primary-500 bg-primary-50'
+                                  : 'border-gray-200 hover:border-gray-300'
+                              }`}
+                              onClick={() => handleSelectAddress(address)}
+                            >
+                              <div className="flex items-start justify-between mb-2">
+                                <div className="flex items-center gap-2">
+                                  <FiMapPin className="text-primary-600" />
+                                  <h4 className="font-bold text-gray-800">{address.name}</h4>
+                                  {address.isDefault && (
+                                    <span className="px-2 py-0.5 bg-primary-100 text-primary-700 rounded text-xs font-semibold">
+                                      Default
+                                    </span>
+                                  )}
+                                </div>
+                                {selectedAddressId === address.id && (
+                                  <FiCheck className="text-primary-600 text-xl" />
+                                )}
+                              </div>
+                              <p className="text-sm text-gray-600">{address.fullName}</p>
+                              <p className="text-sm text-gray-600">{address.address}</p>
+                              <p className="text-sm text-gray-600">
+                                {address.city}, {address.state} {address.zipCode}
+                              </p>
+                            </div>
+                          ))}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => setShowAddressForm(true)}
+                          className="flex items-center gap-2 px-4 py-2 text-primary-600 hover:text-primary-700 font-semibold transition-colors"
+                        >
+                          <FiPlus />
+                          Add New Address
+                        </button>
+                        <div className="my-4 border-t border-gray-200"></div>
+                      </div>
+                    )}
+
+                    {/* Address Form Modal */}
+                    <AnimatePresence>
+                      {showAddressForm && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+                          onClick={() => setShowAddressForm(false)}
+                        >
+                          <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            onClick={(e) => e.stopPropagation()}
+                            className="bg-white rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto"
+                          >
+                            <div className="flex items-center justify-between mb-6">
+                              <h3 className="text-xl font-bold text-gray-800">Add New Address</h3>
+                              <button
+                                onClick={() => setShowAddressForm(false)}
+                                className="p-2 hover:bg-gray-100 rounded-full"
+                              >
+                                <FiX className="text-xl" />
+                              </button>
+                            </div>
+                            <AddressForm
+                              onSubmit={handleNewAddress}
+                              onCancel={() => setShowAddressForm(false)}
+                            />
+                          </motion.div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -173,16 +431,16 @@ const Checkout = () => {
                           className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
                         />
                       </div>
-                      <div className="sm:col-span-2">
+                      <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-2">
-                          Address
+                          State
                         </label>
-                        <textarea
-                          name="address"
-                          value={formData.address}
+                        <input
+                          type="text"
+                          name="state"
+                          value={formData.state}
                           onChange={handleInputChange}
                           required
-                          rows={3}
                           className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
                         />
                       </div>
@@ -196,6 +454,32 @@ const Checkout = () => {
                           value={formData.zipCode}
                           onChange={handleInputChange}
                           required
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Country
+                        </label>
+                        <input
+                          type="text"
+                          name="country"
+                          value={formData.country}
+                          onChange={handleInputChange}
+                          required
+                          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+                        />
+                      </div>
+                      <div className="sm:col-span-2">
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          Address
+                        </label>
+                        <textarea
+                          name="address"
+                          value={formData.address}
+                          onChange={handleInputChange}
+                          required
+                          rows={3}
                           className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
                         />
                       </div>
@@ -238,6 +522,62 @@ const Checkout = () => {
                         </label>
                       ))}
                     </div>
+
+                    {/* Shipping Options */}
+                    {total < 100 && (
+                      <div className="mt-6 pt-6 border-t border-gray-200">
+                        <h3 className="text-lg font-semibold text-gray-800 mb-4">Shipping Options</h3>
+                        <div className="space-y-3">
+                          <label
+                            className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                              shippingOption === 'standard'
+                                ? 'border-primary-500 bg-primary-50'
+                                : 'border-gray-200 hover:border-gray-300'
+                            }`}
+                          >
+                            <div>
+                              <input
+                                type="radio"
+                                name="shippingOption"
+                                value="standard"
+                                checked={shippingOption === 'standard'}
+                                onChange={(e) => setShippingOption(e.target.value)}
+                                className="w-5 h-5 text-primary-500 mr-3"
+                              />
+                              <span className="font-semibold text-gray-800">Standard Shipping</span>
+                              <p className="text-sm text-gray-600">5-7 business days</p>
+                            </div>
+                            <span className="font-bold text-gray-800">{formatPrice(50)}</span>
+                          </label>
+                          <label
+                            className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                              shippingOption === 'express'
+                                ? 'border-primary-500 bg-primary-50'
+                                : 'border-gray-200 hover:border-gray-300'
+                            }`}
+                          >
+                            <div>
+                              <input
+                                type="radio"
+                                name="shippingOption"
+                                value="express"
+                                checked={shippingOption === 'express'}
+                                onChange={(e) => setShippingOption(e.target.value)}
+                                className="w-5 h-5 text-primary-500 mr-3"
+                              />
+                              <span className="font-semibold text-gray-800">Express Shipping</span>
+                              <p className="text-sm text-gray-600">2-3 business days</p>
+                            </div>
+                            <span className="font-bold text-gray-800">{formatPrice(100)}</span>
+                          </label>
+                        </div>
+                        {total >= 50 && (
+                          <p className="mt-3 text-sm text-primary-600 font-semibold">
+                            💡 Add {formatPrice(100 - total)} more for free shipping!
+                          </p>
+                        )}
+                      </div>
+                    )}
                   </motion.div>
                 )}
 
@@ -338,14 +678,70 @@ const Checkout = () => {
                     </div>
                   ))}
                 </div>
+
+                {/* Coupon Code */}
+                <div className="mb-6 pb-6 border-b border-gray-200">
+                  {!appliedCoupon ? (
+                    <div className="space-y-2">
+                      <label className="block text-sm font-semibold text-gray-700">
+                        Coupon Code
+                      </label>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={couponCode}
+                          onChange={(e) => setCouponCode(e.target.value)}
+                          placeholder="Enter code"
+                          className="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500 text-sm"
+                        />
+                        <button
+                          type="button"
+                          onClick={handleApplyCoupon}
+                          className="px-4 py-2 gradient-green text-white rounded-lg font-semibold text-sm hover:shadow-glow-green transition-all"
+                        >
+                          Apply
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                      <div>
+                        <p className="text-sm font-semibold text-green-800">
+                          {appliedCoupon.name} Applied
+                        </p>
+                        <p className="text-xs text-green-600">Code: {couponCode}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleRemoveCoupon}
+                        className="text-red-600 hover:text-red-700"
+                      >
+                        <FiX className="text-lg" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+
                 <div className="border-t border-gray-200 pt-4 space-y-2">
                   <div className="flex justify-between text-gray-600">
                     <span>Subtotal</span>
                     <span>{formatPrice(total)}</span>
                   </div>
+                  {discount > 0 && (
+                    <div className="flex justify-between text-green-600">
+                      <span>Discount</span>
+                      <span>-{formatPrice(discount)}</span>
+                    </div>
+                  )}
                   <div className="flex justify-between text-gray-600">
                     <span>Shipping</span>
-                    <span>{formatPrice(shipping)}</span>
+                    <span>
+                      {shipping === 0 ? (
+                        <span className="text-green-600 font-semibold">FREE</span>
+                      ) : (
+                        formatPrice(shipping)
+                      )}
+                    </span>
                   </div>
                   <div className="flex justify-between text-gray-600">
                     <span>Tax</span>
@@ -364,6 +760,148 @@ const Checkout = () => {
         <Footer />
       </div>
     </PageTransition>
+  );
+};
+
+// Address Form Component for Modal
+const AddressForm = ({ onSubmit, onCancel }) => {
+  const [formData, setFormData] = useState({
+    name: '',
+    fullName: '',
+    phone: '',
+    address: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    country: '',
+  });
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onSubmit(formData);
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div>
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
+          Address Label
+        </label>
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          required
+          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+          placeholder="Home, Work, etc."
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
+          Full Name
+        </label>
+        <input
+          type="text"
+          name="fullName"
+          value={formData.fullName}
+          onChange={handleChange}
+          required
+          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
+          Phone Number
+        </label>
+        <input
+          type="tel"
+          name="phone"
+          value={formData.phone}
+          onChange={handleChange}
+          required
+          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-semibold text-gray-700 mb-2">
+          Street Address
+        </label>
+        <input
+          type="text"
+          name="address"
+          value={formData.address}
+          onChange={handleChange}
+          required
+          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+      </div>
+      <div className="grid grid-cols-3 gap-4">
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">City</label>
+          <input
+            type="text"
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">State</label>
+          <input
+            type="text"
+            name="state"
+            value={formData.state}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-2">Zip Code</label>
+          <input
+            type="text"
+            name="zipCode"
+            value={formData.zipCode}
+            onChange={handleChange}
+            required
+            className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+          />
+        </div>
+      </div>
+      <div>
+        <label className="block text-sm font-semibold text-gray-700 mb-2">Country</label>
+        <input
+          type="text"
+          name="country"
+          value={formData.country}
+          onChange={handleChange}
+          required
+          className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-green-500"
+        />
+      </div>
+      <div className="flex gap-3 pt-4">
+        <button
+          type="submit"
+          className="flex-1 gradient-green text-white py-3 rounded-xl font-semibold hover:shadow-glow-green transition-all"
+        >
+          Add Address
+        </button>
+        <button
+          type="button"
+          onClick={onCancel}
+          className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
   );
 };
 

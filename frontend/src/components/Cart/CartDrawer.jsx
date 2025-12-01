@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
-import { FiX, FiPlus, FiMinus, FiTrash2, FiShoppingBag, FiHeart } from 'react-icons/fi';
+import { FiX, FiPlus, FiMinus, FiTrash2, FiShoppingBag, FiHeart, FiAlertCircle } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore, useUIStore } from '../../store/useStore';
 import { useWishlistStore } from '../../store/wishlistStore';
+import { getProductById } from '../../data/products';
 import { formatPrice } from '../../utils/helpers';
 import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
@@ -26,12 +27,35 @@ const CartDrawer = () => {
   }, [isCartOpen]);
 
   const handleQuantityChange = (id, currentQuantity, change) => {
+    const product = getProductById(id);
     const newQuantity = currentQuantity + change;
+    
     if (newQuantity <= 0) {
       removeItem(id);
-    } else {
-      updateQuantity(id, newQuantity);
+      return;
     }
+
+    if (product && newQuantity > product.stockQuantity) {
+      toast.error(`Only ${product.stockQuantity} items available in stock`);
+      return;
+    }
+
+    updateQuantity(id, newQuantity);
+  };
+
+  const getProductStock = (id) => {
+    const product = getProductById(id);
+    return product ? product.stockQuantity : null;
+  };
+
+  const isMaxQuantity = (id, quantity) => {
+    const product = getProductById(id);
+    return product ? quantity >= product.stockQuantity : false;
+  };
+
+  const isLowStock = (id) => {
+    const product = getProductById(id);
+    return product ? product.stock === 'low_stock' : false;
   };
 
   const handleSaveForLater = (item) => {
@@ -108,9 +132,17 @@ const CartDrawer = () => {
                         <h3 className="font-semibold text-gray-800 text-sm mb-1 line-clamp-2">
                           {item.name}
                         </h3>
-                        <p className="text-sm font-bold text-primary-600 mb-3">
+                        <p className="text-sm font-bold text-primary-600 mb-2">
                           {formatPrice(item.price)}
                         </p>
+
+                        {/* Stock Warning */}
+                        {isLowStock(item.id) && (
+                          <div className="flex items-center gap-1 text-xs text-orange-600 mb-2">
+                            <FiAlertCircle className="text-xs" />
+                            <span>Only {getProductStock(item.id)} left!</span>
+                          </div>
+                        )}
 
                         {/* Quantity Controls */}
                         <div className="flex items-center gap-3 mb-2">
@@ -125,7 +157,12 @@ const CartDrawer = () => {
                           </span>
                           <button
                             onClick={() => handleQuantityChange(item.id, item.quantity, 1)}
-                            className="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-gray-300 hover:bg-gray-50 transition-colors"
+                            disabled={isMaxQuantity(item.id, item.quantity)}
+                            className={`w-8 h-8 flex items-center justify-center rounded-lg border transition-colors ${
+                              isMaxQuantity(item.id, item.quantity)
+                                ? 'bg-gray-100 border-gray-200 cursor-not-allowed opacity-50'
+                                : 'bg-white border-gray-300 hover:bg-gray-50'
+                            }`}
                           >
                             <FiPlus className="text-xs text-gray-600" />
                           </button>

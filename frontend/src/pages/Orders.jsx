@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { FiPackage, FiTruck, FiCheckCircle, FiXCircle, FiClock, FiEye, FiRotateCw } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { formatPrice } from '../utils/helpers';
@@ -8,59 +9,13 @@ import Footer from '../components/Layout/Footer';
 import PageTransition from '../components/PageTransition';
 import ProtectedRoute from '../components/Auth/ProtectedRoute';
 import Badge from '../components/Badge';
-
-// Mock orders data - replace with API call
-const mockOrders = [
-  {
-    id: 'ORD-001',
-    date: '2024-01-15',
-    status: 'delivered',
-    total: 1250.50,
-    items: [
-      { id: 1, name: 'Overnight Diapers Size 6', quantity: 2, price: 33.25, image: '/images/products/overnight_diapers_size_6-cover.png' },
-      { id: 2, name: 'Potato Regular', quantity: 5, price: 9.8, image: '/images/products/potato_regular-cover.png' },
-    ],
-    shippingAddress: '123 Main St, City, State 12345',
-    trackingNumber: 'TRK123456789',
-  },
-  {
-    id: 'ORD-002',
-    date: '2024-01-20',
-    status: 'shipped',
-    total: 890.25,
-    items: [
-      { id: 3, name: 'Cauliflower', quantity: 3, price: 45.0, image: '/images/products/cauliflower-cover.png' },
-    ],
-    shippingAddress: '123 Main St, City, State 12345',
-    trackingNumber: 'TRK987654321',
-  },
-  {
-    id: 'ORD-003',
-    date: '2024-01-22',
-    status: 'processing',
-    total: 450.00,
-    items: [
-      { id: 4, name: 'Coriander Leaves', quantity: 2, price: 42.75, image: '/images/products/coriander_leaves-cover.png' },
-    ],
-    shippingAddress: '123 Main St, City, State 12345',
-    trackingNumber: null,
-  },
-  {
-    id: 'ORD-004',
-    date: '2024-01-10',
-    status: 'cancelled',
-    total: 320.50,
-    items: [
-      { id: 5, name: 'Beef Meat', quantity: 1, price: 35.0, image: '/images/products/beef.jpg' },
-    ],
-    shippingAddress: '123 Main St, City, State 12345',
-    trackingNumber: null,
-  },
-];
+import { useOrderStore } from '../store/orderStore';
+import { useAuthStore } from '../store/authStore';
 
 const Orders = () => {
+  const { getAllOrders } = useOrderStore();
+  const { user } = useAuthStore();
   const [selectedStatus, setSelectedStatus] = useState('all');
-  const [selectedOrder, setSelectedOrder] = useState(null);
 
   const statusOptions = [
     { value: 'all', label: 'All Orders' },
@@ -71,10 +26,13 @@ const Orders = () => {
     { value: 'cancelled', label: 'Cancelled' },
   ];
 
+  // Get orders from store
+  const allOrders = getAllOrders(user?.id || null);
+
   const filteredOrders = useMemo(() => {
-    if (selectedStatus === 'all') return mockOrders;
-    return mockOrders.filter((order) => order.status === selectedStatus);
-  }, [selectedStatus]);
+    if (selectedStatus === 'all') return allOrders;
+    return allOrders.filter((order) => order.status === selectedStatus);
+  }, [selectedStatus, allOrders]);
 
   const getStatusIcon = (status) => {
     switch (status) {
@@ -217,13 +175,13 @@ const Orders = () => {
 
                         {/* Order Actions */}
                         <div className="flex flex-col sm:flex-row gap-3">
-                          <button
-                            onClick={() => setSelectedOrder(order)}
+                          <Link
+                            to={`/orders/${order.id}`}
                             className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
                           >
                             <FiEye />
                             View Details
-                          </button>
+                          </Link>
                           {order.status === 'delivered' && (
                             <button className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-6 py-3 gradient-green text-white rounded-xl font-semibold hover:shadow-glow-green transition-all duration-300">
                               <FiRotateCw />
@@ -231,10 +189,13 @@ const Orders = () => {
                             </button>
                           )}
                           {order.trackingNumber && (
-                            <button className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-6 py-3 border-2 border-primary-600 text-primary-600 rounded-xl font-semibold hover:bg-primary-50 transition-colors">
+                            <Link
+                              to={`/track-order/${order.id}`}
+                              className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-6 py-3 border-2 border-primary-600 text-primary-600 rounded-xl font-semibold hover:bg-primary-50 transition-colors"
+                            >
                               <FiTruck />
                               Track Order
-                            </button>
+                            </Link>
                           )}
                         </div>
 

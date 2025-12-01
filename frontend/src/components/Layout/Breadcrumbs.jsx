@@ -16,6 +16,11 @@ const Breadcrumbs = () => {
       return product ? product.name : 'Product';
     }
 
+    // Order pages
+    if (pathname === 'order-confirmation') return 'Order Confirmation';
+    if (pathname === 'orders' && pathnames[index + 1]) return 'Order Details';
+    if (pathname === 'track-order') return 'Track Order';
+
     // Convert pathname to readable format
     return pathname
       .split('-')

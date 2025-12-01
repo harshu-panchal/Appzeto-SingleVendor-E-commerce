@@ -27,6 +27,9 @@ import ProductForm from "./pages/admin/ProductForm";
 import AdminOrders from "./pages/admin/Orders";
 import OrderDetail from "./pages/admin/OrderDetail";
 import RouteWrapper from "./components/RouteWrapper";
+import OrderConfirmation from "./pages/OrderConfirmation";
+import OrderDetailPage from "./pages/OrderDetail";
+import TrackOrder from "./pages/TrackOrder";
 
 // Inner component that has access to useLocation
 const AppRoutes = () => {
@@ -44,6 +47,9 @@ const AppRoutes = () => {
       <Route path="/offers" element={<RouteWrapper><Offers /></RouteWrapper>} />
       <Route path="/daily-deals" element={<RouteWrapper><DailyDeals /></RouteWrapper>} />
       <Route path="/flash-sale" element={<RouteWrapper><FlashSale /></RouteWrapper>} />
+      <Route path="/order-confirmation/:orderId" element={<RouteWrapper><OrderConfirmation /></RouteWrapper>} />
+      <Route path="/orders/:orderId" element={<RouteWrapper><OrderDetailPage /></RouteWrapper>} />
+      <Route path="/track-order/:orderId" element={<RouteWrapper><TrackOrder /></RouteWrapper>} />
       <Route
         path="/profile"
         element={

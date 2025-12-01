@@ -8,65 +8,7 @@ import Navbar from '../components/Layout/Navbar';
 import Footer from '../components/Layout/Footer';
 import PageTransition from '../components/PageTransition';
 import ProtectedRoute from '../components/Auth/ProtectedRoute';
-
-// Mock addresses - replace with API/store
-const useAddressStore = () => {
-  const [addresses, setAddresses] = useState([
-    {
-      id: '1',
-      name: 'Home',
-      fullName: 'John Doe',
-      phone: '1234567890',
-      address: '123 Main Street',
-      city: 'New York',
-      state: 'NY',
-      zipCode: '10001',
-      country: 'United States',
-      isDefault: true,
-    },
-    {
-      id: '2',
-      name: 'Work',
-      fullName: 'John Doe',
-      phone: '1234567890',
-      address: '456 Business Ave',
-      city: 'New York',
-      state: 'NY',
-      zipCode: '10002',
-      country: 'United States',
-      isDefault: false,
-    },
-  ]);
-
-  const addAddress = (address) => {
-    const newAddress = {
-      ...address,
-      id: Date.now().toString(),
-      isDefault: addresses.length === 0,
-    };
-    setAddresses([...addresses, newAddress]);
-    return newAddress;
-  };
-
-  const updateAddress = (id, updatedAddress) => {
-    setAddresses(addresses.map((addr) => (addr.id === id ? { ...addr, ...updatedAddress } : addr)));
-  };
-
-  const deleteAddress = (id) => {
-    setAddresses(addresses.filter((addr) => addr.id !== id));
-  };
-
-  const setDefaultAddress = (id) => {
-    setAddresses(
-      addresses.map((addr) => ({
-        ...addr,
-        isDefault: addr.id === id,
-      }))
-    );
-  };
-
-  return { addresses, addAddress, updateAddress, deleteAddress, setDefaultAddress };
-};
+import { useAddressStore } from '../store/addressStore';
 
 const Addresses = () => {
   const { addresses, addAddress, updateAddress, deleteAddress, setDefaultAddress } =

@@ -9,6 +9,7 @@ import Header from '../components/Layout/Header';
 import Navbar from '../components/Layout/Navbar';
 import Footer from '../components/Layout/Footer';
 import PageTransition from '../components/PageTransition';
+import Breadcrumbs from '../components/Layout/Breadcrumbs';
 import useInfiniteScroll from '../hooks/useInfiniteScroll';
 import ProductGridSkeleton from '../components/Skeletons/ProductGridSkeleton';
 
@@ -115,6 +116,7 @@ const Search = () => {
         <Navbar />
         <main className="w-full overflow-x-hidden">
           <div className="container mx-auto px-2 sm:px-4 py-8">
+          <Breadcrumbs />
           {/* Search Header */}
           <div className="mb-6">
             <form onSubmit={handleSearch} className="mb-4">
