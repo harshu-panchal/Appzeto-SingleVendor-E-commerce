@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FiShoppingBag, FiMail, FiPhone, FiMapPin } from 'react-icons/fi';
 import { FaFacebook, FaTwitter, FaInstagram, FaYoutube } from 'react-icons/fa';
 import toast from 'react-hot-toast';
@@ -48,14 +49,14 @@ const Footer = () => {
           {/* Branding and Newsletter */}
           <div className="space-y-6">
             {/* Logo */}
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 gradient-accent rounded-xl flex items-center justify-center shadow-glow-accent">
+            <Link to="/" className="flex items-center gap-3 cursor-pointer group">
+              <div className="w-12 h-12 gradient-accent rounded-xl flex items-center justify-center shadow-glow-accent group-hover:scale-110 transition-all duration-300">
                 <FiShoppingBag className="text-white text-xl" />
               </div>
               <span className="text-2xl font-extrabold">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-accent-300 to-accent-500">Appzeto E-commerce</span>
               </span>
-            </div>
+            </Link>
 
             {/* Newsletter */}
             <div>

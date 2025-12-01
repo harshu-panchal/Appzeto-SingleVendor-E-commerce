@@ -1,4 +1,5 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { FiFilter, FiGrid, FiList, FiTrendingDown, FiX, FiLoader } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { getOffers } from '../data/products';
@@ -14,6 +15,7 @@ import useInfiniteScroll from '../hooks/useInfiniteScroll';
 import ProductGridSkeleton from '../components/Skeletons/ProductGridSkeleton';
 
 const Offers = () => {
+  const location = useLocation();
   const allOffers = getOffers();
   const [viewMode, setViewMode] = useState('grid');
   const [sortBy, setSortBy] = useState('discount'); // discount, price-low, price-high, rating
@@ -70,6 +72,14 @@ const Offers = () => {
     const total = offersWithDiscount.reduce((sum, p) => sum + p.discount, 0);
     return Math.round(total / offersWithDiscount.length);
   }, [offersWithDiscount]);
+
+  // Force component update when location changes
+  useEffect(() => {
+    // Reset filters and view when route changes
+    setShowFilters(false);
+    // Force a re-render by updating a state that doesn't affect UI
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [location.pathname, location.key]);
 
   return (
     <PageTransition>
