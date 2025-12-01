@@ -1,0 +1,22 @@
+{
+  "name": "appzeto-sv-ecommerce",
+  "version": "1.0.0",
+  "description": "Single Vendor E-commerce Website - MERN Stack",
+  "main": "server.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd backend && npm run dev",
+    "client": "cd frontend && npm run dev",
+    "install-all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "download-images": "node download-images.js",
+    "copy-images": "node copy-images-to-frontend.js",
+    "setup-images": "npm run download-images && npm run copy-images"
+  },
+  "keywords": ["ecommerce", "mern", "react", "nodejs"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
+

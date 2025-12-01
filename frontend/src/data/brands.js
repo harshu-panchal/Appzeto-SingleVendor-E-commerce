@@ -1,0 +1,33 @@
+export const brands = [
+  {
+    id: 1,
+    name: 'Dove',
+    logo: '/images/brands/dove-cover.png',
+  },
+  {
+    id: 2,
+    name: 'Great Value',
+    logo: '/images/brands/great_value-cover.png',
+  },
+  {
+    id: 3,
+    name: 'Nature Valley',
+    logo: '/images/brands/nature_valley-cover.png',
+  },
+  {
+    id: 4,
+    name: 'Oxi Clean',
+    logo: '/images/brands/oxi_clean-cover.png',
+  },
+  {
+    id: 5,
+    name: 'Pampers',
+    logo: '/images/brands/pampers-cover.png',
+  },
+  {
+    id: 6,
+    name: 'Suave',
+    logo: '/images/brands/suave-cover.png',
+  },
+];
+

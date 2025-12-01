@@ -1,0 +1,47 @@
+import { useEffect } from 'react';
+import { motion } from 'framer-motion';
+import Header from '../components/Layout/Header';
+import Navbar from '../components/Layout/Navbar';
+import Footer from '../components/Layout/Footer';
+import HeroBanner from '../components/Home/HeroBanner';
+import CategoriesSection from '../components/Home/CategoriesSection';
+import PromotionalBanners from '../components/Home/PromotionalBanners';
+import MostPopularSection from '../components/Home/MostPopularSection';
+import TrendingItemsSection from '../components/Home/TrendingItemsSection';
+import FlashSaleSection from '../components/Home/FlashSaleSection';
+import PopularBrandsSection from '../components/Home/PopularBrandsSection';
+import FeaturesSection from '../components/Home/FeaturesSection';
+import PageTransition from '../components/PageTransition';
+
+const Home = () => {
+  // Ensure body scroll is restored when component mounts
+  useEffect(() => {
+    document.body.style.overflowY = '';
+    return () => {
+      document.body.style.overflowY = '';
+    };
+  }, []);
+
+  return (
+    <PageTransition>
+      <div className="min-h-screen bg-background w-full overflow-x-hidden">
+        <Header />
+        <Navbar />
+        <main className="w-full overflow-x-hidden">
+          <HeroBanner />
+          <CategoriesSection />
+          <PromotionalBanners />
+          <MostPopularSection />
+          <TrendingItemsSection />
+          <FlashSaleSection />
+          <PopularBrandsSection />
+          <FeaturesSection />
+        </main>
+        <Footer />
+      </div>
+    </PageTransition>
+  );
+};
+
+export default Home;
+
