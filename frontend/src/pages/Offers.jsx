@@ -92,10 +92,10 @@ const Offers = () => {
               <Breadcrumbs />
 
               {/* Header Section */}
-              <div className="mb-8">
+              <div className="mb-8 relative z-10">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                   <div>
-                    <h1 className="text-3xl sm:text-4xl font-extrabold text-gradient mb-2">
+                    <h1 className="text-3xl sm:text-4xl font-extrabold text-gradient mb-2 relative z-10">
                       Special Offers
                     </h1>
                     <p className="text-gray-600 text-sm sm:text-base">
@@ -244,7 +244,7 @@ const Offers = () => {
                 </div>
               ) : viewMode === 'grid' ? (
                 <>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6 relative z-0">
                     {displayedItems.map((product, index) => (
                       <motion.div
                         key={product.id}

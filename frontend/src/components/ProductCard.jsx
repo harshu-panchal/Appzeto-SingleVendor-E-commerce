@@ -74,24 +74,24 @@ const ProductCard = ({ product }) => {
     >
       <div className="relative">
         {/* Favorite & Compare Icons */}
-        <div className="absolute top-3 right-3 z-10 flex flex-col gap-2">
+        <div className="absolute top-2 right-2 z-10 flex flex-col gap-1.5">
           <button
             onClick={handleFavorite}
-            className="p-2.5 glass rounded-full shadow-lg hover:bg-white/80 transition-all duration-300 hover:scale-110 group"
+            className="p-1.5 glass rounded-full shadow-lg hover:bg-white/80 transition-all duration-300 hover:scale-110 group"
           >
             <FiHeart
-              className={`text-lg transition-all duration-300 ${isFavorite ? 'text-red-500 fill-red-500 scale-110' : 'text-gray-600 group-hover:text-red-400'}`}
+              className={`text-sm transition-all duration-300 ${isFavorite ? 'text-red-500 fill-red-500 scale-110' : 'text-gray-600 group-hover:text-red-400'}`}
             />
           </button>
           <button
             onClick={handleCompare}
-            className={`p-2.5 glass rounded-full shadow-lg hover:bg-white/80 transition-all duration-300 hover:scale-110 group ${
+            className={`p-1.5 glass rounded-full shadow-lg hover:bg-white/80 transition-all duration-300 hover:scale-110 group ${
               isInComparison ? 'bg-primary-50' : ''
             }`}
             title={isInComparison ? 'Remove from comparison' : 'Add to comparison'}
           >
             <FiLayers
-              className={`text-lg transition-all duration-300 ${
+              className={`text-sm transition-all duration-300 ${
                 isInComparison
                   ? 'text-primary-600 fill-primary-600 scale-110'
                   : 'text-gray-600 group-hover:text-primary-400'
@@ -102,7 +102,7 @@ const ProductCard = ({ product }) => {
 
         {/* Product Image */}
         <Link to={`/product/${product.id}`}>
-          <div className="w-full h-48 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden relative group-hover:opacity-90 transition-opacity duration-300">
+          <div className="w-full h-28 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden relative group-hover:opacity-90 transition-opacity duration-300">
           <LazyImage
             src={product.image}
             alt={product.name}
@@ -117,20 +117,20 @@ const ProductCard = ({ product }) => {
       </div>
 
       {/* Product Info */}
-      <div className="p-4 flex-1 flex flex-col">
+      <div className="p-2.5 flex-1 flex flex-col">
         <Link to={`/product/${product.id}`}>
-          <h3 className="font-bold text-gray-800 mb-1.5 line-clamp-2 text-sm group-hover:text-gradient transition-colors min-h-[2.5rem]">{product.name}</h3>
+          <h3 className="font-bold text-gray-800 mb-0.5 line-clamp-2 text-sm group-hover:text-gradient transition-colors">{product.name}</h3>
         </Link>
-        <p className="text-xs text-gray-500 mb-2 font-medium">{product.unit}</p>
+        <p className="text-xs text-gray-500 mb-1 font-medium">{product.unit}</p>
 
         {/* Rating */}
         {product.rating && (
-          <div className="flex items-center gap-1.5 mb-2">
+          <div className="flex items-center gap-1 mb-1">
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => (
                 <FiStar
                   key={i}
-                  className={`text-xs ${
+                  className={`text-[10px] ${
                     i < Math.floor(product.rating)
                       ? 'text-yellow-400 fill-yellow-400'
                       : 'text-gray-300'
@@ -138,19 +138,19 @@ const ProductCard = ({ product }) => {
                 />
               ))}
             </div>
-            <span className="text-xs text-gray-600 font-medium">
+            <span className="text-[10px] text-gray-600 font-medium">
               {product.rating} ({product.reviewCount || 0})
             </span>
           </div>
         )}
 
         {/* Price */}
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-base font-bold text-gray-800">
+        <div className="flex items-center gap-2 mb-1.5">
+          <span className="text-sm font-bold text-gray-800">
             {formatPrice(product.price)}
           </span>
           {product.originalPrice && (
-            <span className="text-xs text-gray-400 line-through font-medium">
+            <span className="text-[10px] text-gray-400 line-through font-medium">
               {formatPrice(product.originalPrice)}
             </span>
           )}
@@ -160,13 +160,13 @@ const ProductCard = ({ product }) => {
         <button
           onClick={handleAddToCart}
           disabled={product.stock === 'out_of_stock'}
-          className={`w-full py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 mt-auto ${
+          className={`w-full py-1.5 rounded-lg font-semibold text-xs transition-all duration-300 flex items-center justify-center gap-1.5 mt-auto ${
             product.stock === 'out_of_stock'
               ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
               : 'gradient-green text-white hover:shadow-glow-green hover:scale-105 group/btn'
           }`}
         >
-          <FiShoppingBag className="group-hover/btn:scale-110 transition-transform" />
+          <FiShoppingBag className="text-sm group-hover/btn:scale-110 transition-transform" />
           <span>{product.stock === 'out_of_stock' ? 'Out of Stock' : 'Add to Cart'}</span>
         </button>
       </div>

@@ -47,12 +47,11 @@ const HeroBanner = () => {
   return (
     <div className="container mx-auto px-2 sm:px-4 overflow-x-hidden w-full">
       <div
-        className="relative w-full max-w-[1366px] mx-auto h-[550px] overflow-hidden rounded-3xl my-6 shadow-2xl scrollbar-hide"
+        className="relative w-full max-w-[1366px] mx-auto h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[550px] overflow-hidden rounded-2xl sm:rounded-3xl my-4 sm:my-6 shadow-2xl scrollbar-hide"
         style={{
           position: "relative",
           width: "100%",
           maxWidth: "1366px",
-          height: "550px",
           overflow: "hidden",
         }}>
         <AnimatePresence initial={false}>
@@ -128,7 +127,7 @@ const HeroBanner = () => {
         </AnimatePresence>
 
         {/* Carousel Indicators */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+        <div className="absolute bottom-3 sm:bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
           {slides.map((_, index) => (
             <button
               key={index}

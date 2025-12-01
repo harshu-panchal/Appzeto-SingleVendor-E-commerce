@@ -7,11 +7,8 @@ import { useWishlistStore } from '../../store/wishlistStore';
 import SearchBar from '../SearchBar';
 
 const Header = () => {
-  const [language, setLanguage] = useState('English');
   const [showUserMenu, setShowUserMenu] = useState(false);
-  const [showLanguageMenu, setShowLanguageMenu] = useState(false);
   const userMenuRef = useRef(null);
-  const languageMenuRef = useRef(null);
   const navigate = useNavigate();
   
   const itemCount = useCartStore((state) => state.getItemCount());
@@ -24,9 +21,6 @@ const Header = () => {
     const handleClickOutside = (event) => {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
         setShowUserMenu(false);
-      }
-      if (languageMenuRef.current && !languageMenuRef.current.contains(event.target)) {
-        setShowLanguageMenu(false);
       }
     };
 
@@ -51,7 +45,7 @@ const Header = () => {
               <div className="w-8 h-8 sm:w-10 sm:h-10 gradient-green rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-glow-green transition-all duration-300 group-hover:scale-110">
                 <FiShoppingBag className="text-white text-lg sm:text-xl" />
               </div>
-              <span className="text-xl sm:text-2xl font-bold text-gradient">Appzeto E-commerce</span>
+              <span className="text-base sm:text-xl md:text-2xl font-bold text-gradient">Appzeto E-commerce</span>
             </Link>
 
             {/* Search Bar - Hidden on mobile */}
@@ -61,43 +55,6 @@ const Header = () => {
 
             {/* Right Side Utilities */}
             <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-              {/* Language Selector - Hidden on mobile */}
-              <div 
-                ref={languageMenuRef}
-                className="hidden lg:block relative"
-              >
-                <button
-                  onClick={() => setShowLanguageMenu(!showLanguageMenu)}
-                  className="flex items-center gap-2 cursor-pointer px-3 py-2 rounded-lg hover:bg-white/50 transition-all duration-300 group"
-                >
-                  <span className="text-lg">🇬🇧</span>
-                  <span className="text-sm font-semibold text-gray-700 group-hover:text-gradient transition-colors">{language}</span>
-                  <span className="text-xs text-gray-500">▼</span>
-                </button>
-                {showLanguageMenu && (
-                  <div className="absolute right-0 mt-2 bg-white rounded-xl shadow-2xl border border-gray-200 p-2 z-50 min-w-[150px]">
-                    <button
-                      onClick={() => {
-                        setLanguage('English');
-                        setShowLanguageMenu(false);
-                      }}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-50 rounded-lg transition-colors"
-                    >
-                      English
-                    </button>
-                    <button
-                      onClick={() => {
-                        setLanguage('Spanish');
-                        setShowLanguageMenu(false);
-                      }}
-                      className="w-full text-left px-4 py-2 hover:bg-gray-50 rounded-lg transition-colors"
-                    >
-                      Spanish
-                    </button>
-                  </div>
-                )}
-              </div>
-
               {/* Wishlist Button */}
               <Link
                 to="/wishlist"

@@ -42,7 +42,7 @@ const FeaturesSection = () => {
   return (
     <section ref={sectionRef} className="py-16 bg-transparent">
       <div className="container mx-auto px-2 sm:px-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 lg:gap-8">
           {features.map((feature, index) => {
             const Icon = feature.icon;
             return (
@@ -53,15 +53,15 @@ const FeaturesSection = () => {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -8, scale: 1.02 }}
-                className="glass-card rounded-2xl p-8 text-center hover-lift group cursor-pointer"
+                className="glass-card rounded-2xl p-4 sm:p-6 md:p-8 text-center hover-lift group cursor-pointer"
               >
-                <div className="flex justify-center mb-6">
-                  <div className="w-20 h-20 gradient-green rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-glow-green transition-all duration-300 group-hover:scale-110">
-                    <Icon className="text-white text-3xl" />
+                <div className="flex justify-center mb-4 sm:mb-6">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 gradient-green rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg group-hover:shadow-glow-green transition-all duration-300 group-hover:scale-110">
+                    <Icon className="text-white text-2xl sm:text-3xl" />
                   </div>
                 </div>
-                <h3 className="text-xl font-extrabold text-gray-800 mb-3 group-hover:text-gradient transition-colors">{feature.title}</h3>
-                <p className="text-sm text-gray-600 font-medium">{feature.description}</p>
+                <h3 className="text-lg sm:text-xl font-extrabold text-gray-800 mb-2 sm:mb-3 group-hover:text-gradient transition-colors">{feature.title}</h3>
+                <p className="text-xs sm:text-sm text-gray-600 font-medium">{feature.description}</p>
               </motion.div>
             );
           })}

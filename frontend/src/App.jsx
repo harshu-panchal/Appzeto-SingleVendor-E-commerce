@@ -34,7 +34,7 @@ import TrackOrder from "./pages/TrackOrder";
 // Inner component that has access to useLocation
 const AppRoutes = () => {
   return (
-    <Routes>
+      <Routes>
       <Route path="/" element={<RouteWrapper><Home /></RouteWrapper>} />
       <Route path="/product/:id" element={<RouteWrapper><ProductDetail /></RouteWrapper>} />
       <Route path="/category/:id" element={<RouteWrapper><Category /></RouteWrapper>} />
@@ -50,53 +50,53 @@ const AppRoutes = () => {
       <Route path="/order-confirmation/:orderId" element={<RouteWrapper><OrderConfirmation /></RouteWrapper>} />
       <Route path="/orders/:orderId" element={<RouteWrapper><OrderDetailPage /></RouteWrapper>} />
       <Route path="/track-order/:orderId" element={<RouteWrapper><TrackOrder /></RouteWrapper>} />
-      <Route
-        path="/profile"
-        element={
+        <Route
+          path="/profile"
+          element={
           <RouteWrapper>
             <ProtectedRoute>
               <Profile />
             </ProtectedRoute>
           </RouteWrapper>
-        }
-      />
-      <Route
-        path="/orders"
-        element={
+          }
+        />
+        <Route
+          path="/orders"
+          element={
           <RouteWrapper>
             <ProtectedRoute>
               <Orders />
             </ProtectedRoute>
           </RouteWrapper>
-        }
-      />
-      <Route
-        path="/addresses"
-        element={
+          }
+        />
+        <Route
+          path="/addresses"
+          element={
           <RouteWrapper>
             <ProtectedRoute>
               <Addresses />
             </ProtectedRoute>
           </RouteWrapper>
-        }
-      />
-      {/* Admin Routes */}
-      <Route path="/admin/login" element={<AdminLogin />} />
-      <Route
-        path="/admin"
-        element={
-          <AdminProtectedRoute>
-            <AdminLayout />
-          </AdminProtectedRoute>
-        }
-      >
-        <Route path="dashboard" element={<Dashboard />} />
-        <Route path="products" element={<Products />} />
-        <Route path="products/:id" element={<ProductForm />} />
-        <Route path="orders" element={<AdminOrders />} />
-        <Route path="orders/:id" element={<OrderDetail />} />
-      </Route>
-    </Routes>
+          }
+        />
+        {/* Admin Routes */}
+        <Route path="/admin/login" element={<AdminLogin />} />
+        <Route
+          path="/admin"
+          element={
+            <AdminProtectedRoute>
+              <AdminLayout />
+            </AdminProtectedRoute>
+          }
+        >
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="products" element={<Products />} />
+          <Route path="products/:id" element={<ProductForm />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="orders/:id" element={<OrderDetail />} />
+        </Route>
+      </Routes>
   );
 };
 
@@ -105,31 +105,31 @@ function App() {
     <ErrorBoundary>
       <Router>
         <AppRoutes />
-        <CartDrawer />
-        <Toaster
-          position="top-right"
-          toastOptions={{
+      <CartDrawer />
+      <Toaster
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: "#3F3F46",
+            color: "#fff",
+          },
+          success: {
             duration: 3000,
-            style: {
-              background: "#3F3F46",
-              color: "#fff",
+            iconTheme: {
+              primary: "#6B4F3F",
+              secondary: "#fff",
             },
-            success: {
-              duration: 3000,
-              iconTheme: {
-                primary: "#6B4F3F",
-                secondary: "#fff",
-              },
+          },
+          error: {
+            duration: 4000,
+            iconTheme: {
+              primary: "#F59E0B",
+              secondary: "#fff",
             },
-            error: {
-              duration: 4000,
-              iconTheme: {
-                primary: "#F59E0B",
-                secondary: "#fff",
-              },
-            },
-          }}
-        />
+          },
+        }}
+      />
       </Router>
     </ErrorBoundary>
   );

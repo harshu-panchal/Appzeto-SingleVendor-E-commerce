@@ -1,5 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
-import { FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { gsapAnimations } from '../../utils/animations';
 import ProductCard from '../ProductCard';
@@ -7,7 +6,6 @@ import { getTrending } from '../../data/products';
 
 const TrendingItemsSection = () => {
   const sectionRef = useRef(null);
-  const scrollContainerRef = useRef(null);
   const products = getTrending();
 
   useEffect(() => {
@@ -16,49 +14,21 @@ const TrendingItemsSection = () => {
     }
   }, []);
 
-  const scroll = (direction) => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 320;
-      scrollContainerRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      });
-    }
-  };
-
   return (
-    <section ref={sectionRef} className="py-16 bg-transparent">
-      <div className="container mx-auto px-2 sm:px-4">
-        <div className="flex items-center justify-between mb-10">
-          <h2 className="text-4xl md:text-5xl font-extrabold text-gradient">Trending Items</h2>
-          <div className="flex gap-3">
-            <button
-              onClick={() => scroll('left')}
-              className="w-12 h-12 glass rounded-full flex items-center justify-center hover:bg-white/60 transition-all duration-300 hover:scale-110 shadow-lg"
-            >
-              <FiChevronLeft className="text-gray-700 text-xl" />
-            </button>
-            <button
-              onClick={() => scroll('right')}
-              className="w-12 h-12 glass rounded-full flex items-center justify-center hover:bg-white/60 transition-all duration-300 hover:scale-110 shadow-lg"
-            >
-              <FiChevronRight className="text-gray-700 text-xl" />
-            </button>
-          </div>
+    <section ref={sectionRef} className="py-16 bg-transparent relative">
+      <div className="container mx-auto px-2 sm:px-4 relative">
+        <div className="flex items-center justify-between mb-10 relative z-20">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-gradient relative z-20">Trending Items</h2>
         </div>
 
-        <div
-          ref={scrollContainerRef}
-          className="flex gap-5 lg:gap-6 overflow-x-auto scrollbar-hide pb-4"
-        >
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6 relative z-[1]">
           {products.map((product, index) => (
             <motion.div
               key={product.id}
-              initial={{ opacity: 0, x: 50 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: index * 0.08 }}
-              className="flex-shrink-0 w-72"
+              transition={{ delay: index * 0.05 }}
             >
               <ProductCard product={product} />
             </motion.div>

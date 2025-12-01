@@ -40,7 +40,7 @@ const CartDrawer = () => {
       return;
     }
 
-    updateQuantity(id, newQuantity);
+      updateQuantity(id, newQuantity);
   };
 
   const getProductStock = (id) => {

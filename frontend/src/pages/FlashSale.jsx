@@ -78,11 +78,11 @@ const FlashSale = () => {
               <Breadcrumbs />
 
               {/* Header Section with Countdown */}
-              <div className="mb-8">
+              <div className="mb-8 relative z-10">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                   <div>
                     <div className="flex items-center gap-3 mb-2">
-                      <h1 className="text-3xl sm:text-4xl font-extrabold text-gradient">
+                      <h1 className="text-3xl sm:text-4xl font-extrabold text-gradient relative z-10">
                         Flash Sale
                       </h1>
                       <Badge variant="flash" className="animate-pulse">
@@ -232,7 +232,7 @@ const FlashSale = () => {
                   </Link>
                 </div>
               ) : viewMode === 'grid' ? (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-5 lg:gap-6 relative z-0">
                   {sortedProducts.map((product, index) => (
                     <motion.div
                       key={product.id}

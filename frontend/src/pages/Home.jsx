@@ -7,6 +7,7 @@ import HeroBanner from '../components/Home/HeroBanner';
 import CategoriesSection from '../components/Home/CategoriesSection';
 import PromotionalBanners from '../components/Home/PromotionalBanners';
 import MostPopularSection from '../components/Home/MostPopularSection';
+import TrendingBanner from '../components/Home/TrendingBanner';
 import TrendingItemsSection from '../components/Home/TrendingItemsSection';
 import FlashSaleSection from '../components/Home/FlashSaleSection';
 import PopularBrandsSection from '../components/Home/PopularBrandsSection';
@@ -32,6 +33,7 @@ const Home = () => {
           <CategoriesSection />
           <PromotionalBanners />
           <MostPopularSection />
+          <TrendingBanner />
           <TrendingItemsSection />
           <FlashSaleSection />
           <PopularBrandsSection />
