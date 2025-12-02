@@ -42,7 +42,7 @@ const MobileHeader = () => {
   };
 
   const headerContent = (
-    <header className="glass fixed top-0 left-0 right-0 z-[9999] shadow-lg overflow-visible">
+    <header className="bg-white fixed top-0 left-0 right-0 z-[9999] shadow-lg overflow-visible">
       <div className="px-4 py-3 overflow-visible">
         <div className="flex items-center justify-between gap-3 overflow-visible">
           {/* Logo */}
