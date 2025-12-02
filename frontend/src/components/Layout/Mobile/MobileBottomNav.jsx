@@ -14,7 +14,7 @@ const MobileBottomNav = () => {
     { path: '/app', icon: FiHome, label: 'Home' },
     { path: '/app/categories', icon: FiGrid, label: 'Categories' },
     { path: '/app/search', icon: FiSearch, label: 'Search' },
-    { path: '/app/wishlist', icon: FiHeart, label: 'Wishlist', badge: wishlistCount },
+    { path: '/app/wishlist', icon: FiHeart, label: 'Wishlist', badge: wishlistCount > 0 ? wishlistCount : null },
     { path: isAuthenticated ? '/app/profile' : '/app/login', icon: FiUser, label: 'Profile' },
   ];
 
@@ -152,7 +152,7 @@ const MobileBottomNav = () => {
                 </motion.div>
 
                 {/* Badge Dot */}
-                {item.badge && item.badge > 0 && (
+                {item.badge && (
                   <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-accent-500 rounded-full border-2 border-white shadow-md z-20" />
                 )}
               </motion.div>
