@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FiUser, FiMail, FiPhone, FiLock, FiEye, FiEyeOff, FiSave, FiCamera, FiArrowLeft } from 'react-icons/fi';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import MobileLayout from '../../components/Layout/Mobile/MobileLayout';
 import { useAuthStore } from '../../store/authStore';
@@ -9,6 +9,7 @@ import { isValidEmail, isValidPhone } from '../../utils/helpers';
 import toast from 'react-hot-toast';
 import PageTransition from '../../components/PageTransition';
 import ProtectedRoute from '../../components/Auth/ProtectedRoute';
+import PasswordStrengthMeter from '../../components/Mobile/PasswordStrengthMeter';
 
 const MobileProfile = () => {
   const navigate = useNavigate();
@@ -150,9 +151,18 @@ const MobileProfile = () => {
                           placeholder="Your full name"
                         />
                       </div>
-                      {personalErrors.name && (
-                        <p className="mt-1 text-sm text-red-600">{personalErrors.name.message}</p>
-                      )}
+                      <AnimatePresence>
+                        {personalErrors.name && (
+                          <motion.p
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0 }}
+                            className="mt-1 text-sm text-red-600"
+                          >
+                            {personalErrors.name.message}
+                          </motion.p>
+                        )}
+                      </AnimatePresence>
                     </div>
 
                     <div>
@@ -176,9 +186,18 @@ const MobileProfile = () => {
                           placeholder="your.email@example.com"
                         />
                       </div>
-                      {personalErrors.email && (
-                        <p className="mt-1 text-sm text-red-600">{personalErrors.email.message}</p>
-                      )}
+                      <AnimatePresence>
+                        {personalErrors.email && (
+                          <motion.p
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0 }}
+                            className="mt-1 text-sm text-red-600"
+                          >
+                            {personalErrors.email.message}
+                          </motion.p>
+                        )}
+                      </AnimatePresence>
                     </div>
 
                     <div>
@@ -201,9 +220,18 @@ const MobileProfile = () => {
                           placeholder="1234567890"
                         />
                       </div>
-                      {personalErrors.phone && (
-                        <p className="mt-1 text-sm text-red-600">{personalErrors.phone.message}</p>
-                      )}
+                      <AnimatePresence>
+                        {personalErrors.phone && (
+                          <motion.p
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            exit={{ opacity: 0 }}
+                            className="mt-1 text-sm text-red-600"
+                          >
+                            {personalErrors.phone.message}
+                          </motion.p>
+                        )}
+                      </AnimatePresence>
                     </div>
 
                     <button
@@ -292,10 +320,15 @@ const MobileProfile = () => {
                         </button>
                       </div>
                       {passwordErrors.newPassword && (
-                        <p className="mt-1 text-sm text-red-600">
+                        <motion.p
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          className="mt-1 text-sm text-red-600"
+                        >
                           {passwordErrors.newPassword.message}
-                        </p>
+                        </motion.p>
                       )}
+                      <PasswordStrengthMeter password={newPassword} />
                     </div>
 
                     <div>

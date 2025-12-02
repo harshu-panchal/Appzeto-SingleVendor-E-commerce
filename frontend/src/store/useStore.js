@@ -54,6 +54,10 @@ export const useCartStore = create(
         if (product.stock === 'low_stock' && newQuantity >= product.stockQuantity * 0.8) {
           toast.warning(`Only ${product.stockQuantity} left in stock!`);
         }
+        
+        // Trigger cart animation
+        const { triggerCartAnimation } = useUIStore.getState();
+        triggerCartAnimation();
       },
       removeItem: (id) =>
         set((state) => ({
@@ -102,8 +106,10 @@ export const useUIStore = create((set) => ({
   isMenuOpen: false,
   isCartOpen: false,
   isLoading: false,
+  cartAnimationTrigger: 0,
   toggleMenu: () => set((state) => ({ isMenuOpen: !state.isMenuOpen })),
   toggleCart: () => set((state) => ({ isCartOpen: !state.isCartOpen })),
   setLoading: (loading) => set({ isLoading: loading }),
+  triggerCartAnimation: () => set((state) => ({ cartAnimationTrigger: state.cartAnimationTrigger + 1 })),
 }));
 

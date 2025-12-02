@@ -8,6 +8,8 @@ import LazyImage from '../../components/LazyImage';
 import { getMostPopular, getTrending, getFlashSale } from '../../data/products';
 import { categories } from '../../data/categories';
 import PageTransition from '../../components/PageTransition';
+import usePullToRefresh from '../../hooks/usePullToRefresh';
+import toast from 'react-hot-toast';
 
 const MobileHome = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -30,10 +32,51 @@ const MobileHome = () => {
     return () => clearInterval(interval);
   }, [slides.length]);
 
+  // Pull to refresh handler
+  const handleRefresh = async () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        toast.success('Refreshed');
+        resolve();
+      }, 1000);
+    });
+  };
+
+  const {
+    pullDistance,
+    isPulling,
+    isRefreshing,
+    elementRef,
+    handleTouchStart,
+    handleTouchMove,
+    handleTouchEnd,
+  } = usePullToRefresh(handleRefresh);
+
   return (
     <PageTransition>
       <MobileLayout>
-        <div className="w-full">
+        {/* Pull to Refresh Indicator */}
+        {(isPulling || isRefreshing) && (
+          <div className="flex items-center justify-center py-2">
+            <motion.div
+              animate={{ rotate: isRefreshing ? 360 : 0 }}
+              transition={{ duration: 1, repeat: isRefreshing ? Infinity : 0, ease: "linear" }}
+              className="w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full"
+            />
+          </div>
+        )}
+
+        <div
+          ref={elementRef}
+          className="w-full"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          style={{
+            transform: `translateY(${Math.min(pullDistance, 80)}px)`,
+            transition: isPulling ? 'none' : 'transform 0.3s ease-out',
+          }}
+        >
           {/* Hero Banner */}
           <div className="px-4 py-4">
             <div className="relative w-full h-48 rounded-2xl overflow-hidden">

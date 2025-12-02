@@ -1,11 +1,14 @@
 import { FiHeart, FiShoppingBag, FiStar } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { useCartStore } from '../store/useStore';
+import { useCartStore, useUIStore } from '../store/useStore';
 import { useWishlistStore } from '../store/wishlistStore';
 import { formatPrice } from '../utils/helpers';
 import toast from 'react-hot-toast';
 import LazyImage from './LazyImage';
+import { useState } from 'react';
+import useLongPress from '../hooks/useLongPress';
+import LongPressMenu from './Mobile/LongPressMenu';
 
 const ProductCard = ({ product }) => {
   const location = useLocation();
@@ -13,10 +16,15 @@ const ProductCard = ({ product }) => {
   const isMobileApp = location.pathname.startsWith('/app');
   const productLink = isMobileApp ? `/app/product/${product.id}` : `/product/${product.id}`;
   const addItem = useCartStore((state) => state.addItem);
+  const triggerCartAnimation = useUIStore((state) => state.triggerCartAnimation);
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
   const isFavorite = isInWishlist(product.id);
+  const [isAdding, setIsAdding] = useState(false);
+  const [showLongPressMenu, setShowLongPressMenu] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
   const handleAddToCart = () => {
+    setIsAdding(true);
     addItem({
       id: product.id,
       name: product.name,
@@ -24,8 +32,34 @@ const ProductCard = ({ product }) => {
       image: product.image,
       quantity: 1,
     });
+    triggerCartAnimation();
     toast.success('Added to cart!');
+    setTimeout(() => setIsAdding(false), 600);
   };
+
+  const handleLongPress = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMenuPosition({
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2,
+    });
+    setShowLongPressMenu(true);
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: product.name,
+        text: `Check out ${product.name}`,
+        url: window.location.origin + productLink,
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.origin + productLink);
+      toast.success('Link copied to clipboard');
+    }
+  };
+
+  const longPressHandlers = useLongPress(handleLongPress, 500);
 
   const handleFavorite = (e) => {
     e.stopPropagation();
@@ -44,10 +78,13 @@ const ProductCard = ({ product }) => {
   };
 
   return (
-    <motion.div
-      whileHover={{ y: -8, scale: 1.02 }}
-      className="glass-card rounded-2xl overflow-hidden hover-lift group cursor-pointer h-full flex flex-col"
-    >
+    <>
+      <motion.div
+        whileHover={{ y: -8, scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        className="glass-card rounded-2xl overflow-hidden hover-lift group cursor-pointer h-full flex flex-col"
+        {...longPressHandlers}
+      >
       <div className="relative">
         {/* Favorite Icon */}
         <div className="absolute top-2 right-2 z-10">
@@ -118,20 +155,42 @@ const ProductCard = ({ product }) => {
         </div>
 
         {/* Add Button */}
-        <button
+        <motion.button
           onClick={handleAddToCart}
-          disabled={product.stock === 'out_of_stock'}
+          disabled={product.stock === 'out_of_stock' || isAdding}
+          whileTap={{ scale: 0.95 }}
+          animate={isAdding ? {
+            scale: [1, 1.1, 1],
+          } : {}}
           className={`w-full py-1.5 rounded-lg font-semibold text-xs transition-all duration-300 flex items-center justify-center gap-1.5 mt-auto ${
             product.stock === 'out_of_stock'
               ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
               : 'gradient-green text-white hover:shadow-glow-green hover:scale-105 group/btn'
           }`}
         >
-          <FiShoppingBag className="text-sm group-hover/btn:scale-110 transition-transform" />
-          <span>{product.stock === 'out_of_stock' ? 'Out of Stock' : 'Add to Cart'}</span>
-        </button>
+          <motion.div
+            animate={isAdding ? {
+              rotate: [0, -10, 10, -10, 0],
+            } : {}}
+            transition={{ duration: 0.5 }}
+          >
+            <FiShoppingBag className="text-sm group-hover/btn:scale-110 transition-transform" />
+          </motion.div>
+          <span>{product.stock === 'out_of_stock' ? 'Out of Stock' : isAdding ? 'Adding...' : 'Add to Cart'}</span>
+        </motion.button>
       </div>
     </motion.div>
+
+    <LongPressMenu
+      isOpen={showLongPressMenu}
+      onClose={() => setShowLongPressMenu(false)}
+      position={menuPosition}
+      onAddToCart={handleAddToCart}
+      onAddToWishlist={handleFavorite}
+      onShare={handleShare}
+      isInWishlist={isFavorite}
+    />
+    </>
   );
 };
 

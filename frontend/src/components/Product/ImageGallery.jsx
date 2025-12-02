@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { FiX, FiChevronLeft, FiChevronRight, FiZoomIn } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import LazyImage from '../LazyImage';
+import useSwipeGesture from '../../hooks/useSwipeGesture';
 
 const ImageGallery = ({ images, productName = 'Product' }) => {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -47,6 +48,13 @@ const ImageGallery = ({ images, productName = 'Product' }) => {
     setIsLightboxOpen(true);
   };
 
+  // Swipe gestures for image navigation
+  const swipeHandlers = useSwipeGesture({
+    onSwipeLeft: handleNext,
+    onSwipeRight: handlePrevious,
+    threshold: 50,
+  });
+
   return (
     <>
       <div className="w-full">
@@ -68,6 +76,9 @@ const ImageGallery = ({ images, productName = 'Product' }) => {
             onMouseEnter={() => setIsZoomed(true)}
             onMouseLeave={() => setIsZoomed(false)}
             onClick={handleImageClick}
+            onTouchStart={swipeHandlers.onTouchStart}
+            onTouchMove={swipeHandlers.onTouchMove}
+            onTouchEnd={swipeHandlers.onTouchEnd}
           >
             <LazyImage
               src={imageArray[selectedIndex]}

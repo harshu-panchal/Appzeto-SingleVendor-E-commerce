@@ -13,6 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useCartStore, useUIStore } from "../../../store/useStore";
 import { useAuthStore } from "../../../store/authStore";
 import { appLogo } from "../../../data/logos";
+import { motion } from "framer-motion";
 
 const MobileHeader = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -21,6 +22,9 @@ const MobileHeader = () => {
 
   const itemCount = useCartStore((state) => state.getItemCount());
   const toggleCart = useUIStore((state) => state.toggleCart);
+  const cartAnimationTrigger = useUIStore(
+    (state) => state.cartAnimationTrigger
+  );
   const { user, isAuthenticated, logout } = useAuthStore();
 
   // Close menus when clicking outside
@@ -74,16 +78,28 @@ const MobileHeader = () => {
             </button>
 
             {/* Cart Button */}
-            <button
+            <motion.button
               onClick={toggleCart}
-              className="relative p-2.5 hover:bg-white/50 rounded-full transition-all duration-300">
+              className="relative p-2.5 hover:bg-white/50 rounded-full transition-all duration-300"
+              animate={
+                cartAnimationTrigger > 0
+                  ? {
+                      scale: [1, 1.2, 1],
+                    }
+                  : {}
+              }
+              transition={{ duration: 0.5, ease: "easeOut" }}>
               <FiShoppingBag className="text-xl text-gray-700" />
               {itemCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                <motion.span
+                  key={itemCount}
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="absolute -top-1 -right-1 w-5 h-5 bg-accent-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
                   {itemCount > 9 ? "9+" : itemCount}
-                </span>
+                </motion.span>
               )}
-            </button>
+            </motion.button>
 
             {/* User Menu */}
             {isAuthenticated ? (

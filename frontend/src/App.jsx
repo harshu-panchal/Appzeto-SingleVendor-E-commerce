@@ -193,12 +193,20 @@ function App() {
         <AppRoutes />
       <CartDrawer />
       <Toaster
-        position="top-right"
+        position={window.innerWidth < 768 ? "bottom-center" : "top-right"}
+        containerStyle={{
+          bottom: window.innerWidth < 768 ? "80px" : "auto",
+        }}
         toastOptions={{
           duration: 3000,
           style: {
             background: "#212121",
             color: "#fff",
+            borderRadius: "12px",
+            padding: "12px 16px",
+            fontSize: "14px",
+            maxWidth: window.innerWidth < 768 ? "90vw" : "400px",
+            boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
           },
           success: {
             duration: 3000,

@@ -8,6 +8,8 @@ import { useOrderStore } from '../../store/orderStore';
 import { useAuthStore } from '../../store/authStore';
 import PageTransition from '../../components/PageTransition';
 import ProtectedRoute from '../../components/Auth/ProtectedRoute';
+import usePullToRefresh from '../../hooks/usePullToRefresh';
+import toast from 'react-hot-toast';
 
 const MobileOrders = () => {
   const navigate = useNavigate();
@@ -31,6 +33,27 @@ const MobileOrders = () => {
     if (selectedStatus === 'all') return allOrders;
     return allOrders.filter((order) => order.status === selectedStatus);
   }, [selectedStatus, allOrders]);
+
+  // Pull to refresh handler
+  const handleRefresh = async () => {
+    // Simulate refresh - in real app, this would fetch new orders
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        toast.success('Orders refreshed');
+        resolve();
+      }, 1000);
+    });
+  };
+
+  const {
+    pullDistance,
+    isPulling,
+    isRefreshing,
+    elementRef,
+    handleTouchStart,
+    handleTouchMove,
+    handleTouchEnd,
+  } = usePullToRefresh(handleRefresh);
 
   return (
     <ProtectedRoute>
@@ -83,8 +106,29 @@ const MobileOrders = () => {
               )}
             </div>
 
+            {/* Pull to Refresh Indicator */}
+            {(isPulling || isRefreshing) && (
+              <div className="flex items-center justify-center py-2">
+                <motion.div
+                  animate={{ rotate: isRefreshing ? 360 : 0 }}
+                  transition={{ duration: 1, repeat: isRefreshing ? Infinity : 0, ease: "linear" }}
+                  className="w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full"
+                />
+              </div>
+            )}
+
             {/* Orders List */}
-            <div className="px-4 py-4">
+            <div
+              ref={elementRef}
+              className="px-4 py-4"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              style={{
+                transform: `translateY(${Math.min(pullDistance, 80)}px)`,
+                transition: isPulling ? 'none' : 'transform 0.3s ease-out',
+              }}
+            >
               {filteredOrders.length === 0 ? (
                 <div className="text-center py-12">
                   <div className="text-6xl text-gray-300 mx-auto mb-4">📦</div>

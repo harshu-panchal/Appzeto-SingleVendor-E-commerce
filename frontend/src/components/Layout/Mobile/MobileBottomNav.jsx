@@ -61,14 +61,36 @@ const MobileBottomNav = () => {
             <Link
               key={item.path}
               to={item.path}
-              className="flex items-center justify-center flex-1 h-full">
-              <motion.div className="relative flex items-center justify-center w-12 h-12">
+              className="flex items-center justify-center flex-1 h-full relative">
+              <motion.div
+                className="relative flex items-center justify-center w-12 h-12"
+                whileTap={{ scale: 0.9 }}>
+                {/* Active Indicator Background */}
+                {active && (
+                  <motion.div
+                    layoutId="activeTab"
+                    className="absolute inset-0 bg-primary-50 rounded-full"
+                    initial={false}
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  />
+                )}
+
+                {/* Active Indicator Dot */}
+                {active && (
+                  <motion.div
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary-600 rounded-full"
+                  />
+                )}
+
                 {/* Icon */}
                 <motion.div
                   className="relative z-10 flex items-center justify-center"
                   variants={iconVariants}
                   initial="inactive"
-                  animate={active ? "active" : "inactive"}>
+                  animate={active ? "active" : "inactive"}
+                  transition={{ duration: 0.2 }}>
                   <Icon
                     className="text-2xl"
                     style={{
@@ -79,9 +101,17 @@ const MobileBottomNav = () => {
                   />
                 </motion.div>
 
-                {/* Badge Dot */}
+                {/* Badge */}
                 {item.badge && (
-                  <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-accent-500 rounded-full border-2 border-white shadow-md z-20" />
+                  <motion.span
+                    key={item.badge}
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-accent-500 rounded-full border-2 border-white shadow-md z-20 flex items-center justify-center">
+                    <span className="text-[8px] font-bold text-white">
+                      {item.badge > 9 ? "9+" : item.badge}
+                    </span>
+                  </motion.span>
                 )}
               </motion.div>
             </Link>

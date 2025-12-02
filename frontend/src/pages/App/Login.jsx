@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FiMail, FiLock, FiEye, FiEyeOff } from 'react-icons/fi';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '../../store/authStore';
 import { isValidEmail } from '../../utils/helpers';
 import toast from 'react-hot-toast';
@@ -75,9 +75,18 @@ const MobileLogin = () => {
                       placeholder="your.email@example.com"
                     />
                   </div>
-                  {errors.email && (
-                    <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
-                  )}
+                  <AnimatePresence>
+                    {errors.email && (
+                      <motion.p
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0 }}
+                        className="mt-1 text-sm text-red-600"
+                      >
+                        {errors.email.message}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 {/* Password */}
@@ -111,9 +120,18 @@ const MobileLogin = () => {
                       {showPassword ? <FiEyeOff /> : <FiEye />}
                     </button>
                   </div>
-                  {errors.password && (
-                    <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
-                  )}
+                  <AnimatePresence>
+                    {errors.password && (
+                      <motion.p
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0 }}
+                        className="mt-1 text-sm text-red-600"
+                      >
+                        {errors.password.message}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 {/* Remember Me & Forgot Password */}

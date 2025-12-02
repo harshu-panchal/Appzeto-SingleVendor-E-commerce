@@ -1,19 +1,28 @@
 import { FiHeart, FiShoppingBag, FiStar } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
-import { useCartStore } from '../../store/useStore';
+import { motion } from 'framer-motion';
+import { useCartStore, useUIStore } from '../../store/useStore';
 import { useWishlistStore } from '../../store/wishlistStore';
 import { formatPrice } from '../../utils/helpers';
 import toast from 'react-hot-toast';
 import LazyImage from '../LazyImage';
+import { useState } from 'react';
+import useLongPress from '../../hooks/useLongPress';
+import LongPressMenu from './LongPressMenu';
 
 const MobileProductCard = ({ product }) => {
   const addItem = useCartStore((state) => state.addItem);
+  const triggerCartAnimation = useUIStore((state) => state.triggerCartAnimation);
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
   const isFavorite = isInWishlist(product.id);
+  const [showLongPressMenu, setShowLongPressMenu] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
   const handleAddToCart = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     addItem({
       id: product.id,
       name: product.name,
@@ -21,12 +30,15 @@ const MobileProductCard = ({ product }) => {
       image: product.image,
       quantity: 1,
     });
+    triggerCartAnimation();
     toast.success('Added to cart!');
   };
 
   const handleFavorite = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
     if (isFavorite) {
       removeFromWishlist(product.id);
       toast.success('Removed from wishlist');
@@ -41,9 +53,38 @@ const MobileProductCard = ({ product }) => {
     }
   };
 
+  const handleLongPress = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMenuPosition({
+      x: rect.left + rect.width / 2,
+      y: rect.top + rect.height / 2,
+    });
+    setShowLongPressMenu(true);
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: product.name,
+        text: `Check out ${product.name}`,
+        url: window.location.origin + `/app/product/${product.id}`,
+      });
+    } else {
+      navigator.clipboard.writeText(window.location.origin + `/app/product/${product.id}`);
+      toast.success('Link copied to clipboard');
+    }
+  };
+
+  const longPressHandlers = useLongPress(handleLongPress, 500);
+
   return (
+    <>
     <Link to={`/app/product/${product.id}`} className="block">
-      <div className="glass-card rounded-2xl overflow-hidden mb-4">
+      <motion.div
+        whileTap={{ scale: 0.98 }}
+        className="glass-card rounded-2xl overflow-hidden mb-4"
+        {...longPressHandlers}
+      >
         <div className="flex gap-4 p-4">
           {/* Product Image */}
           <div className="w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100">
@@ -123,8 +164,19 @@ const MobileProductCard = ({ product }) => {
             </button>
           </div>
         </div>
-      </div>
+      </motion.div>
     </Link>
+
+    <LongPressMenu
+      isOpen={showLongPressMenu}
+      onClose={() => setShowLongPressMenu(false)}
+      position={menuPosition}
+      onAddToCart={handleAddToCart}
+      onAddToWishlist={handleFavorite}
+      onShare={handleShare}
+      isInWishlist={isFavorite}
+    />
+    </>
   );
 };
 

@@ -1,13 +1,18 @@
-import { useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import { FiX, FiFilter } from 'react-icons/fi';
 import { categories } from '../../data/categories';
+import useSwipeGesture from '../../hooks/useSwipeGesture';
 
 const MobileFilterPanel = ({ isOpen, onClose, filters, onFilterChange, onClearFilters }) => {
+  const [dragY, setDragY] = useState(0);
+  const panelRef = useRef(null);
+
   // Prevent body scroll when panel is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflowY = 'hidden';
+      setDragY(0);
     } else {
       document.body.style.overflowY = '';
     }
@@ -15,6 +20,17 @@ const MobileFilterPanel = ({ isOpen, onClose, filters, onFilterChange, onClearFi
       document.body.style.overflowY = '';
     };
   }, [isOpen]);
+
+  const handleSwipeDown = () => {
+    if (dragY > 100) {
+      onClose();
+    }
+  };
+
+  const swipeHandlers = useSwipeGesture({
+    onSwipeDown: handleSwipeDown,
+    threshold: 100,
+  });
 
   return (
     <AnimatePresence>
@@ -29,16 +45,37 @@ const MobileFilterPanel = ({ isOpen, onClose, filters, onFilterChange, onClearFi
             className="fixed inset-0 bg-black/50 z-50"
           />
 
-          {/* Filter Panel */}
+          {/* Filter Panel - Bottom Sheet */}
           <motion.div
-            initial={{ x: '100%' }}
-            animate={{ x: 0 }}
-            exit={{ x: '100%' }}
+            ref={panelRef}
+            initial={{ y: '100%' }}
+            animate={{ y: dragY > 0 ? dragY : 0 }}
+            exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 h-full w-full max-w-sm bg-white shadow-2xl z-50 flex flex-col"
+            className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl z-50 flex flex-col max-h-[90vh]"
+            onTouchStart={swipeHandlers.onTouchStart}
+            onTouchMove={(e) => {
+              if (swipeHandlers.swipeState.isSwiping && swipeHandlers.swipeState.offset > 0) {
+                setDragY(swipeHandlers.swipeState.offset);
+              }
+              swipeHandlers.onTouchMove(e);
+            }}
+            onTouchEnd={(e) => {
+              if (dragY > 100) {
+                onClose();
+              } else {
+                setDragY(0);
+              }
+              swipeHandlers.onTouchEnd(e);
+            }}
           >
+            {/* Drag Handle */}
+            <div className="flex justify-center pt-3 pb-2">
+              <div className="w-12 h-1.5 bg-gray-300 rounded-full" />
+            </div>
+
             {/* Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+            <div className="flex items-center justify-between px-4 pb-4 border-b border-gray-200">
               <div className="flex items-center gap-2">
                 <FiFilter className="text-xl text-gray-700" />
                 <h2 className="text-xl font-bold text-gray-800">Filters</h2>
@@ -52,7 +89,7 @@ const MobileFilterPanel = ({ isOpen, onClose, filters, onFilterChange, onClearFi
             </div>
 
             {/* Filter Content */}
-            <div className="flex-1 overflow-y-auto p-4">
+            <div className="flex-1 overflow-y-auto px-4 py-4">
               {/* Category Filter */}
               <div className="mb-6">
                 <h3 className="font-semibold text-gray-700 mb-3 text-base">Category</h3>
