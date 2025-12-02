@@ -253,7 +253,7 @@ export const products = [
     unit: 'Milliliter',
     price: 48.0,
     originalPrice: 60.0,
-    image: '/images/products/antibacterial_liquid_dish_soap-cover.png',
+    image: '/images/products/shampoo.jpg',
     flashSale: true,
     isNew: true,
     stock: 'in_stock',
