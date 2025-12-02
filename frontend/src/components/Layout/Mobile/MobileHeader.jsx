@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { FiSearch, FiShoppingBag, FiUser, FiLogOut, FiPackage, FiMapPin } from 'react-icons/fi';
 import { Link, useNavigate } from 'react-router-dom';
 import { useCartStore, useUIStore } from '../../../store/useStore';
@@ -31,7 +32,7 @@ const MobileHeader = () => {
     navigate('/app');
   };
 
-  return (
+  const headerContent = (
     <header className="glass fixed top-0 left-0 right-0 z-[9999] shadow-lg">
       <div className="px-4 py-3">
         <div className="flex items-center justify-between gap-3">
@@ -138,6 +139,9 @@ const MobileHeader = () => {
       </div>
     </header>
   );
+
+  // Use portal to render outside of transformed containers (like PageTransition)
+  return createPortal(headerContent, document.body);
 };
 
 export default MobileHeader;

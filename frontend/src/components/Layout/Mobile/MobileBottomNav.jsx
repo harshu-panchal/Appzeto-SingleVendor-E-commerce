@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import { Link, useLocation } from 'react-router-dom';
 import { FiHome, FiGrid, FiSearch, FiHeart, FiUser } from 'react-icons/fi';
 import { useWishlistStore } from '../../../store/wishlistStore';
@@ -23,7 +24,7 @@ const MobileBottomNav = () => {
     return location.pathname.startsWith(path);
   };
 
-  return (
+  const navContent = (
     <nav className="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-gray-200/50 z-[9999] safe-area-bottom shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
       <div className="flex items-center justify-around h-16 px-1">
         {navItems.map((item) => {
@@ -63,6 +64,9 @@ const MobileBottomNav = () => {
       </div>
     </nav>
   );
+
+  // Use portal to render outside of transformed containers (like PageTransition)
+  return createPortal(navContent, document.body);
 };
 
 export default MobileBottomNav;
