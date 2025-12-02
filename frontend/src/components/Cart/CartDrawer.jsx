@@ -122,8 +122,8 @@ const CartDrawer = () => {
 
     if (isDeleted) return null;
 
-    return (
-      <motion.div
+  return (
+          <motion.div
         layout
         initial={hasAnimated ? false : { opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0, x: swipeOffset }}
@@ -147,40 +147,40 @@ const CartDrawer = () => {
             </div>
           )}
           
-          {/* Product Image */}
+                      {/* Product Image */}
           <div className="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-200 relative z-10">
-            <img
-              src={item.image}
-              alt={item.name}
-              className="w-full h-full object-cover"
-            />
-          </div>
+                        <img
+                          src={item.image}
+                          alt={item.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
 
-          {/* Product Info */}
+                      {/* Product Info */}
           <div className="flex-1 min-w-0 relative z-10">
-            <h3 className="font-semibold text-gray-800 text-sm mb-1 line-clamp-2">
-              {item.name}
-            </h3>
-            <p className="text-sm font-bold text-primary-600 mb-2">
-              {formatPrice(item.price)}
-            </p>
+                        <h3 className="font-semibold text-gray-800 text-sm mb-1 line-clamp-2">
+                          {item.name}
+                        </h3>
+                        <p className="text-sm font-bold text-primary-600 mb-2">
+                          {formatPrice(item.price)}
+                        </p>
 
-            {/* Stock Warning */}
-            {isLowStock(item.id) && (
-              <div className="flex items-center gap-1 text-xs text-orange-600 mb-2">
-                <FiAlertCircle className="text-xs" />
-                <span>Only {getProductStock(item.id)} left!</span>
-              </div>
-            )}
+                        {/* Stock Warning */}
+                        {isLowStock(item.id) && (
+                          <div className="flex items-center gap-1 text-xs text-orange-600 mb-2">
+                            <FiAlertCircle className="text-xs" />
+                            <span>Only {getProductStock(item.id)} left!</span>
+                          </div>
+                        )}
 
-            {/* Quantity Controls */}
-            <div className="flex items-center gap-3 mb-2">
-              <button
-                onClick={() => handleQuantityChange(item.id, item.quantity, -1)}
-                className="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-gray-300 hover:bg-gray-50 transition-colors"
-              >
-                <FiMinus className="text-xs text-gray-600" />
-              </button>
+                        {/* Quantity Controls */}
+                        <div className="flex items-center gap-3 mb-2">
+                          <button
+                            onClick={() => handleQuantityChange(item.id, item.quantity, -1)}
+                            className="w-8 h-8 flex items-center justify-center rounded-lg bg-white border border-gray-300 hover:bg-gray-50 transition-colors"
+                          >
+                            <FiMinus className="text-xs text-gray-600" />
+                          </button>
               <motion.span
                 key={item.quantity}
                 initial={{ scale: 1.2 }}
@@ -188,37 +188,37 @@ const CartDrawer = () => {
                 transition={{ duration: 0.2 }}
                 className="text-sm font-semibold text-gray-800 min-w-[2rem] text-center"
               >
-                {item.quantity}
+                            {item.quantity}
               </motion.span>
-              <button
-                onClick={() => handleQuantityChange(item.id, item.quantity, 1)}
-                disabled={isMaxQuantity(item.id, item.quantity)}
-                className={`w-8 h-8 flex items-center justify-center rounded-lg border transition-colors ${
-                  isMaxQuantity(item.id, item.quantity)
-                    ? 'bg-gray-100 border-gray-200 cursor-not-allowed opacity-50'
-                    : 'bg-white border-gray-300 hover:bg-gray-50'
-                }`}
-              >
-                <FiPlus className="text-xs text-gray-600" />
-              </button>
-              <button
-                onClick={() => removeItem(item.id)}
-                className="ml-auto p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
-              >
-                <FiTrash2 className="text-sm" />
-              </button>
-            </div>
-            {/* Save for Later Button */}
-            <button
-              onClick={() => handleSaveForLater(item)}
-              className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-pink-50 text-pink-600 rounded-lg font-medium hover:bg-pink-100 transition-colors text-sm"
-            >
-              <FiHeart className="text-sm" />
-              Save for Later
-            </button>
+                          <button
+                            onClick={() => handleQuantityChange(item.id, item.quantity, 1)}
+                            disabled={isMaxQuantity(item.id, item.quantity)}
+                            className={`w-8 h-8 flex items-center justify-center rounded-lg border transition-colors ${
+                              isMaxQuantity(item.id, item.quantity)
+                                ? 'bg-gray-100 border-gray-200 cursor-not-allowed opacity-50'
+                                : 'bg-white border-gray-300 hover:bg-gray-50'
+                            }`}
+                          >
+                            <FiPlus className="text-xs text-gray-600" />
+                          </button>
+                          <button
+                            onClick={() => removeItem(item.id)}
+                            className="ml-auto p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                          >
+                            <FiTrash2 className="text-sm" />
+                          </button>
+                        </div>
+                        {/* Save for Later Button */}
+                        <button
+                          onClick={() => handleSaveForLater(item)}
+                          className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-pink-50 text-pink-600 rounded-lg font-medium hover:bg-pink-100 transition-colors text-sm"
+                        >
+                          <FiHeart className="text-sm" />
+                          Save for Later
+                        </button>
           </div>
-        </div>
-      </motion.div>
+                      </div>
+                    </motion.div>
     );
   };
 
@@ -282,8 +282,8 @@ const CartDrawer = () => {
                   <div className="space-y-4">
                     {items.map((item, index) => (
                       <SwipeableCartItem key={item.id} item={item} index={index} />
-                    ))}
-                  </div>
+                  ))}
+                </div>
                 </AnimatePresence>
               )}
             </div>

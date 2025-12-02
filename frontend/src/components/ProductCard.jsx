@@ -3,19 +3,13 @@ import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import { useCartStore, useUIStore } from '../store/useStore';
 import { useWishlistStore } from '../store/wishlistStore';
-import { formatPrice, getProductCategory, getQuickSpecs } from '../utils/helpers';
-import { categories } from '../data/categories';
+import { formatPrice } from '../utils/helpers';
 import toast from 'react-hot-toast';
+import LazyImage from './LazyImage';
 import { useState, useRef } from 'react';
 import useLongPress from '../hooks/useLongPress';
 import LongPressMenu from './Mobile/LongPressMenu';
 import FlyingItem from './Mobile/FlyingItem';
-import ProductImageCarousel from './Product/ProductImageCarousel';
-import DiscountBadge from './Product/DiscountBadge';
-import StockStatusBadge from './Product/StockStatusBadge';
-import CategoryTag from './Product/CategoryTag';
-import QuickSpecs from './Product/QuickSpecs';
-import CollapsibleDetails from './Product/CollapsibleDetails';
 
 const ProductCard = ({ product }) => {
   const location = useLocation();
@@ -126,11 +120,6 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  // Get product category and quick specs
-  const productCategory = getProductCategory(product, categories);
-  const quickSpecs = getQuickSpecs(product);
-  const productImages = product.images && product.images.length > 0 ? product.images : [product.image];
-
   return (
     <>
       <motion.div
@@ -140,26 +129,6 @@ const ProductCard = ({ product }) => {
         {...longPressHandlers}
       >
       <div className="relative">
-        {/* Discount Badge */}
-        {product.originalPrice && product.originalPrice > product.price && (
-          <DiscountBadge
-            originalPrice={product.originalPrice}
-            discountedPrice={product.price}
-            position="top-left"
-          />
-        )}
-
-        {/* Flash Sale Badge */}
-        {product.flashSale && (
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            className="absolute top-2 right-2 z-20 bg-gradient-to-br from-orange-500 to-red-500 text-white px-2 py-0.5 rounded-lg text-xs font-bold shadow-lg"
-          >
-            FLASH SALE
-          </motion.div>
-        )}
-
         {/* Favorite Icon */}
         <div className="absolute top-2 right-2 z-10">
           <button
@@ -172,45 +141,37 @@ const ProductCard = ({ product }) => {
           </button>
         </div>
 
-        {/* Product Image Carousel */}
+        {/* Product Image */}
         <Link to={productLink}>
-          <ProductImageCarousel
-            images={productImages}
-            productName={product.name}
-            aspectRatio="aspect-[4/3]"
-            autoPlay={false}
+          <div className="w-full h-28 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden relative group-hover:opacity-90 transition-opacity duration-300">
+          <LazyImage
+            src={product.image}
+            alt={product.name}
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            onError={(e) => {
+              e.target.src = 'https://via.placeholder.com/300x300?text=Product+Image';
+            }}
           />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        </div>
         </Link>
       </div>
 
       {/* Product Info */}
-      <div className="p-3 flex-1 flex flex-col gap-2">
-        {/* Category Tag */}
-        {productCategory && (
-          <div className="flex items-center gap-2">
-            <CategoryTag category={productCategory} productId={product.id} size="sm" />
-          </div>
-        )}
-
+      <div className="p-2.5 flex-1 flex flex-col">
         <Link to={productLink}>
-          <h3 className="font-bold text-gray-900 mb-1 line-clamp-2 text-base leading-tight group-hover:text-primary-600 transition-colors">
-            {product.name}
-          </h3>
+          <h3 className="font-bold text-gray-800 mb-0.5 line-clamp-2 text-sm group-hover:text-gradient transition-colors">{product.name}</h3>
         </Link>
-
-        {/* Quick Specs */}
-        {quickSpecs.length > 0 && (
-          <QuickSpecs specs={quickSpecs} />
-        )}
+        <p className="text-xs text-gray-500 mb-1 font-medium">{product.unit}</p>
 
         {/* Rating */}
         {product.rating && (
-          <div className="flex items-center gap-1.5 mb-1">
+          <div className="flex items-center gap-1 mb-1">
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => (
                 <FiStar
                   key={i}
-                  className={`text-xs ${
+                  className={`text-[10px] ${
                     i < Math.floor(product.rating)
                       ? 'text-yellow-400 fill-yellow-400'
                       : 'text-gray-300'
@@ -218,72 +179,48 @@ const ProductCard = ({ product }) => {
                 />
               ))}
             </div>
-            <span className="text-xs text-gray-600 font-medium">
+            <span className="text-[10px] text-gray-600 font-medium">
               {product.rating} ({product.reviewCount || 0})
             </span>
           </div>
         )}
 
-        {/* Price and Stock Status */}
-        <div className="flex items-center justify-between gap-2 mb-2">
-          <div className="flex items-baseline gap-2">
-            <span className="text-lg font-bold text-gray-900">
-              {formatPrice(product.price)}
+        {/* Price */}
+        <div className="flex items-center gap-2 mb-1.5">
+          <span className="text-sm font-bold text-gray-800">
+            {formatPrice(product.price)}
+          </span>
+          {product.originalPrice && (
+            <span className="text-[10px] text-gray-400 line-through font-medium">
+              {formatPrice(product.originalPrice)}
             </span>
-            {product.originalPrice && product.originalPrice > product.price && (
-              <span className="text-xs text-gray-400 line-through font-medium">
-                {formatPrice(product.originalPrice)}
-              </span>
-            )}
-          </div>
-          <StockStatusBadge
-            stock={product.stock}
-            stockQuantity={product.stockQuantity}
-            showQuantity={product.stock === 'low_stock'}
-            size="sm"
-          />
+          )}
         </div>
-
-        {/* Collapsible Details */}
-        <CollapsibleDetails product={product} defaultExpanded={false} />
 
         {/* Add Button */}
         <motion.button
           ref={buttonRef}
           onClick={handleAddToCart}
           disabled={product.stock === 'out_of_stock' || isAdding}
-          whileHover={product.stock !== 'out_of_stock' && !isAdding ? { scale: 1.02 } : {}}
-          whileTap={{ scale: 0.98 }}
+          whileTap={{ scale: 0.95 }}
           animate={isAdding ? {
-            scale: [1, 1.05, 1],
+            scale: [1, 1.1, 1],
           } : {}}
-          className={`w-full py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 mt-auto relative overflow-hidden ${
+          className={`w-full py-1.5 rounded-lg font-semibold text-xs transition-all duration-300 flex items-center justify-center gap-1.5 mt-auto ${
             product.stock === 'out_of_stock'
               ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'gradient-green text-white hover:shadow-glow-green group/btn'
+              : 'gradient-green text-white hover:shadow-glow-green hover:scale-105 group/btn'
           }`}
         >
-          {/* Ripple effect */}
-          {product.stock !== 'out_of_stock' && (
-            <motion.div
-              className="absolute inset-0 bg-white/20 rounded-xl"
-              initial={{ scale: 0, opacity: 0 }}
-              whileTap={{ scale: 2, opacity: [0, 0.5, 0] }}
-              transition={{ duration: 0.6 }}
-            />
-          )}
           <motion.div
             animate={isAdding ? {
               rotate: [0, -10, 10, -10, 0],
             } : {}}
             transition={{ duration: 0.5 }}
-            className="relative z-10"
           >
-            <FiShoppingBag className="text-base group-hover/btn:scale-110 transition-transform" />
+            <FiShoppingBag className="text-sm group-hover/btn:scale-110 transition-transform" />
           </motion.div>
-          <span className="relative z-10">
-            {product.stock === 'out_of_stock' ? 'Out of Stock' : isAdding ? 'Adding...' : 'Add to Cart'}
-          </span>
+          <span>{product.stock === 'out_of_stock' ? 'Out of Stock' : isAdding ? 'Adding...' : 'Add to Cart'}</span>
         </motion.button>
       </div>
     </motion.div>

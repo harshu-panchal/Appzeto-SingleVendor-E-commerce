@@ -3,18 +3,13 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useCartStore, useUIStore } from '../../store/useStore';
 import { useWishlistStore } from '../../store/wishlistStore';
-import { formatPrice, getProductCategory, getQuickSpecs } from '../../utils/helpers';
-import { categories } from '../../data/categories';
+import { formatPrice } from '../../utils/helpers';
 import toast from 'react-hot-toast';
+import LazyImage from '../LazyImage';
 import { useState, useRef } from 'react';
 import useLongPress from '../../hooks/useLongPress';
 import LongPressMenu from './LongPressMenu';
 import FlyingItem from './FlyingItem';
-import ProductImageCarousel from '../Product/ProductImageCarousel';
-import DiscountBadge from '../Product/DiscountBadge';
-import StockStatusBadge from '../Product/StockStatusBadge';
-import CategoryTag from '../Product/CategoryTag';
-import QuickSpecs from '../Product/QuickSpecs';
 
 const MobileProductCard = ({ product }) => {
   const addItem = useCartStore((state) => state.addItem);
@@ -119,18 +114,6 @@ const MobileProductCard = ({ product }) => {
 
   const longPressHandlers = useLongPress(handleLongPress, 500);
 
-  // Get product category and quick specs
-  const productCategory = getProductCategory(product, categories);
-  const quickSpecs = getQuickSpecs(product);
-  const productImages = product.images && product.images.length > 0 ? product.images : [product.image];
-  const [isAdding, setIsAdding] = useState(false);
-
-  const handleAddToCartWithState = (e) => {
-    setIsAdding(true);
-    handleAddToCart(e);
-    setTimeout(() => setIsAdding(false), 600);
-  };
-
   return (
     <>
     <Link to={`/app/product/${product.id}`} className="block">
@@ -140,54 +123,24 @@ const MobileProductCard = ({ product }) => {
         {...longPressHandlers}
       >
         <div className="flex gap-4 p-4">
-          {/* Product Image with Carousel */}
-          <div className="w-28 h-28 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100 relative">
-            <ProductImageCarousel
-              images={productImages}
-              productName={product.name}
-              aspectRatio="aspect-square"
-              autoPlay={false}
+          {/* Product Image */}
+          <div className="w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100">
+            <LazyImage
+              src={product.image}
+              alt={product.name}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.target.src = 'https://via.placeholder.com/200x200?text=Product';
+              }}
             />
-            {/* Discount Badge */}
-            {product.originalPrice && product.originalPrice > product.price && (
-              <DiscountBadge
-                originalPrice={product.originalPrice}
-                discountedPrice={product.price}
-                position="top-left"
-              />
-            )}
-            {/* Flash Sale Badge */}
-            {product.flashSale && (
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                className="absolute top-1 right-1 z-20 bg-gradient-to-br from-orange-500 to-red-500 text-white px-1.5 py-0.5 rounded text-[10px] font-bold shadow-lg"
-              >
-                SALE
-              </motion.div>
-            )}
           </div>
 
           {/* Product Info */}
           <div className="flex-1 min-w-0 flex flex-col">
             <div className="flex items-start justify-between gap-2 mb-1">
-              <div className="flex-1 min-w-0">
-                {/* Category Tag */}
-                {productCategory && (
-                  <div className="mb-1">
-                    <CategoryTag category={productCategory} productId={product.id} size="sm" />
-                  </div>
-                )}
-                <h3 className="font-bold text-gray-900 text-sm line-clamp-2 leading-tight mb-1">
-                  {product.name}
-                </h3>
-                {/* Quick Specs */}
-                {quickSpecs.length > 0 && (
-                  <div className="mb-1">
-                    <QuickSpecs specs={quickSpecs} />
-                  </div>
-                )}
-              </div>
+              <h3 className="font-bold text-gray-800 text-sm line-clamp-2 flex-1">
+                {product.name}
+              </h3>
               <button
                 onClick={handleFavorite}
                 className="flex-shrink-0 p-1.5 hover:bg-gray-100 rounded-full transition-colors"
@@ -197,6 +150,8 @@ const MobileProductCard = ({ product }) => {
                 />
               </button>
             </div>
+
+            <p className="text-xs text-gray-500 mb-2">{product.unit}</p>
 
             {/* Rating */}
             {product.rating && (
@@ -219,63 +174,32 @@ const MobileProductCard = ({ product }) => {
               </div>
             )}
 
-            {/* Price and Stock Status */}
-            <div className="flex items-center justify-between gap-2 mb-2">
-              <div className="flex items-baseline gap-2">
-                <span className="text-lg font-bold text-gray-900">
-                  {formatPrice(product.price)}
+            {/* Price */}
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-lg font-bold text-gray-800">
+                {formatPrice(product.price)}
+              </span>
+              {product.originalPrice && (
+                <span className="text-xs text-gray-400 line-through font-medium">
+                  {formatPrice(product.originalPrice)}
                 </span>
-                {product.originalPrice && product.originalPrice > product.price && (
-                  <span className="text-xs text-gray-400 line-through font-medium">
-                    {formatPrice(product.originalPrice)}
-                  </span>
-                )}
-              </div>
-              <StockStatusBadge
-                stock={product.stock}
-                stockQuantity={product.stockQuantity}
-                showQuantity={product.stock === 'low_stock'}
-                size="sm"
-              />
+              )}
             </div>
 
             {/* Add to Cart Button */}
             <motion.button
               ref={buttonRef}
-              onClick={handleAddToCartWithState}
-              disabled={product.stock === 'out_of_stock' || isAdding}
-              whileHover={product.stock !== 'out_of_stock' && !isAdding ? { scale: 1.02 } : {}}
-              whileTap={{ scale: 0.98 }}
-              animate={isAdding ? {
-                scale: [1, 1.05, 1],
-              } : {}}
-              className={`w-full py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden ${
+              onClick={handleAddToCart}
+              disabled={product.stock === 'out_of_stock'}
+              whileTap={{ scale: 0.95 }}
+              className={`w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 ${
                 product.stock === 'out_of_stock'
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
                   : 'gradient-green text-white hover:shadow-glow-green'
               }`}
             >
-              {/* Ripple effect */}
-              {product.stock !== 'out_of_stock' && (
-                <motion.div
-                  className="absolute inset-0 bg-white/20 rounded-xl"
-                  initial={{ scale: 0, opacity: 0 }}
-                  whileTap={{ scale: 2, opacity: [0, 0.5, 0] }}
-                  transition={{ duration: 0.6 }}
-                />
-              )}
-              <motion.div
-                animate={isAdding ? {
-                  rotate: [0, -10, 10, -10, 0],
-                } : {}}
-                transition={{ duration: 0.5 }}
-                className="relative z-10"
-              >
-                <FiShoppingBag className="text-base" />
-              </motion.div>
-              <span className="relative z-10">
-                {product.stock === 'out_of_stock' ? 'Out of Stock' : isAdding ? 'Adding...' : 'Add to Cart'}
-              </span>
+              <FiShoppingBag className="text-base" />
+              <span>{product.stock === 'out_of_stock' ? 'Out of Stock' : 'Add to Cart'}</span>
             </motion.button>
           </div>
         </div>
