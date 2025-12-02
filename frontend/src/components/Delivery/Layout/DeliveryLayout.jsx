@@ -1,47 +1,40 @@
-import { useState } from 'react';
-import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
-import { FiMenu, FiLogOut, FiTruck, FiPackage, FiHome, FiUser } from 'react-icons/fi';
-import { useDeliveryAuthStore } from '../../../store/deliveryAuthStore';
-import { motion, AnimatePresence } from 'framer-motion';
-import toast from 'react-hot-toast';
-import DeliveryBottomNav from './DeliveryBottomNav';
-import { appLogo } from '../../../data/logos';
+import { useState } from "react";
+import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
+import { FiLogOut, FiTruck, FiPackage, FiHome, FiUser } from "react-icons/fi";
+import { useDeliveryAuthStore } from "../../../store/deliveryAuthStore";
+import { motion, AnimatePresence } from "framer-motion";
+import toast from "react-hot-toast";
+import DeliveryBottomNav from "./DeliveryBottomNav";
+import { appLogo } from "../../../data/logos";
 
 const DeliveryLayout = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { deliveryBoy, logout, updateStatus } = useDeliveryAuthStore();
+  const { deliveryBoy, logout } = useDeliveryAuthStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [statusMenuOpen, setStatusMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
-    toast.success('Logged out successfully');
-    navigate('/delivery/login');
-  };
-
-  const handleStatusChange = (newStatus) => {
-    updateStatus(newStatus);
-    toast.success(`Status updated to ${newStatus}`);
-    setStatusMenuOpen(false);
+    toast.success("Logged out successfully");
+    navigate("/delivery/login");
   };
 
   const menuItems = [
-    { icon: FiHome, label: 'Dashboard', path: '/delivery/dashboard' },
-    { icon: FiPackage, label: 'Orders', path: '/delivery/orders' },
-    { icon: FiUser, label: 'Profile', path: '/delivery/profile' },
+    { icon: FiHome, label: "Dashboard", path: "/delivery/dashboard" },
+    { icon: FiPackage, label: "Orders", path: "/delivery/orders" },
+    { icon: FiUser, label: "Profile", path: "/delivery/profile" },
   ];
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'available':
-        return 'bg-green-500';
-      case 'busy':
-        return 'bg-yellow-500';
-      case 'offline':
-        return 'bg-gray-500';
+      case "available":
+        return "bg-green-500";
+      case "busy":
+        return "bg-yellow-500";
+      case "offline":
+        return "bg-gray-500";
       default:
-        return 'bg-gray-500';
+        return "bg-gray-500";
     }
   };
 
@@ -53,8 +46,7 @@ const DeliveryLayout = () => {
           {/* Logo */}
           <Link
             to="/delivery/dashboard"
-            className="flex items-center flex-shrink-0 overflow-visible relative z-10"
-          >
+            className="flex items-center flex-shrink-0 overflow-visible relative z-10">
             <div className="overflow-visible">
               <img
                 src={appLogo.src}
@@ -69,51 +61,12 @@ const DeliveryLayout = () => {
               />
             </div>
           </Link>
-          
-          <div className="flex items-center gap-0.5" style={{ marginLeft: '30px' }}>
+
+          <div
+            className="flex items-center gap-2"
+            style={{ marginLeft: "30px" }}>
             <FiTruck className="text-primary-600 text-xl" />
             <h1 className="text-lg font-bold text-gray-800">Delivery</h1>
-          </div>
-
-          <div className="relative">
-            <button
-              onClick={() => setStatusMenuOpen(!statusMenuOpen)}
-              className="flex items-center gap-2 px-3 py-1.5 rounded-full text-white text-xs font-semibold"
-              style={{ backgroundColor: deliveryBoy?.status === 'available' ? '#10b981' : deliveryBoy?.status === 'busy' ? '#f59e0b' : '#6b7280' }}
-            >
-              <span className="w-2 h-2 rounded-full bg-white"></span>
-              {deliveryBoy?.status || 'offline'}
-            </button>
-
-            <AnimatePresence>
-              {statusMenuOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50"
-                >
-                  <button
-                    onClick={() => handleStatusChange('available')}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-green-50 text-green-700"
-                  >
-                    Available
-                  </button>
-                  <button
-                    onClick={() => handleStatusChange('busy')}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-yellow-50 text-yellow-700"
-                  >
-                    Busy
-                  </button>
-                  <button
-                    onClick={() => handleStatusChange('offline')}
-                    className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 text-gray-700"
-                  >
-                    Offline
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
           </div>
         </div>
       </header>
@@ -133,9 +86,8 @@ const DeliveryLayout = () => {
               initial={{ x: -300 }}
               animate={{ x: 0 }}
               exit={{ x: -300 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed left-0 top-0 bottom-0 w-64 bg-white shadow-xl z-50 overflow-y-auto"
-            >
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="fixed left-0 top-0 bottom-0 w-64 bg-white shadow-xl z-50 overflow-y-auto">
               {/* Sidebar Header */}
               <div className="p-4 border-b border-gray-200">
                 <div className="flex items-center gap-3 mb-4">
@@ -143,13 +95,22 @@ const DeliveryLayout = () => {
                     <FiTruck className="text-white text-xl" />
                   </div>
                   <div>
-                    <h2 className="font-semibold text-gray-800">{deliveryBoy?.name || 'Delivery Boy'}</h2>
-                    <p className="text-xs text-gray-600">{deliveryBoy?.email}</p>
+                    <h2 className="font-semibold text-gray-800">
+                      {deliveryBoy?.name || "Delivery Boy"}
+                    </h2>
+                    <p className="text-xs text-gray-600">
+                      {deliveryBoy?.email}
+                    </p>
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className={`w-2 h-2 rounded-full ${getStatusColor(deliveryBoy?.status)}`}></div>
-                  <span className="text-xs text-gray-600 capitalize">{deliveryBoy?.status || 'offline'}</span>
+                  <div
+                    className={`w-2 h-2 rounded-full ${getStatusColor(
+                      deliveryBoy?.status
+                    )}`}></div>
+                  <span className="text-xs text-gray-600 capitalize">
+                    {deliveryBoy?.status || "offline"}
+                  </span>
                 </div>
               </div>
 
@@ -167,10 +128,9 @@ const DeliveryLayout = () => {
                       }}
                       className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl mb-1 transition-colors ${
                         isActive
-                          ? 'bg-primary-50 text-primary-700'
-                          : 'text-gray-700 hover:bg-gray-100'
-                      }`}
-                    >
+                          ? "bg-primary-50 text-primary-700"
+                          : "text-gray-700 hover:bg-gray-100"
+                      }`}>
                       <Icon className="text-xl" />
                       <span className="font-medium">{item.label}</span>
                     </button>
@@ -182,8 +142,7 @@ const DeliveryLayout = () => {
               <div className="p-2 border-t border-gray-200 mt-auto">
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-colors"
-                >
+                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 transition-colors">
                   <FiLogOut className="text-xl" />
                   <span className="font-medium">Logout</span>
                 </button>
@@ -205,4 +164,3 @@ const DeliveryLayout = () => {
 };
 
 export default DeliveryLayout;
-

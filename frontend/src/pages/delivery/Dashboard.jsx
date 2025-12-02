@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useDeliveryAuthStore } from '../../store/deliveryAuthStore';
 import { FiPackage, FiCheckCircle, FiClock, FiDollarSign, FiMapPin, FiTruck } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import PageTransition from '../../components/PageTransition';
+import toast from 'react-hot-toast';
 
 const DeliveryDashboard = () => {
-  const { deliveryBoy } = useDeliveryAuthStore();
+  const { deliveryBoy, updateStatus } = useDeliveryAuthStore();
   const navigate = useNavigate();
+  const [statusMenuOpen, setStatusMenuOpen] = useState(false);
   const [stats, setStats] = useState({
     totalOrders: 0,
     completedToday: 0,
@@ -90,6 +92,12 @@ const DeliveryDashboard = () => {
     },
   ];
 
+  const handleStatusChange = (newStatus) => {
+    updateStatus(newStatus);
+    toast.success(`Status updated to ${newStatus}`);
+    setStatusMenuOpen(false);
+  };
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'pending':
@@ -103,6 +111,19 @@ const DeliveryDashboard = () => {
     }
   };
 
+  const getStatusButtonColor = (status) => {
+    switch (status) {
+      case 'available':
+        return '#10b981';
+      case 'busy':
+        return '#f59e0b';
+      case 'offline':
+        return '#6b7280';
+      default:
+        return '#6b7280';
+    }
+  };
+
   return (
     <PageTransition>
       <div className="px-4 py-6 space-y-6">
@@ -112,14 +133,58 @@ const DeliveryDashboard = () => {
           animate={{ opacity: 1, y: 0 }}
           className="bg-gradient-to-r from-primary-600 to-primary-700 rounded-2xl p-6 text-white"
         >
-          <h1 className="text-2xl font-bold mb-2">Welcome back, {deliveryBoy?.name || 'Delivery Boy'}!</h1>
-          <p className="text-primary-100 text-sm">
-            {deliveryBoy?.status === 'available' 
-              ? 'You are available for new orders' 
-              : deliveryBoy?.status === 'busy'
-              ? 'You are currently busy'
-              : 'You are offline'}
-          </p>
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <h1 className="text-2xl font-bold mb-2">Welcome back, {deliveryBoy?.name || 'Delivery Boy'}!</h1>
+              <p className="text-primary-100 text-sm">
+                {deliveryBoy?.status === 'available' 
+                  ? 'You are available for new orders' 
+                  : deliveryBoy?.status === 'busy'
+                  ? 'You are currently busy'
+                  : 'You are offline'}
+              </p>
+            </div>
+            <div className="relative">
+              <button
+                onClick={() => setStatusMenuOpen(!statusMenuOpen)}
+                className="flex items-center gap-2 px-3 py-1.5 rounded-full text-white text-xs font-semibold"
+                style={{ backgroundColor: getStatusButtonColor(deliveryBoy?.status) }}
+              >
+                <span className="w-2 h-2 rounded-full bg-white"></span>
+                {deliveryBoy?.status || 'offline'}
+              </button>
+
+              <AnimatePresence>
+                {statusMenuOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50"
+                  >
+                    <button
+                      onClick={() => handleStatusChange('available')}
+                      className="w-full text-left px-4 py-2 text-sm hover:bg-green-50 text-green-700"
+                    >
+                      Available
+                    </button>
+                    <button
+                      onClick={() => handleStatusChange('busy')}
+                      className="w-full text-left px-4 py-2 text-sm hover:bg-yellow-50 text-yellow-700"
+                    >
+                      Busy
+                    </button>
+                    <button
+                      onClick={() => handleStatusChange('offline')}
+                      className="w-full text-left px-4 py-2 text-sm hover:bg-gray-50 text-gray-700"
+                    >
+                      Offline
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </div>
           <div className="mt-4 flex items-center gap-4">
             <div className="flex items-center gap-2">
               <FiTruck className="text-lg" />
