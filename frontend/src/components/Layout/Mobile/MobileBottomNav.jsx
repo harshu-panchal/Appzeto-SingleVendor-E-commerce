@@ -72,7 +72,9 @@ const MobileBottomNav = () => {
                   <Icon
                     className="text-2xl"
                     style={{
-                      fill: active ? "currentColor" : "none",
+                      fill: "none",
+                      stroke: "currentColor",
+                      strokeWidth: 2,
                     }}
                   />
                 </motion.div>
