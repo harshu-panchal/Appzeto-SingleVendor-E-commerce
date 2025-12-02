@@ -1,3 +1,4 @@
+import { createPortal } from 'react-dom';
 import { useCartStore, useUIStore } from '../../../store/useStore';
 import { FiShoppingBag, FiChevronRight } from 'react-icons/fi';
 import { formatPrice } from '../../../utils/helpers';
@@ -13,36 +14,36 @@ const MobileCartBar = () => {
     return null;
   }
 
-  return (
+  const cartBarContent = (
     <motion.div
       initial={{ y: 100 }}
       animate={{ y: 0 }}
       exit={{ y: 100 }}
-      className="fixed bottom-16 left-0 right-0 z-[9998] px-4 pb-2 safe-area-bottom"
+      className="fixed bottom-16 left-0 right-0 z-[9998] px-3 pb-2 safe-area-bottom flex justify-center"
     >
       <button
         onClick={toggleCart}
-        className="w-full gradient-green text-white rounded-xl p-4 shadow-lg flex items-center justify-between hover:shadow-glow-green transition-all duration-300"
+        className="gradient-green text-white rounded-2xl px-4 py-3 shadow-xl flex items-center gap-3 hover:shadow-glow-green transition-all duration-300 max-w-sm"
       >
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <FiShoppingBag className="text-2xl" />
-            <span className="absolute -top-2 -right-2 w-5 h-5 bg-white text-primary-600 rounded-full flex items-center justify-center text-xs font-bold">
-              {itemCount}
-            </span>
-          </div>
-          <div className="text-left">
-            <p className="text-sm font-medium opacity-90">{itemCount} item{itemCount > 1 ? 's' : ''}</p>
-            <p className="text-lg font-bold">{formatPrice(total)}</p>
-          </div>
+        <div className="relative">
+          <FiShoppingBag className="text-xl" />
+          <span className="absolute -top-1.5 -right-1.5 w-4.5 h-4.5 bg-white text-primary-600 rounded-full flex items-center justify-center text-[10px] font-bold">
+            {itemCount}
+          </span>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="text-sm font-semibold">View Cart</span>
-          <FiChevronRight className="text-xl" />
+        <div className="text-left flex-1 min-w-0">
+          <p className="text-base font-bold leading-tight">{formatPrice(total)}</p>
+        </div>
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          <span className="text-xs font-semibold">View Cart</span>
+          <FiChevronRight className="text-lg" />
         </div>
       </button>
     </motion.div>
   );
+
+  // Use portal to render outside of transformed containers (like PageTransition)
+  return createPortal(cartBarContent, document.body);
 };
 
 export default MobileCartBar;
