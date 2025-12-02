@@ -40,10 +40,13 @@ const MobileHome = () => {
               <AnimatePresence initial={false}>
                 <motion.div
                   key={currentSlide}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.5 }}
+                  initial={{ x: '100%' }}
+                  animate={{ x: 0 }}
+                  exit={{ x: '-100%' }}
+                  transition={{ 
+                    duration: 0.6,
+                    ease: [0.25, 0.1, 0.25, 1]
+                  }}
                   className="absolute inset-0"
                 >
                   <LazyImage
