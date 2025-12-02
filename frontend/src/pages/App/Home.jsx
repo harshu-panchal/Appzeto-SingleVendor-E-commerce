@@ -165,6 +165,25 @@ const MobileHome = () => {
             </div>
           </div>
 
+          {/* Trending Banner */}
+          <div className="px-4 py-4">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="relative w-full h-40 rounded-xl overflow-hidden shadow-lg"
+            >
+              <LazyImage
+                src="/images/hero/banner2.png"
+                alt="Trending Items Banner"
+                className="w-full h-full object-cover object-center"
+                onError={(e) => {
+                  e.target.src = "https://via.placeholder.com/1200x300?text=Banner";
+                }}
+              />
+            </motion.div>
+          </div>
+
           {/* Flash Sale */}
           {flashSale.length > 0 && (
             <div className="px-4 py-4 bg-gradient-to-br from-red-50 to-orange-50">
