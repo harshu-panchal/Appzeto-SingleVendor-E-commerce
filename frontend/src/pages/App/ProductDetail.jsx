@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { FiStar, FiHeart, FiShoppingBag, FiMinus, FiPlus, FiArrowLeft, FiShare2 } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { useCartStore } from '../../store/useStore';
@@ -264,7 +264,7 @@ const MobileProductDetail = () => {
                   Customer Reviews ({productReviews.length})
                 </h3>
                 <div className="space-y-3">
-                  {productReviews.slice(0, 2).map((review) => (
+                  {productReviews.map((review) => (
                     <div key={review.id} className="bg-gray-50 rounded-xl p-3">
                       <div className="flex items-center gap-2 mb-2">
                         <div className="flex items-center">
@@ -285,12 +285,6 @@ const MobileProductDetail = () => {
                     </div>
                   ))}
                 </div>
-                <Link
-                  to={`/app/product/${product.id}/reviews`}
-                  className="text-sm text-primary-600 font-semibold mt-2 inline-block"
-                >
-                  View All Reviews
-                </Link>
               </div>
             )}
 

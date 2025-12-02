@@ -609,7 +609,7 @@ const MobileCheckout = () => {
             )}
 
             {/* Navigation Buttons */}
-            <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 z-40 safe-area-bottom">
+            <div className="fixed bottom-16 left-0 right-0 bg-white border-t border-gray-200 p-4 z-40 safe-area-bottom">
               <div className="flex gap-3">
                 {step > 1 && (
                   <button

@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { FiGrid, FiMenu, FiX } from 'react-icons/fi';
-import { categories } from '../../data/categories';
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import { FiGrid, FiMenu, FiX } from "react-icons/fi";
+import { categories } from "../../data/categories";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -10,15 +10,15 @@ const Navbar = () => {
   const navRef = useRef(null);
 
   const navLinks = [
-    { path: '/', label: 'Home' },
-    { path: '/offers', label: 'Offers' },
-    { path: '/daily-deals', label: 'Daily Deals' },
-    { path: '/flash-sale', label: 'Flash Sale' },
+    { path: "/", label: "Home" },
+    { path: "/offers", label: "Offers" },
+    { path: "/daily-deals", label: "Daily Deals" },
+    { path: "/flash-sale", label: "Flash Sale" },
   ];
 
   useEffect(() => {
     const updateHeaderHeight = () => {
-      const header = document.querySelector('header');
+      const header = document.querySelector("header");
       if (header) {
         setHeaderHeight(header.offsetHeight);
       }
@@ -28,39 +28,42 @@ const Navbar = () => {
     updateHeaderHeight();
 
     // Update on resize
-    window.addEventListener('resize', updateHeaderHeight);
-    
+    window.addEventListener("resize", updateHeaderHeight);
+
     // Update after a short delay to ensure header is rendered
     const timeoutId = setTimeout(updateHeaderHeight, 100);
 
     return () => {
-      window.removeEventListener('resize', updateHeaderHeight);
+      window.removeEventListener("resize", updateHeaderHeight);
       clearTimeout(timeoutId);
     };
   }, []);
 
   return (
-    <nav 
+    <nav
       ref={navRef}
       className="glass border-b border-white/20 sticky shadow-md"
-      style={{ 
+      style={{
         top: `${headerHeight}px`,
-        zIndex: 40
-      }}
-    >
+        zIndex: 40,
+      }}>
       <div className="container mx-auto px-2 sm:px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Browse Category Button with Dropdown */}
           <div
             className="relative"
             onMouseEnter={() => setIsCategoryOpen(true)}
-            onMouseLeave={() => setIsCategoryOpen(false)}
-          >
+            onMouseLeave={() => setIsCategoryOpen(false)}>
             <button className="flex items-center gap-2 sm:gap-3 gradient-primary text-white px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl hover:shadow-glow transition-all duration-300 font-semibold text-sm sm:text-base hover:scale-105">
               <FiGrid className="text-lg sm:text-xl" />
               <span className="hidden sm:inline">Browse Category</span>
               <span className="sm:hidden">Category</span>
-              <span className={`text-xs transition-transform duration-300 ${isCategoryOpen ? 'rotate-180' : ''}`}>▼</span>
+              <span
+                className={`text-xs transition-transform duration-300 ${
+                  isCategoryOpen ? "rotate-180" : ""
+                }`}>
+                ▼
+              </span>
             </button>
 
             {/* Dropdown Menu */}
@@ -70,19 +73,21 @@ const Navbar = () => {
                   <Link
                     key={category.id}
                     to={`/category/${category.id}`}
-                    className="flex items-center gap-4 px-5 py-3.5 hover:bg-white/60 transition-all duration-300 group mx-2 rounded-xl"
-                  >
+                    className="flex items-center gap-4 px-5 py-3.5 hover:bg-white/60 transition-all duration-300 group mx-2 rounded-xl">
                     <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 ring-2 ring-white/50 group-hover:ring-green-500/50 transition-all duration-300 group-hover:scale-110">
                       <img
                         src={category.image}
                         alt={category.name}
                         className="w-full h-full object-cover"
                         onError={(e) => {
-                          e.target.src = 'https://via.placeholder.com/48x48?text=Category';
+                          e.target.src =
+                            "https://via.placeholder.com/48x48?text=Category";
                         }}
                       />
                     </div>
-                    <span className="text-gray-800 font-semibold group-hover:text-gradient transition-colors">{category.name}</span>
+                    <span className="text-gray-800 font-semibold group-hover:text-gradient transition-colors">
+                      {category.name}
+                    </span>
                   </Link>
                 ))}
               </div>
@@ -95,8 +100,7 @@ const Navbar = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className="text-gray-700 hover:text-gradient font-semibold transition-all duration-300 relative group"
-              >
+                className="text-gray-700 hover:text-gradient font-semibold transition-all duration-300 relative group">
                 {link.label}
                 <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-green-500 to-blue-500 group-hover:w-full transition-all duration-300"></span>
               </Link>
@@ -106,9 +110,12 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2.5 text-gray-700 hover:bg-white/50 rounded-lg transition-all duration-300"
-          >
-            {isMenuOpen ? <FiX className="text-2xl" /> : <FiMenu className="text-2xl" />}
+            className="md:hidden p-2.5 text-gray-700 hover:bg-white/50 rounded-lg transition-all duration-300">
+            {isMenuOpen ? (
+              <FiX className="text-2xl" />
+            ) : (
+              <FiMenu className="text-2xl" />
+            )}
           </button>
         </div>
 
@@ -120,8 +127,7 @@ const Navbar = () => {
                 key={link.path}
                 to={link.path}
                 onClick={() => setIsMenuOpen(false)}
-                className="block py-3 px-4 text-gray-700 hover:text-gradient hover:bg-white/50 rounded-lg transition-all duration-300 font-semibold"
-              >
+                className="block py-3 px-4 text-gray-700 hover:text-gradient hover:bg-white/50 rounded-lg transition-all duration-300 font-semibold">
                 {link.label}
               </Link>
             ))}
@@ -133,4 +139,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

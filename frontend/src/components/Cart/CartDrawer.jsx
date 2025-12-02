@@ -5,10 +5,14 @@ import { useCartStore, useUIStore } from '../../store/useStore';
 import { useWishlistStore } from '../../store/wishlistStore';
 import { getProductById } from '../../data/products';
 import { formatPrice } from '../../utils/helpers';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 const CartDrawer = () => {
+  const location = useLocation();
+  // Check if we're in the mobile app section
+  const isMobileApp = location.pathname.startsWith('/app');
+  const checkoutLink = isMobileApp ? '/app/checkout' : '/checkout';
   const { isCartOpen, toggleCart } = useUIStore();
   const { items, removeItem, updateQuantity, getTotal, clearCart } = useCartStore();
   const { addItem: addToWishlist } = useWishlistStore();
@@ -199,7 +203,7 @@ const CartDrawer = () => {
                 </div>
                 <div className="flex flex-col gap-2">
                   <Link
-                    to="/checkout"
+                    to={checkoutLink}
                     onClick={toggleCart}
                     className="w-full gradient-green text-white py-3 rounded-xl font-semibold text-center hover:shadow-glow-green transition-all duration-300 hover:scale-105"
                   >

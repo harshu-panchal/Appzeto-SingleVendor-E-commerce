@@ -13,7 +13,8 @@ const CategoryCard = ({ category }) => {
             alt={category.name}
             className="w-full h-full object-contain scale-50 group-hover:scale-65 transition-transform duration-500"
             onError={(e) => {
-              e.target.src = "https://via.placeholder.com/200x200?text=Category";
+              e.target.src =
+                "https://via.placeholder.com/200x200?text=Category";
             }}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
