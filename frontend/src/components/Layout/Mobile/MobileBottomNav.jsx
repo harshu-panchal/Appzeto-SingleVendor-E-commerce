@@ -91,7 +91,7 @@ const MobileBottomNav = () => {
 
   const navContent = (
     <nav className="fixed bottom-0 left-0 right-0 glass border-t border-l border-r border-accent-200/30 z-[9999] safe-area-bottom shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
-      <div className="flex items-center justify-around h-20 px-1 pb-1">
+      <div className="flex items-center justify-around h-16 px-1">
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.path);
@@ -100,7 +100,7 @@ const MobileBottomNav = () => {
             <Link
               key={item.path}
               to={item.path}
-              className="flex flex-col items-center justify-center gap-1 flex-1 h-full"
+              className="flex items-center justify-center flex-1 h-full"
             >
               <motion.div
                 className="relative flex items-center justify-center w-12 h-12"
@@ -158,19 +158,6 @@ const MobileBottomNav = () => {
                   </span>
                 )}
               </motion.div>
-              
-              {/* Label */}
-              <motion.span
-                className={`text-xs font-medium transition-colors duration-200 ${
-                  active ? 'text-accent-500' : 'text-gray-500'
-                }`}
-                animate={{
-                  color: active ? '#F59E0B' : '#6B7280',
-                }}
-                transition={{ duration: 0.2 }}
-              >
-                {item.label}
-              </motion.span>
             </Link>
           );
         })}

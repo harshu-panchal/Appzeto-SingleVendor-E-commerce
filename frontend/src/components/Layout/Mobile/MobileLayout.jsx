@@ -16,7 +16,7 @@ const MobileLayout = ({ children, showBottomNav = true, showCartBar = true }) =>
   return (
     <>
       <MobileHeader />
-      <main className={`min-h-screen w-full overflow-x-hidden pt-16 ${showBottomNav ? 'pb-24' : ''} ${showCartBar ? 'pb-28' : ''}`}>
+      <main className={`min-h-screen w-full overflow-x-hidden pt-16 ${showBottomNav ? 'pb-20' : ''} ${showCartBar ? 'pb-24' : ''}`}>
         {children}
       </main>
       {showCartBar && <MobileCartBar />}
