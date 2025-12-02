@@ -10,7 +10,6 @@ import Profile from "./pages/Profile";
 import Orders from "./pages/Orders";
 import Addresses from "./pages/Addresses";
 import Wishlist from "./pages/Wishlist";
-import Compare from "./pages/Compare";
 import Offers from "./pages/Offers";
 import DailyDeals from "./pages/DailyDeals";
 import FlashSale from "./pages/FlashSale";
@@ -44,7 +43,6 @@ import MobileOrders from "./pages/App/Orders";
 import MobileOrderDetail from "./pages/App/OrderDetail";
 import MobileAddresses from "./pages/App/Addresses";
 import MobileWishlist from "./pages/App/Wishlist";
-import MobileCompare from "./pages/App/Compare";
 import MobileOffers from "./pages/App/Offers";
 import MobileDailyDeals from "./pages/App/DailyDeals";
 import MobileFlashSale from "./pages/App/FlashSale";
@@ -63,7 +61,6 @@ const AppRoutes = () => {
       <Route path="/login" element={<RouteWrapper><Login /></RouteWrapper>} />
       <Route path="/register" element={<RouteWrapper><Register /></RouteWrapper>} />
       <Route path="/wishlist" element={<RouteWrapper><Wishlist /></RouteWrapper>} />
-      <Route path="/compare" element={<RouteWrapper><Compare /></RouteWrapper>} />
       <Route path="/offers" element={<RouteWrapper><Offers /></RouteWrapper>} />
       <Route path="/daily-deals" element={<RouteWrapper><DailyDeals /></RouteWrapper>} />
       <Route path="/flash-sale" element={<RouteWrapper><FlashSale /></RouteWrapper>} />
@@ -126,7 +123,6 @@ const AppRoutes = () => {
         <Route path="/app/login" element={<RouteWrapper><MobileLogin /></RouteWrapper>} />
         <Route path="/app/register" element={<RouteWrapper><MobileRegister /></RouteWrapper>} />
         <Route path="/app/wishlist" element={<RouteWrapper><MobileWishlist /></RouteWrapper>} />
-        <Route path="/app/compare" element={<RouteWrapper><MobileCompare /></RouteWrapper>} />
         <Route path="/app/offers" element={<RouteWrapper><MobileOffers /></RouteWrapper>} />
         <Route path="/app/daily-deals" element={<RouteWrapper><MobileDailyDeals /></RouteWrapper>} />
         <Route path="/app/flash-sale" element={<RouteWrapper><MobileFlashSale /></RouteWrapper>} />

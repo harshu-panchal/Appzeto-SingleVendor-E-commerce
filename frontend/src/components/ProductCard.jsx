@@ -1,9 +1,8 @@
-import { FiHeart, FiShoppingBag, FiStar, FiLayers } from 'react-icons/fi';
+import { FiHeart, FiShoppingBag, FiStar } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
 import { useCartStore } from '../store/useStore';
 import { useWishlistStore } from '../store/wishlistStore';
-import { useCompareStore } from '../store/compareStore';
 import { formatPrice } from '../utils/helpers';
 import toast from 'react-hot-toast';
 import LazyImage from './LazyImage';
@@ -15,9 +14,7 @@ const ProductCard = ({ product }) => {
   const productLink = isMobileApp ? `/app/product/${product.id}` : `/product/${product.id}`;
   const addItem = useCartStore((state) => state.addItem);
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
-  const { addItem: addToCompare, removeItem: removeFromCompare, isInCompare, canAddMore } = useCompareStore();
   const isFavorite = isInWishlist(product.id);
-  const isInComparison = isInCompare(product.id);
 
   const handleAddToCart = () => {
     addItem({
@@ -46,60 +43,20 @@ const ProductCard = ({ product }) => {
     }
   };
 
-  const handleCompare = (e) => {
-    e.stopPropagation();
-    if (isInComparison) {
-      removeFromCompare(product.id);
-      toast.success('Removed from comparison');
-    } else {
-      if (!canAddMore()) {
-        toast.error('Maximum 4 products can be compared at once');
-        return;
-      }
-      addToCompare({
-        id: product.id,
-        name: product.name,
-        price: product.price,
-        image: product.image,
-        rating: product.rating,
-        reviewCount: product.reviewCount,
-        stock: product.stock,
-        stockQuantity: product.stockQuantity,
-        unit: product.unit,
-      });
-      toast.success('Added to comparison');
-    }
-  };
-
   return (
     <motion.div
       whileHover={{ y: -8, scale: 1.02 }}
       className="glass-card rounded-2xl overflow-hidden hover-lift group cursor-pointer h-full flex flex-col"
     >
       <div className="relative">
-        {/* Favorite & Compare Icons */}
-        <div className="absolute top-2 right-2 z-10 flex flex-col gap-1.5">
+        {/* Favorite Icon */}
+        <div className="absolute top-2 right-2 z-10">
           <button
             onClick={handleFavorite}
             className="p-1.5 glass rounded-full shadow-lg hover:bg-white/80 transition-all duration-300 hover:scale-110 group"
           >
             <FiHeart
               className={`text-sm transition-all duration-300 ${isFavorite ? 'text-red-500 fill-red-500 scale-110' : 'text-gray-600 group-hover:text-red-400'}`}
-            />
-          </button>
-          <button
-            onClick={handleCompare}
-            className={`p-1.5 glass rounded-full shadow-lg hover:bg-white/80 transition-all duration-300 hover:scale-110 group ${
-              isInComparison ? 'bg-primary-50' : ''
-            }`}
-            title={isInComparison ? 'Remove from comparison' : 'Add to comparison'}
-          >
-            <FiLayers
-              className={`text-sm transition-all duration-300 ${
-                isInComparison
-                  ? 'text-primary-600 fill-primary-600 scale-110'
-                  : 'text-gray-600 group-hover:text-primary-400'
-              }`}
             />
           </button>
         </div>
