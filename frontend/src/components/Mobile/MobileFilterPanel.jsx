@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
+import { useEffect, useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { FiX, FiFilter } from 'react-icons/fi';
 import { categories } from '../../data/categories';
 import useSwipeGesture from '../../hooks/useSwipeGesture';
