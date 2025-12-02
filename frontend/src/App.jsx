@@ -48,6 +48,14 @@ import MobileDailyDeals from "./pages/App/DailyDeals";
 import MobileFlashSale from "./pages/App/FlashSale";
 import MobileTrackOrder from "./pages/App/TrackOrder";
 import MobileOrderConfirmation from "./pages/App/OrderConfirmation";
+// Delivery Routes
+import DeliveryLogin from "./pages/delivery/Login";
+import DeliveryProtectedRoute from "./components/Delivery/DeliveryProtectedRoute";
+import DeliveryLayout from "./components/Delivery/Layout/DeliveryLayout";
+import DeliveryDashboard from "./pages/delivery/Dashboard";
+import DeliveryOrders from "./pages/delivery/Orders";
+import DeliveryOrderDetail from "./pages/delivery/OrderDetail";
+import DeliveryProfile from "./pages/delivery/Profile";
 
 // Inner component that has access to useLocation
 const AppRoutes = () => {
@@ -112,6 +120,21 @@ const AppRoutes = () => {
           <Route path="products/:id" element={<ProductForm />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="orders/:id" element={<OrderDetail />} />
+        </Route>
+        {/* Delivery Routes */}
+        <Route path="/delivery/login" element={<DeliveryLogin />} />
+        <Route
+          path="/delivery"
+          element={
+            <DeliveryProtectedRoute>
+              <DeliveryLayout />
+            </DeliveryProtectedRoute>
+          }
+        >
+          <Route path="dashboard" element={<DeliveryDashboard />} />
+          <Route path="orders" element={<DeliveryOrders />} />
+          <Route path="orders/:id" element={<DeliveryOrderDetail />} />
+          <Route path="profile" element={<DeliveryProfile />} />
         </Route>
         {/* Mobile App Routes */}
         <Route path="/app" element={<RouteWrapper><MobileHome /></RouteWrapper>} />
