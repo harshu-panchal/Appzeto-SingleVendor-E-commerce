@@ -126,7 +126,7 @@ const MobileHome = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
-                  className="relative w-[calc(50vw-1.5rem)] h-32 rounded-xl overflow-hidden shadow-lg"
+                  className="relative w-[calc(55vw-1.5rem)] h-32 rounded-xl overflow-hidden shadow-lg"
                 >
                   <LazyImage
                     src="/images/banners/babycare-WEB.avif"
@@ -143,7 +143,7 @@ const MobileHome = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="relative w-[calc(50vw-1.5rem)] h-32 rounded-xl overflow-hidden shadow-lg"
+                  className="relative w-[calc(85vw-1.5rem)] h-32 rounded-xl overflow-hidden shadow-lg"
                 >
                   <LazyImage
                     src="/images/banners/pharmacy-WEB.avif"
@@ -160,7 +160,7 @@ const MobileHome = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.3 }}
-                  className="relative w-[calc(50vw-1.5rem)] h-32 rounded-xl overflow-hidden shadow-lg"
+                  className="relative w-[calc(85vw-1.5rem)] h-32 rounded-xl overflow-hidden shadow-lg"
                 >
                   <LazyImage
                     src="/images/banners/Pet-Care_WEB.avif"
