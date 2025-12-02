@@ -6,9 +6,10 @@ import { useWishlistStore } from '../../store/wishlistStore';
 import { formatPrice } from '../../utils/helpers';
 import toast from 'react-hot-toast';
 import LazyImage from '../LazyImage';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import useLongPress from '../../hooks/useLongPress';
 import LongPressMenu from './LongPressMenu';
+import FlyingItem from './FlyingItem';
 
 const MobileProductCard = ({ product }) => {
   const addItem = useCartStore((state) => state.addItem);
@@ -17,12 +18,48 @@ const MobileProductCard = ({ product }) => {
   const isFavorite = isInWishlist(product.id);
   const [showLongPressMenu, setShowLongPressMenu] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const [showFlyingItem, setShowFlyingItem] = useState(false);
+  const [flyingItemPos, setFlyingItemPos] = useState({ start: { x: 0, y: 0 }, end: { x: 0, y: 0 } });
+  const buttonRef = useRef(null);
 
   const handleAddToCart = (e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
+
+    // Get button position
+    const buttonRect = buttonRef.current?.getBoundingClientRect();
+    const startX = buttonRect ? buttonRect.left + buttonRect.width / 2 : 0;
+    const startY = buttonRect ? buttonRect.top + buttonRect.height / 2 : 0;
+
+    // Get cart bar position (prefer cart bar over header icon)
+    setTimeout(() => {
+      const cartBar = document.querySelector('[data-cart-bar]');
+      let endX = window.innerWidth / 2;
+      let endY = window.innerHeight - 100;
+
+      if (cartBar) {
+        const cartRect = cartBar.getBoundingClientRect();
+        endX = cartRect.left + cartRect.width / 2;
+        endY = cartRect.top + cartRect.height / 2;
+      } else {
+        // Fallback to cart icon in header
+        const cartIcon = document.querySelector('[data-cart-icon]');
+        if (cartIcon) {
+          const cartRect = cartIcon.getBoundingClientRect();
+          endX = cartRect.left + cartRect.width / 2;
+          endY = cartRect.top + cartRect.height / 2;
+        }
+      }
+
+      setFlyingItemPos({
+        start: { x: startX, y: startY },
+        end: { x: endX, y: endY },
+      });
+      setShowFlyingItem(true);
+    }, 50);
+
     addItem({
       id: product.id,
       name: product.name,
@@ -150,9 +187,11 @@ const MobileProductCard = ({ product }) => {
             </div>
 
             {/* Add to Cart Button */}
-            <button
+            <motion.button
+              ref={buttonRef}
               onClick={handleAddToCart}
               disabled={product.stock === 'out_of_stock'}
+              whileTap={{ scale: 0.95 }}
               className={`w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 ${
                 product.stock === 'out_of_stock'
                   ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
@@ -161,7 +200,7 @@ const MobileProductCard = ({ product }) => {
             >
               <FiShoppingBag className="text-base" />
               <span>{product.stock === 'out_of_stock' ? 'Out of Stock' : 'Add to Cart'}</span>
-            </button>
+            </motion.button>
           </div>
         </div>
       </motion.div>
@@ -176,6 +215,15 @@ const MobileProductCard = ({ product }) => {
       onShare={handleShare}
       isInWishlist={isFavorite}
     />
+
+    {showFlyingItem && (
+      <FlyingItem
+        image={product.image}
+        startPosition={flyingItemPos.start}
+        endPosition={flyingItemPos.end}
+        onComplete={() => setShowFlyingItem(false)}
+      />
+    )}
     </>
   );
 };

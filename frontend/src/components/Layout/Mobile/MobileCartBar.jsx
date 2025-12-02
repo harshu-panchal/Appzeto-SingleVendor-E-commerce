@@ -32,6 +32,7 @@ const MobileCartBar = () => {
       className="fixed bottom-16 left-0 right-0 z-[9998] px-3 pb-2 safe-area-bottom flex justify-center"
     >
       <motion.button
+        data-cart-bar
         onClick={toggleCart}
         className="gradient-green text-white rounded-2xl px-4 py-3 shadow-xl flex items-center gap-3 hover:shadow-glow-green transition-all duration-300 max-w-sm"
         animate={pulseAnimation ? {

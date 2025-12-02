@@ -79,6 +79,7 @@ const MobileHeader = () => {
 
             {/* Cart Button */}
             <motion.button
+              data-cart-icon
               onClick={toggleCart}
               className="relative p-2.5 hover:bg-white/50 rounded-full transition-all duration-300"
               animate={

@@ -6,9 +6,10 @@ import { useWishlistStore } from '../store/wishlistStore';
 import { formatPrice } from '../utils/helpers';
 import toast from 'react-hot-toast';
 import LazyImage from './LazyImage';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import useLongPress from '../hooks/useLongPress';
 import LongPressMenu from './Mobile/LongPressMenu';
+import FlyingItem from './Mobile/FlyingItem';
 
 const ProductCard = ({ product }) => {
   const location = useLocation();
@@ -22,9 +23,51 @@ const ProductCard = ({ product }) => {
   const [isAdding, setIsAdding] = useState(false);
   const [showLongPressMenu, setShowLongPressMenu] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  const [showFlyingItem, setShowFlyingItem] = useState(false);
+  const [flyingItemPos, setFlyingItemPos] = useState({ start: { x: 0, y: 0 }, end: { x: 0, y: 0 } });
+  const buttonRef = useRef(null);
+  const cartIconRef = useRef(null);
 
-  const handleAddToCart = () => {
+  const handleAddToCart = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+
     setIsAdding(true);
+    
+    // Get button position
+    const buttonRect = buttonRef.current?.getBoundingClientRect();
+    const startX = buttonRect ? buttonRect.left + buttonRect.width / 2 : 0;
+    const startY = buttonRect ? buttonRect.top + buttonRect.height / 2 : 0;
+
+    // Get cart bar position (prefer cart bar over header icon)
+    setTimeout(() => {
+      const cartBar = document.querySelector('[data-cart-bar]');
+      let endX = window.innerWidth / 2;
+      let endY = window.innerHeight - 100;
+
+      if (cartBar) {
+        const cartRect = cartBar.getBoundingClientRect();
+        endX = cartRect.left + cartRect.width / 2;
+        endY = cartRect.top + cartRect.height / 2;
+      } else {
+        // Fallback to cart icon in header
+        const cartIcon = document.querySelector('[data-cart-icon]');
+        if (cartIcon) {
+          const cartRect = cartIcon.getBoundingClientRect();
+          endX = cartRect.left + cartRect.width / 2;
+          endY = cartRect.top + cartRect.height / 2;
+        }
+      }
+
+      setFlyingItemPos({
+        start: { x: startX, y: startY },
+        end: { x: endX, y: endY },
+      });
+      setShowFlyingItem(true);
+    }, 50);
+
     addItem({
       id: product.id,
       name: product.name,
@@ -156,6 +199,7 @@ const ProductCard = ({ product }) => {
 
         {/* Add Button */}
         <motion.button
+          ref={buttonRef}
           onClick={handleAddToCart}
           disabled={product.stock === 'out_of_stock' || isAdding}
           whileTap={{ scale: 0.95 }}
@@ -190,6 +234,15 @@ const ProductCard = ({ product }) => {
       onShare={handleShare}
       isInWishlist={isFavorite}
     />
+
+    {showFlyingItem && (
+      <FlyingItem
+        image={product.image}
+        startPosition={flyingItemPos.start}
+        endPosition={flyingItemPos.end}
+        onComplete={() => setShowFlyingItem(false)}
+      />
+    )}
     </>
   );
 };
