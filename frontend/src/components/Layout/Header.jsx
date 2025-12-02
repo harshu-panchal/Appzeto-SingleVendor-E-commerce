@@ -38,14 +38,14 @@ const Header = () => {
     <header className="glass sticky top-0 z-50 shadow-lg">
       {/* Top Bar */}
       <div className="border-b border-white/20">
-        <div className="container mx-auto px-2 sm:px-4 py-3 sm:py-4">
-          <div className="flex items-center justify-between gap-4">
+        <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3 md:py-4">
+          <div className="flex items-center justify-between gap-2 sm:gap-3 md:gap-4">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2 sm:gap-3 flex-shrink-0 group cursor-pointer">
-              <div className="w-8 h-8 sm:w-10 sm:h-10 gradient-green rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-glow-green transition-all duration-300 group-hover:scale-110">
-                <FiShoppingBag className="text-white text-lg sm:text-xl" />
+            <Link to="/" className="flex items-center gap-1.5 sm:gap-2 md:gap-3 flex-shrink-0 group cursor-pointer min-w-0">
+              <div className="w-7 h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 gradient-green rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-glow-green transition-all duration-300 group-hover:scale-110 flex-shrink-0">
+                <FiShoppingBag className="text-white text-base sm:text-lg md:text-xl" />
               </div>
-              <span className="text-base sm:text-xl md:text-2xl font-bold text-gradient">Appzeto E-commerce</span>
+              <span className="text-xs sm:text-base md:text-xl lg:text-2xl font-bold text-gradient truncate">Appzeto E-commerce</span>
             </Link>
 
             {/* Search Bar - Hidden on mobile */}
@@ -54,15 +54,15 @@ const Header = () => {
             </div>
 
             {/* Right Side Utilities */}
-            <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            <div className="flex items-center gap-1 sm:gap-2 md:gap-3 flex-shrink-0">
               {/* Wishlist Button */}
               <Link
                 to="/wishlist"
-                className="p-2.5 hover:bg-white/50 rounded-full transition-all duration-300 hover:scale-110 relative group"
+                className="p-1.5 sm:p-2 md:p-2.5 hover:bg-white/50 rounded-full transition-all duration-300 hover:scale-110 relative group"
               >
-                <FiHeart className="text-primary-500 text-xl group-hover:text-accent-500 transition-colors" />
+                <FiHeart className="text-primary-500 text-base sm:text-lg md:text-xl group-hover:text-accent-500 transition-colors" />
                 {wishlistCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+                  <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 w-4 h-4 sm:w-5 sm:h-5 bg-accent-500 rounded-full flex items-center justify-center text-white text-[10px] sm:text-xs font-bold">
                     {wishlistCount > 9 ? '9+' : wishlistCount}
                   </span>
                 )}
@@ -73,16 +73,16 @@ const Header = () => {
                 <div ref={userMenuRef} className="relative">
                   <button
                     onClick={() => setShowUserMenu(!showUserMenu)}
-                    className="p-2.5 hover:bg-white/50 rounded-full transition-all duration-300 hover:scale-110 group relative"
+                    className="p-1.5 sm:p-2 md:p-2.5 hover:bg-white/50 rounded-full transition-all duration-300 hover:scale-110 group relative"
                   >
                     {user?.avatar ? (
                       <img
                         src={user.avatar}
                         alt={user.name}
-                        className="w-8 h-8 rounded-full object-cover"
+                        className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover"
                       />
                     ) : (
-                      <div className="w-8 h-8 rounded-full gradient-green flex items-center justify-center text-white font-semibold">
+                      <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full gradient-green flex items-center justify-center text-white text-xs sm:text-sm font-semibold">
                         {user?.name?.charAt(0).toUpperCase() || 'U'}
                       </div>
                     )}
@@ -128,16 +128,16 @@ const Header = () => {
                   )}
                 </div>
               ) : (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1 sm:gap-2">
                   <Link
                     to="/login"
-                    className="px-3 py-2 text-text-dark hover:text-primary-600 font-semibold transition-colors text-sm"
+                    className="px-2 sm:px-3 py-1.5 sm:py-2 text-text-dark hover:text-primary-600 font-semibold transition-colors text-xs sm:text-sm"
                   >
                     Login
                   </Link>
                   <Link
                     to="/register"
-                    className="px-3 py-2 gradient-green text-white rounded-lg font-semibold hover:shadow-glow-green transition-all duration-300 text-sm"
+                    className="px-2 sm:px-3 py-1.5 sm:py-2 gradient-green text-white rounded-lg font-semibold hover:shadow-glow-green transition-all duration-300 text-xs sm:text-sm"
                   >
                     Sign Up
                   </Link>
@@ -147,11 +147,11 @@ const Header = () => {
               {/* Cart Button */}
               <button 
                 onClick={toggleCart}
-                className="flex items-center gap-2 gradient-green text-white px-3 sm:px-4 py-2 rounded-lg hover:shadow-glow-green transition-all duration-300 font-semibold text-sm sm:text-base hover:scale-105"
+                className="flex items-center gap-1 sm:gap-2 gradient-green text-white px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg hover:shadow-glow-green transition-all duration-300 font-semibold text-xs sm:text-sm md:text-base hover:scale-105"
               >
-                <FiShoppingBag className="text-lg" />
+                <FiShoppingBag className="text-base sm:text-lg" />
                 <span className="hidden sm:inline">My Cart</span>
-                <span className="bg-white/30 px-2 py-0.5 rounded-full text-xs font-bold">({itemCount})</span>
+                <span className="bg-white/30 px-1.5 sm:px-2 py-0.5 rounded-full text-[10px] sm:text-xs font-bold">({itemCount})</span>
               </button>
             </div>
           </div>
