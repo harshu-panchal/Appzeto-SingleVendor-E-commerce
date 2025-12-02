@@ -164,12 +164,12 @@ const MobileCategory = () => {
                   >
                     <FiGrid className="text-lg" />
                   </button>
-                </div>
-                <button
-                  onClick={() => setShowFilters(true)}
-                  className="p-2.5 glass-card rounded-xl hover:bg-white/80 transition-colors">
-                  <FiFilter className="text-gray-600 text-lg" />
-                </button>
+              </div>
+              <button
+                onClick={() => setShowFilters(true)}
+                className="p-2.5 glass-card rounded-xl hover:bg-white/80 transition-colors">
+                <FiFilter className="text-gray-600 text-lg" />
+              </button>
               </div>
             </div>
           </div>
