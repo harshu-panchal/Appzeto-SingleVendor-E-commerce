@@ -70,7 +70,7 @@ const DeliveryLayout = () => {
             </div>
           </Link>
           
-          <div className="flex items-center gap-2" style={{ marginLeft: '20px' }}>
+          <div className="flex items-center gap-2" style={{ marginLeft: '30px' }}>
             <FiTruck className="text-primary-600 text-xl" />
             <h1 className="text-lg font-bold text-gray-800">Delivery</h1>
           </div>
