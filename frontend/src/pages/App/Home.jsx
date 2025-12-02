@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import MobileLayout from '../../components/Layout/Mobile/MobileLayout';
 import ProductCard from '../../components/ProductCard';
 import MobileCategoryGrid from '../../components/Mobile/MobileCategoryGrid';
+import AnimatedBanner from '../../components/Mobile/AnimatedBanner';
 import LazyImage from '../../components/LazyImage';
 import { getMostPopular, getTrending, getFlashSale } from '../../data/products';
 import { categories } from '../../data/categories';
@@ -107,6 +108,9 @@ const MobileHome = () => {
 
           {/* Categories */}
           <MobileCategoryGrid />
+
+          {/* Animated Banner */}
+          <AnimatedBanner />
 
           {/* Promotional Banners */}
           <div className="px-4 py-4">
