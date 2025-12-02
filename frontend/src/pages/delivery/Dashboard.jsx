@@ -205,29 +205,6 @@ const DeliveryDashboard = () => {
           </div>
         </motion.div>
 
-        {/* Quick Actions */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-          className="bg-white rounded-2xl p-4 shadow-sm"
-        >
-          <h2 className="text-lg font-bold text-gray-800 mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-2 gap-3">
-            <button
-              onClick={() => navigate('/delivery/orders')}
-              className="gradient-green text-white py-3 rounded-xl font-semibold text-sm"
-            >
-              View Orders
-            </button>
-            <button
-              onClick={() => navigate('/delivery/profile')}
-              className="bg-gray-100 text-gray-700 py-3 rounded-xl font-semibold text-sm hover:bg-gray-200"
-            >
-              My Profile
-            </button>
-          </div>
-        </motion.div>
       </div>
     </PageTransition>
   );

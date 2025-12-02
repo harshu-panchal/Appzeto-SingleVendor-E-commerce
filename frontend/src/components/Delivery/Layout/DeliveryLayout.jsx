@@ -1,9 +1,11 @@
 import { useState } from 'react';
-import { Outlet, useNavigate, useLocation } from 'react-router-dom';
+import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
 import { FiMenu, FiLogOut, FiTruck, FiPackage, FiHome, FiUser } from 'react-icons/fi';
 import { useDeliveryAuthStore } from '../../../store/deliveryAuthStore';
 import { motion, AnimatePresence } from 'framer-motion';
 import toast from 'react-hot-toast';
+import DeliveryBottomNav from './DeliveryBottomNav';
+import { appLogo } from '../../../data/logos';
 
 const DeliveryLayout = () => {
   const navigate = useNavigate();
@@ -48,12 +50,25 @@ const DeliveryLayout = () => {
       {/* Mobile Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
         <div className="flex items-center justify-between px-4 py-3">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="p-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+          {/* Logo */}
+          <Link
+            to="/delivery/dashboard"
+            className="flex items-center flex-shrink-0 overflow-visible relative z-10"
           >
-            <FiMenu className="text-xl" />
-          </button>
+            <div className="overflow-visible">
+              <img
+                src={appLogo.src}
+                alt={appLogo.alt}
+                className="h-8 w-auto object-contain origin-left"
+                style={{ transform: "scale(4)" }}
+                onError={(e) => {
+                  // Fallback to placeholder if logo doesn't exist
+                  e.target.src =
+                    "https://via.placeholder.com/120x40/2874F0/FFFFFF?text=LOGO";
+                }}
+              />
+            </div>
+          </Link>
           
           <div className="flex items-center gap-2">
             <FiTruck className="text-primary-600 text-xl" />
@@ -179,9 +194,12 @@ const DeliveryLayout = () => {
       </AnimatePresence>
 
       {/* Main Content */}
-      <main className="pt-16 pb-4">
+      <main className="pt-16 pb-20">
         <Outlet />
       </main>
+
+      {/* Bottom Navigation */}
+      <DeliveryBottomNav />
     </div>
   );
 };

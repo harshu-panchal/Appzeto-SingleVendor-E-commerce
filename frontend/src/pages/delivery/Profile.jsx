@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { useDeliveryAuthStore } from '../../store/deliveryAuthStore';
-import { FiUser, FiMail, FiPhone, FiTruck, FiEdit2, FiSave, FiX } from 'react-icons/fi';
+import { FiUser, FiMail, FiPhone, FiTruck, FiEdit2, FiSave, FiX, FiLogOut } from 'react-icons/fi';
 import PageTransition from '../../components/PageTransition';
+import toast from 'react-hot-toast';
 
 const DeliveryProfile = () => {
-  const { deliveryBoy, updateStatus } = useDeliveryAuthStore();
+  const navigate = useNavigate();
+  const { deliveryBoy, updateStatus, logout } = useDeliveryAuthStore();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
     name: deliveryBoy?.name || '',
@@ -37,6 +40,12 @@ const DeliveryProfile = () => {
       vehicleNumber: deliveryBoy?.vehicleNumber || '',
     });
     setIsEditing(false);
+  };
+
+  const handleLogout = () => {
+    logout();
+    toast.success('Logged out successfully');
+    navigate('/delivery/login');
   };
 
   const stats = [
@@ -222,6 +231,22 @@ const DeliveryProfile = () => {
               <p className="px-4 py-3 bg-gray-50 rounded-xl text-gray-800">{formData.vehicleNumber}</p>
             )}
           </div>
+        </motion.div>
+
+        {/* Logout Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="bg-white rounded-2xl p-4 shadow-sm"
+        >
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-3 px-4 py-3 bg-red-50 text-red-600 rounded-xl font-semibold hover:bg-red-100 transition-colors"
+          >
+            <FiLogOut className="text-xl" />
+            <span>Logout</span>
+          </button>
         </motion.div>
       </div>
     </PageTransition>
