@@ -1,9 +1,9 @@
-import { createPortal } from 'react-dom';
-import { Link, useLocation } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { FiHome, FiGrid, FiSearch, FiHeart, FiUser } from 'react-icons/fi';
-import { useWishlistStore } from '../../../store/wishlistStore';
-import { useAuthStore } from '../../../store/authStore';
+import { createPortal } from "react-dom";
+import { Link, useLocation } from "react-router-dom";
+import { motion } from "framer-motion";
+import { FiHome, FiGrid, FiSearch, FiHeart, FiUser } from "react-icons/fi";
+import { useWishlistStore } from "../../../store/wishlistStore";
+import { useAuthStore } from "../../../store/authStore";
 
 const MobileBottomNav = () => {
   const location = useLocation();
@@ -11,16 +11,25 @@ const MobileBottomNav = () => {
   const { isAuthenticated } = useAuthStore();
 
   const navItems = [
-    { path: '/app', icon: FiHome, label: 'Home' },
-    { path: '/app/categories', icon: FiGrid, label: 'Categories' },
-    { path: '/app/search', icon: FiSearch, label: 'Search' },
-    { path: '/app/wishlist', icon: FiHeart, label: 'Wishlist', badge: wishlistCount > 0 ? wishlistCount : null },
-    { path: isAuthenticated ? '/app/profile' : '/app/login', icon: FiUser, label: 'Profile' },
+    { path: "/app", icon: FiHome, label: "Home" },
+    { path: "/app/categories", icon: FiGrid, label: "Categories" },
+    { path: "/app/search", icon: FiSearch, label: "Search" },
+    {
+      path: "/app/wishlist",
+      icon: FiHeart,
+      label: "Wishlist",
+      badge: wishlistCount > 0 ? wishlistCount : null,
+    },
+    {
+      path: isAuthenticated ? "/app/profile" : "/app/login",
+      icon: FiUser,
+      label: "Profile",
+    },
   ];
 
   const isActive = (path) => {
-    if (path === '/app') {
-      return location.pathname === '/app';
+    if (path === "/app") {
+      return location.pathname === "/app";
     }
     return location.pathname.startsWith(path);
   };
@@ -29,14 +38,14 @@ const MobileBottomNav = () => {
   const iconVariants = {
     inactive: {
       scale: 1,
-      color: '#1A1A2E',
+      color: "#878787",
     },
     active: {
       scale: 1.1,
-      color: '#6C63FF', // Primary Buttons color
+      color: "#2874F0", // Primary Buttons color
       transition: {
         duration: 0.3,
-        ease: 'easeOut',
+        ease: "easeOut",
       },
     },
   };
@@ -47,27 +56,23 @@ const MobileBottomNav = () => {
         {navItems.map((item) => {
           const Icon = item.icon;
           const active = isActive(item.path);
-          
+
           return (
             <Link
               key={item.path}
               to={item.path}
-              className="flex items-center justify-center flex-1 h-full"
-            >
-              <motion.div
-                className="relative flex items-center justify-center w-12 h-12"
-              >
+              className="flex items-center justify-center flex-1 h-full">
+              <motion.div className="relative flex items-center justify-center w-12 h-12">
                 {/* Icon */}
                 <motion.div
                   className="relative z-10 flex items-center justify-center"
                   variants={iconVariants}
                   initial="inactive"
-                  animate={active ? 'active' : 'inactive'}
-                >
-                  <Icon 
+                  animate={active ? "active" : "inactive"}>
+                  <Icon
                     className="text-2xl"
                     style={{
-                      fill: active ? 'currentColor' : 'none',
+                      fill: active ? "currentColor" : "none",
                     }}
                   />
                 </motion.div>
@@ -89,4 +94,3 @@ const MobileBottomNav = () => {
 };
 
 export default MobileBottomNav;
-
