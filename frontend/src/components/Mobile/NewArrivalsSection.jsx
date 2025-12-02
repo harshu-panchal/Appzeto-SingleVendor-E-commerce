@@ -173,7 +173,7 @@ const NewArrivalsSection = () => {
                   delay: index * 0.2,
                 }}
               >
-                <ProductCard product={product} />
+                <ProductCard product={product} hideRating={true} />
               </motion.div>
             </motion.div>
           ))}
