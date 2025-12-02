@@ -25,66 +25,18 @@ const MobileBottomNav = () => {
     return location.pathname.startsWith(path);
   };
 
-  // Animation variants for layered reveal
-  const iconContainerVariants = {
-    inactive: {
-      scale: 1,
-      opacity: 1,
-    },
-    active: {
-      scale: 1,
-      opacity: 1,
-      transition: {
-        duration: 0.3,
-        ease: 'easeOut',
-      },
-    },
-  };
-
-  const backSquareVariants = {
-    inactive: {
-      scale: 0,
-      opacity: 0,
-    },
-    active: {
-      scale: 1,
-      opacity: 1,
-      transition: {
-        duration: 0.3,
-        ease: 'easeOut',
-        delay: 0.05,
-      },
-    },
-  };
-
-  const frontSquareVariants = {
-    inactive: {
-      scale: 0,
-      opacity: 0,
-    },
-    active: {
-      scale: 1,
-      opacity: 1,
-      transition: {
-        duration: 0.3,
-        ease: 'easeOut',
-        delay: 0.1,
-      },
-    },
-  };
-
+  // Animation variants for icon
   const iconVariants = {
     inactive: {
       scale: 1,
-      color: '#9CA3AF',
+      color: '#7E808C',
     },
     active: {
       scale: 1.1,
-      color: '#FFFFFF',
+      color: '#FC8019', // Primary Buttons color
       transition: {
         duration: 0.3,
         ease: 'easeOut',
-        delay: 0.15,
       },
     },
   };
@@ -104,44 +56,13 @@ const MobileBottomNav = () => {
             >
               <motion.div
                 className="relative flex items-center justify-center w-12 h-12"
-                variants={iconContainerVariants}
-                initial="inactive"
-                animate={active ? 'active' : 'inactive'}
               >
-                {/* Back square - darker/more opaque (only when active) */}
-                {active && (
-                  <motion.div
-                    className="absolute inset-0 rounded-xl"
-                    variants={backSquareVariants}
-                    style={{
-                      background: 'rgba(245, 158, 11, 0.4)',
-                      backdropFilter: 'blur(8px)',
-                      WebkitBackdropFilter: 'blur(8px)',
-                      border: '1px solid rgba(245, 158, 11, 0.3)',
-                      transform: 'translate(2px, 2px)',
-                    }}
-                  />
-                )}
-                
-                {/* Front square - translucent (only when active) */}
-                {active && (
-                  <motion.div
-                    className="absolute inset-0 rounded-xl flex items-center justify-center"
-                    variants={frontSquareVariants}
-                    style={{
-                      background: 'rgba(245, 158, 11, 0.25)',
-                      backdropFilter: 'blur(12px)',
-                      WebkitBackdropFilter: 'blur(12px)',
-                      border: '1px solid rgba(255, 255, 255, 0.3)',
-                      boxShadow: '0 4px 16px rgba(245, 158, 11, 0.2)',
-                    }}
-                  />
-                )}
-
                 {/* Icon */}
                 <motion.div
                   className="relative z-10 flex items-center justify-center"
                   variants={iconVariants}
+                  initial="inactive"
+                  animate={active ? 'active' : 'inactive'}
                 >
                   <Icon 
                     className="text-2xl"
