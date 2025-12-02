@@ -1,9 +1,10 @@
 import { useState, useMemo, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { FiSearch, FiFilter, FiX, FiMic } from 'react-icons/fi';
+import { FiSearch, FiFilter, FiX, FiMic, FiGrid, FiList } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import MobileLayout from '../../components/Layout/Mobile/MobileLayout';
 import ProductCard from '../../components/ProductCard';
+import ProductListItem from '../../components/Mobile/ProductListItem';
 import MobileFilterPanel from '../../components/Mobile/MobileFilterPanel';
 import SearchSuggestions from '../../components/Mobile/SearchSuggestions';
 import { products } from '../../data/products';
@@ -19,6 +20,7 @@ const MobileSearch = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [recentSearches, setRecentSearches] = useState(() => {
     const stored = localStorage.getItem('recentSearches');
     return stored ? JSON.parse(stored) : [];
@@ -242,18 +244,43 @@ const MobileSearch = () => {
               </div>
             </form>
 
-            {/* Filter Toggle */}
+            {/* Filter Toggle and View Mode */}
             <div className="flex items-center justify-between">
               <p className="text-sm text-gray-600">
                 Found {filteredProducts.length} product(s)
               </p>
-              <button
-                onClick={() => setShowFilters(true)}
-                className="flex items-center gap-2 px-4 py-2 glass-card rounded-xl hover:bg-white/80 transition-colors"
-              >
-                <FiFilter className="text-gray-600 text-lg" />
-                <span className="font-semibold text-gray-700 text-sm">Filters</span>
-              </button>
+              <div className="flex items-center gap-2">
+                {/* View Toggle Buttons */}
+                <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                  <button
+                    onClick={() => setViewMode('list')}
+                    className={`p-1.5 rounded transition-colors ${
+                      viewMode === 'list'
+                        ? 'bg-white text-primary-600 shadow-sm'
+                        : 'text-gray-600'
+                    }`}
+                  >
+                    <FiList className="text-lg" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode('grid')}
+                    className={`p-1.5 rounded transition-colors ${
+                      viewMode === 'grid'
+                        ? 'bg-white text-primary-600 shadow-sm'
+                        : 'text-gray-600'
+                    }`}
+                  >
+                    <FiGrid className="text-lg" />
+                  </button>
+                </div>
+                <button
+                  onClick={() => setShowFilters(true)}
+                  className="flex items-center gap-2 px-4 py-2 glass-card rounded-xl hover:bg-white/80 transition-colors"
+                >
+                  <FiFilter className="text-gray-600 text-lg" />
+                  <span className="font-semibold text-gray-700 text-sm">Filters</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -271,7 +298,7 @@ const MobileSearch = () => {
                   Clear Filters
                 </button>
               </div>
-            ) : (
+            ) : viewMode === 'grid' ? (
               <>
                 <div className="grid grid-cols-2 gap-3">
                   {displayedItems.map((product, index) => (
@@ -313,6 +340,51 @@ const MobileSearch = () => {
                           Loading...
                         </span>
                       ) : 'Load More'}
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="space-y-3">
+                  {displayedItems.map((product, index) => (
+                    <ProductListItem
+                      key={product.id}
+                      product={product}
+                      index={index}
+                    />
+                  ))}
+                </div>
+
+                {hasMore && (
+                  <div ref={loadMoreRef} className="mt-6 flex flex-col items-center gap-4">
+                    {isLoading && (
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                          className="w-5 h-5 border-2 border-primary-500 border-t-transparent rounded-full"
+                        />
+                        <span className="text-sm">Loading more products...</span>
+                      </div>
+                    )}
+                    <button
+                      onClick={loadMore}
+                      disabled={isLoading}
+                      className="px-6 py-3 gradient-green text-white rounded-xl font-semibold hover:shadow-glow-green transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isLoading ? (
+                        <span className="flex items-center gap-2">
+                          <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                            className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                          />
+                          Loading...
+                        </span>
+                      ) : (
+                        'Load More'
+                      )}
                     </button>
                   </div>
                 )}

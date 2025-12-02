@@ -1,9 +1,10 @@
 import { useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { FiFilter, FiArrowLeft } from "react-icons/fi";
+import { FiFilter, FiArrowLeft, FiGrid, FiList } from "react-icons/fi";
 import { motion } from "framer-motion";
 import MobileLayout from "../../components/Layout/Mobile/MobileLayout";
 import ProductCard from "../../components/ProductCard";
+import ProductListItem from "../../components/Mobile/ProductListItem";
 import MobileFilterPanel from "../../components/Mobile/MobileFilterPanel";
 import { products } from "../../data/products";
 import { categories } from "../../data/categories";
@@ -18,6 +19,7 @@ const MobileCategory = () => {
   const category = categories.find((cat) => cat.id === categoryId);
 
   const [showFilters, setShowFilters] = useState(false);
+  const [viewMode, setViewMode] = useState("grid"); // 'grid' or 'list'
   const [filters, setFilters] = useState({
     category: "",
     minPrice: "",
@@ -139,11 +141,36 @@ const MobileCategory = () => {
                   {categoryProducts.length !== 1 ? "s" : ""}
                 </p>
               </div>
-              <button
-                onClick={() => setShowFilters(true)}
-                className="p-2.5 glass-card rounded-xl hover:bg-white/80 transition-colors">
-                <FiFilter className="text-gray-600 text-lg" />
-              </button>
+              <div className="flex items-center gap-2">
+                {/* View Toggle Buttons */}
+                <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                  <button
+                    onClick={() => setViewMode("list")}
+                    className={`p-1.5 rounded transition-colors ${
+                      viewMode === "list"
+                        ? "bg-white text-primary-600 shadow-sm"
+                        : "text-gray-600"
+                    }`}
+                  >
+                    <FiList className="text-lg" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode("grid")}
+                    className={`p-1.5 rounded transition-colors ${
+                      viewMode === "grid"
+                        ? "bg-white text-primary-600 shadow-sm"
+                        : "text-gray-600"
+                    }`}
+                  >
+                    <FiGrid className="text-lg" />
+                  </button>
+                </div>
+                <button
+                  onClick={() => setShowFilters(true)}
+                  className="p-2.5 glass-card rounded-xl hover:bg-white/80 transition-colors">
+                  <FiFilter className="text-gray-600 text-lg" />
+                </button>
+              </div>
             </div>
           </div>
 
@@ -160,7 +187,7 @@ const MobileCategory = () => {
                   moment.
                 </p>
               </div>
-            ) : (
+            ) : viewMode === "grid" ? (
               <>
                 <div className="grid grid-cols-2 gap-3">
                   {displayedItems.map((product, index) => (
@@ -171,6 +198,38 @@ const MobileCategory = () => {
                       transition={{ delay: index * 0.05 }}>
                       <ProductCard product={product} />
                     </motion.div>
+                  ))}
+                </div>
+
+                {hasMore && (
+                  <div
+                    ref={loadMoreRef}
+                    className="mt-6 flex flex-col items-center gap-4">
+                    {isLoading && (
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <span className="text-sm">
+                          Loading more products...
+                        </span>
+                      </div>
+                    )}
+                    <button
+                      onClick={loadMore}
+                      disabled={isLoading}
+                      className="px-6 py-3 gradient-green text-white rounded-xl font-semibold hover:shadow-glow-green transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
+                      {isLoading ? "Loading..." : "Load More"}
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="space-y-3">
+                  {displayedItems.map((product, index) => (
+                    <ProductListItem
+                      key={product.id}
+                      product={product}
+                      index={index}
+                    />
                   ))}
                 </div>
 

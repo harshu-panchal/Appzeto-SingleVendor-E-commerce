@@ -1,9 +1,10 @@
 import { useState, useMemo } from 'react';
-import { FiArrowLeft, FiFilter } from 'react-icons/fi';
+import { FiArrowLeft, FiFilter, FiGrid, FiList } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import MobileLayout from '../../components/Layout/Mobile/MobileLayout';
 import ProductCard from '../../components/ProductCard';
+import ProductListItem from '../../components/Mobile/ProductListItem';
 import MobileFilterPanel from '../../components/Mobile/MobileFilterPanel';
 import { getFlashSale } from '../../data/products';
 import PageTransition from '../../components/PageTransition';
@@ -13,6 +14,7 @@ const MobileFlashSale = () => {
   const navigate = useNavigate();
   const allFlashSale = getFlashSale();
   const [showFilters, setShowFilters] = useState(false);
+  const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [filters, setFilters] = useState({
     category: '',
     minPrice: '',
@@ -76,12 +78,37 @@ const MobileFlashSale = () => {
                   {filteredProducts.length} {filteredProducts.length === 1 ? 'item' : 'items'} on sale
                 </p>
               </div>
-              <button
-                onClick={() => setShowFilters(true)}
-                className="p-2 glass-card rounded-xl hover:bg-white/80 transition-colors"
-              >
-                <FiFilter className="text-gray-600 text-lg" />
-              </button>
+              <div className="flex items-center gap-2">
+                {/* View Toggle Buttons */}
+                <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                  <button
+                    onClick={() => setViewMode('list')}
+                    className={`p-1.5 rounded transition-colors ${
+                      viewMode === 'list'
+                        ? 'bg-white text-primary-600 shadow-sm'
+                        : 'text-gray-600'
+                    }`}
+                  >
+                    <FiList className="text-lg" />
+                  </button>
+                  <button
+                    onClick={() => setViewMode('grid')}
+                    className={`p-1.5 rounded transition-colors ${
+                      viewMode === 'grid'
+                        ? 'bg-white text-primary-600 shadow-sm'
+                        : 'text-gray-600'
+                    }`}
+                  >
+                    <FiGrid className="text-lg" />
+                  </button>
+                </div>
+                <button
+                  onClick={() => setShowFilters(true)}
+                  className="p-2 glass-card rounded-xl hover:bg-white/80 transition-colors"
+                >
+                  <FiFilter className="text-gray-600 text-lg" />
+                </button>
+              </div>
             </div>
           </div>
 
@@ -93,7 +120,7 @@ const MobileFlashSale = () => {
                 <h3 className="text-xl font-bold text-gray-800 mb-2">No flash sale items</h3>
                 <p className="text-gray-600">Check back later for flash sales!</p>
               </div>
-            ) : (
+            ) : viewMode === 'grid' ? (
               <>
                 <div className="grid grid-cols-2 gap-3">
                   {displayedItems.map((product, index) => (
@@ -105,6 +132,35 @@ const MobileFlashSale = () => {
                     >
                       <ProductCard product={product} />
                     </motion.div>
+                  ))}
+                </div>
+
+                {hasMore && (
+                  <div ref={loadMoreRef} className="mt-6 flex flex-col items-center gap-4">
+                    {isLoading && (
+                      <div className="flex items-center gap-2 text-gray-600">
+                        <span className="text-sm">Loading more products...</span>
+                      </div>
+                    )}
+                    <button
+                      onClick={loadMore}
+                      disabled={isLoading}
+                      className="px-6 py-3 gradient-green text-white rounded-xl font-semibold hover:shadow-glow-green transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isLoading ? 'Loading...' : 'Load More'}
+                    </button>
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="space-y-3">
+                  {displayedItems.map((product, index) => (
+                    <ProductListItem
+                      key={product.id}
+                      product={product}
+                      index={index}
+                    />
                   ))}
                 </div>
 

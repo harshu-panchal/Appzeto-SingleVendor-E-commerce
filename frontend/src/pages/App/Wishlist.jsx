@@ -1,8 +1,10 @@
-import { FiHeart, FiArrowLeft } from "react-icons/fi";
+import { useState } from "react";
+import { FiHeart, FiArrowLeft, FiGrid, FiList } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import MobileLayout from "../../components/Layout/Mobile/MobileLayout";
 import SwipeableWishlistItem from "../../components/Mobile/SwipeableWishlistItem";
+import WishlistGridItem from "../../components/Mobile/WishlistGridItem";
 import { useWishlistStore } from "../../store/wishlistStore";
 import { useCartStore } from "../../store/useStore";
 import toast from "react-hot-toast";
@@ -13,6 +15,7 @@ const MobileWishlist = () => {
   const navigate = useNavigate();
   const { items, removeItem, moveToCart, clearWishlist } = useWishlistStore();
   const { addItem } = useCartStore();
+  const [viewMode, setViewMode] = useState("list"); // 'list' or 'grid'
 
   const handleMoveToCart = (item) => {
     const wishlistItem = moveToCart(item.id);
@@ -59,11 +62,34 @@ const MobileWishlist = () => {
                   </p>
                 </div>
                 {items.length > 0 && (
-                  <button
-                    onClick={handleClearAll}
-                    className="text-xs text-red-600 font-semibold px-2 py-1 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0">
-                    Clear All
-                  </button>
+                  <div className="flex items-center gap-2">
+                    {/* View Toggle Buttons */}
+                    <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                      <button
+                        onClick={() => setViewMode("list")}
+                        className={`p-1.5 rounded transition-colors ${
+                          viewMode === "list"
+                            ? "bg-white text-primary-600 shadow-sm"
+                            : "text-gray-600"
+                        }`}>
+                        <FiList className="text-lg" />
+                      </button>
+                      <button
+                        onClick={() => setViewMode("grid")}
+                        className={`p-1.5 rounded transition-colors ${
+                          viewMode === "grid"
+                            ? "bg-white text-primary-600 shadow-sm"
+                            : "text-gray-600"
+                        }`}>
+                        <FiGrid className="text-lg" />
+                      </button>
+                    </div>
+                    <button
+                      onClick={handleClearAll}
+                      className="text-xs text-red-600 font-semibold px-2 py-1 hover:bg-red-50 rounded-lg transition-colors flex-shrink-0">
+                      Clear All
+                    </button>
+                  </div>
                 )}
               </div>
             </div>
@@ -75,6 +101,7 @@ const MobileWishlist = () => {
               ) : (
                 <WishlistItems
                   items={items}
+                  viewMode={viewMode}
                   onMoveToCart={handleMoveToCart}
                   onRemove={handleRemove}
                 />
@@ -104,20 +131,40 @@ const EmptyWishlistState = () => (
 );
 
 // Wishlist Items Component
-const WishlistItems = ({ items, onMoveToCart, onRemove }) => (
-  <AnimatePresence>
-    <div className="space-y-3">
-      {items.map((item, index) => (
-        <SwipeableWishlistItem
-          key={item.id}
-          item={item}
-          index={index}
-          onMoveToCart={onMoveToCart}
-          onRemove={onRemove}
-        />
-      ))}
-    </div>
-  </AnimatePresence>
-);
+const WishlistItems = ({ items, viewMode, onMoveToCart, onRemove }) => {
+  if (viewMode === "grid") {
+    return (
+      <AnimatePresence>
+        <div className="grid grid-cols-2 gap-3">
+          {items.map((item, index) => (
+            <WishlistGridItem
+              key={item.id}
+              item={item}
+              index={index}
+              onMoveToCart={onMoveToCart}
+              onRemove={onRemove}
+            />
+          ))}
+        </div>
+      </AnimatePresence>
+    );
+  }
+
+  return (
+    <AnimatePresence>
+      <div className="space-y-3">
+        {items.map((item, index) => (
+          <SwipeableWishlistItem
+            key={item.id}
+            item={item}
+            index={index}
+            onMoveToCart={onMoveToCart}
+            onRemove={onRemove}
+          />
+        ))}
+      </div>
+    </AnimatePresence>
+  );
+};
 
 export default MobileWishlist;
