@@ -1,7 +1,17 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FiArrowRight, FiZap, FiTag } from 'react-icons/fi';
+import { 
+  FiArrowRight, 
+  FiZap, 
+  FiTag, 
+  FiStar, 
+  FiGift, 
+  FiCalendar,
+  FiAward,
+  FiTrendingUp,
+  FiShoppingBag
+} from 'react-icons/fi';
 
 const AnimatedBanner = () => {
   const [currentBanner, setCurrentBanner] = useState(0);
@@ -18,6 +28,13 @@ const AnimatedBanner = () => {
       gradient: 'from-red-500 via-pink-500 to-orange-500',
       link: '/app/flash-sale',
       icon: FiZap,
+      floatingIcons: [
+        { Icon: FiZap, size: 16, delay: 0, duration: 4 },
+        { Icon: FiStar, size: 14, delay: 1, duration: 5 },
+        { Icon: FiTrendingUp, size: 18, delay: 0.5, duration: 4.5 },
+        { Icon: FiZap, size: 12, delay: 1.5, duration: 5.5 },
+        { Icon: FiStar, size: 16, delay: 2, duration: 4 },
+      ],
     },
     {
       id: 2,
@@ -28,6 +45,13 @@ const AnimatedBanner = () => {
       gradient: 'from-blue-500 via-purple-500 to-indigo-500',
       link: '/app/daily-deals',
       icon: FiTag,
+      floatingIcons: [
+        { Icon: FiCalendar, size: 16, delay: 0, duration: 4 },
+        { Icon: FiGift, size: 18, delay: 0.8, duration: 5 },
+        { Icon: FiTag, size: 14, delay: 1.2, duration: 4.5 },
+        { Icon: FiShoppingBag, size: 16, delay: 0.4, duration: 5.5 },
+        { Icon: FiGift, size: 14, delay: 1.8, duration: 4.8 },
+      ],
     },
     {
       id: 3,
@@ -38,6 +62,13 @@ const AnimatedBanner = () => {
       gradient: 'from-green-500 via-teal-500 to-cyan-500',
       link: '/app/offers',
       icon: FiTag,
+      floatingIcons: [
+        { Icon: FiAward, size: 18, delay: 0, duration: 4.5 },
+        { Icon: FiStar, size: 16, delay: 0.6, duration: 5 },
+        { Icon: FiGift, size: 14, delay: 1.2, duration: 4.8 },
+        { Icon: FiAward, size: 16, delay: 0.3, duration: 5.2 },
+        { Icon: FiStar, size: 14, delay: 1.5, duration: 4.5 },
+      ],
     },
   ];
 
@@ -226,6 +257,44 @@ const AnimatedBanner = () => {
                   ))}
                 </div>
 
+                {/* Floating/Falling Icons */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                  {banner.floatingIcons.map((iconData, index) => {
+                    const IconComponent = iconData.Icon;
+                    const startX = 10 + (index * 18) + (index % 2 === 0 ? 5 : -5);
+                    const endX = startX + (index % 2 === 0 ? 15 : -15);
+                    const fallDistance = 200 + (index * 20);
+                    const xOffset = endX - startX;
+                    
+                    return (
+                      <motion.div
+                        key={index}
+                        className="absolute text-white/70 drop-shadow-lg"
+                        style={{
+                          left: `${startX}%`,
+                          top: '-30px',
+                          fontSize: `${iconData.size}px`,
+                        }}
+                        animate={{
+                          y: [-30, fallDistance],
+                          x: [`0%`, `${xOffset}%`],
+                          opacity: [0, 0.9, 0.9, 0],
+                          rotate: [0, 180, 360],
+                          scale: [0.6, 1.1, 0.8],
+                        }}
+                        transition={{
+                          duration: iconData.duration,
+                          delay: iconData.delay,
+                          repeat: Infinity,
+                          ease: 'easeIn',
+                        }}
+                      >
+                        <IconComponent className="w-full h-full" />
+                      </motion.div>
+                    );
+                  })}
+                </div>
+
                 {/* Animated Background Elements */}
                 <div className="absolute inset-0 overflow-hidden">
                   <motion.div
@@ -268,28 +337,32 @@ const AnimatedBanner = () => {
 
                 {/* Particle Trails */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="absolute w-2 h-2 rounded-full bg-white/40"
-                      style={{
-                        left: `${20 + i * 15}%`,
-                        top: '50%',
-                      }}
-                      animate={{
-                        y: ['50%', '-50%', '50%'],
-                        x: [0, (Math.random() - 0.5) * 30],
-                        opacity: [0, 0.6, 0],
-                        scale: [0.5, 1, 0.5],
-                      }}
-                      transition={{
-                        duration: 3 + Math.random() * 2,
-                        delay: i * 0.3,
-                        repeat: Infinity,
-                        ease: 'easeInOut',
-                      }}
-                    />
-                  ))}
+                  {Array.from({ length: 5 }, (_, i) => {
+                    const xOffset = (Math.random() - 0.5) * 30;
+                    const duration = 3 + Math.random() * 2;
+                    return (
+                      <motion.div
+                        key={i}
+                        className="absolute w-2 h-2 rounded-full bg-white/40"
+                        style={{
+                          left: `${20 + i * 15}%`,
+                          top: '50%',
+                        }}
+                        animate={{
+                          y: ['50%', '-50%', '50%'],
+                          x: ['0px', `${xOffset}px`],
+                          opacity: [0, 0.6, 0],
+                          scale: [0.5, 1, 0.5],
+                        }}
+                        transition={{
+                          duration: duration,
+                          delay: i * 0.3,
+                          repeat: Infinity,
+                          ease: 'easeInOut',
+                        }}
+                      />
+                    );
+                  })}
                 </div>
 
                 {/* Ripple Effects */}
@@ -418,8 +491,9 @@ const AnimatedBanner = () => {
                       
                       {/* Shimmer on badge */}
                       <motion.div
-                        className="absolute inset-0"
+                        className="absolute top-0 left-0 right-0"
                         style={{
+                          height: '60%',
                           background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)',
                           backgroundSize: '200% 100%',
                         }}
