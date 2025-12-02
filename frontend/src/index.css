@@ -20,7 +20,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: #FFFFFF;
+  background: #F5F7FA;
   overflow-x: hidden;
   width: 100%;
   max-width: 100vw;
@@ -73,62 +73,46 @@ body::-webkit-scrollbar {
   }
   
   .glass-card {
-    background: #F0F0F5;
+    background: #FFFFFF;
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(240, 240, 245, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
   }
   
   .gradient-primary {
-    background: linear-gradient(135deg, #FC8019 0%, #FFA76F 100%);
+    background: linear-gradient(135deg, #6C63FF 0%, #877FFF 100%);
   }
   
   .gradient-secondary {
-    background: linear-gradient(135deg, #282C3F 0%, #4A4F66 100%);
+    background: linear-gradient(135deg, #00BFA6 0%, #33CFB7 100%);
   }
   
   .gradient-accent {
-    background: linear-gradient(135deg, #FC8019 0%, #FFA76F 100%);
+    background: linear-gradient(135deg, #FFC400 0%, #FFCF33 100%);
   }
   
   .gradient-green {
-    background: linear-gradient(135deg, #FC8019 0%, #FFA76F 100%);
+    background: linear-gradient(135deg, #6C63FF 0%, #877FFF 100%);
   }
   
   .text-gradient {
-    background: linear-gradient(135deg, #FC8019 0%, #FFA76F 100%);
+    background: linear-gradient(135deg, #6C63FF 0%, #877FFF 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
   
   .shadow-glow {
-    box-shadow: 0 0 20px rgba(252, 128, 25, 0.3);
+    box-shadow: 0 0 20px rgba(108, 99, 255, 0.3);
   }
   
   .shadow-glow-green {
-    box-shadow: 0 0 20px rgba(252, 128, 25, 0.3);
+    box-shadow: 0 0 20px rgba(108, 99, 255, 0.3);
   }
   
   .shadow-glow-accent {
-    box-shadow: 0 0 20px rgba(252, 128, 25, 0.3);
-  }
-  
-  .gradient-success {
-    background: linear-gradient(135deg, #60B246 0%, #87CF6F 100%);
-  }
-  
-  .gradient-error {
-    background: linear-gradient(135deg, #E23744 0%, #EF5F6F 100%);
-  }
-  
-  .shadow-glow-success {
-    box-shadow: 0 0 20px rgba(96, 178, 70, 0.3);
-  }
-  
-  .shadow-glow-error {
-    box-shadow: 0 0 20px rgba(226, 55, 68, 0.3);
+    box-shadow: 0 0 20px rgba(255, 196, 0, 0.3);
   }
   
   .hover-lift {

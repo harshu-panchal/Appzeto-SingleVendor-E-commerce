@@ -29,11 +29,11 @@ const MobileBottomNav = () => {
   const iconVariants = {
     inactive: {
       scale: 1,
-      color: '#7E808C',
+      color: '#1A1A2E',
     },
     active: {
       scale: 1.1,
-      color: '#FC8019', // Primary Buttons color
+      color: '#6C63FF', // Primary Buttons color
       transition: {
         duration: 0.3,
         ease: 'easeOut',
