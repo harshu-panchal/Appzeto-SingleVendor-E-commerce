@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useMemo } from 'react';
 import { FiX, FiPlus, FiMinus, FiTrash2, FiShoppingBag, FiHeart, FiAlertCircle } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore, useUIStore } from '../../store/useStore';
@@ -75,10 +75,16 @@ const CartDrawer = () => {
   };
 
   // Swipeable Cart Item Component
-  const SwipeableCartItem = ({ item }) => {
+  const SwipeableCartItem = ({ item, index }) => {
     const [swipeOffset, setSwipeOffset] = useState(0);
     const [isDeleted, setIsDeleted] = useState(false);
+    const [hasAnimated, setHasAnimated] = useState(false);
     const deletedItemRef = useRef(null);
+
+    // Only animate on mount
+    useEffect(() => {
+      setHasAnimated(true);
+    }, []);
 
     const handleSwipeRight = () => {
       setIsDeleted(true);
@@ -118,10 +124,16 @@ const CartDrawer = () => {
 
     return (
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        layout
+        initial={hasAnimated ? false : { opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0, x: swipeOffset }}
         exit={{ opacity: 0, x: '100%' }}
-        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+        transition={{ 
+          type: 'spring', 
+          stiffness: 300, 
+          damping: 30,
+          layout: { duration: 0.2 }
+        }}
         className="relative"
         onTouchStart={swipeHandlers.onTouchStart}
         onTouchMove={swipeHandlers.onTouchMove}
@@ -169,9 +181,15 @@ const CartDrawer = () => {
               >
                 <FiMinus className="text-xs text-gray-600" />
               </button>
-              <span className="text-sm font-semibold text-gray-800 min-w-[2rem] text-center">
+              <motion.span
+                key={item.quantity}
+                initial={{ scale: 1.2 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.2 }}
+                className="text-sm font-semibold text-gray-800 min-w-[2rem] text-center"
+              >
                 {item.quantity}
-              </span>
+              </motion.span>
               <button
                 onClick={() => handleQuantityChange(item.id, item.quantity, 1)}
                 disabled={isMaxQuantity(item.id, item.quantity)}
@@ -260,11 +278,13 @@ const CartDrawer = () => {
                   <p className="text-sm text-gray-400">Add some items to get started!</p>
                 </div>
               ) : (
-                <div className="space-y-4">
-                  {items.map((item) => (
-                    <SwipeableCartItem key={item.id} item={item} />
-                  ))}
-                </div>
+                <AnimatePresence mode="popLayout">
+                  <div className="space-y-4">
+                    {items.map((item, index) => (
+                      <SwipeableCartItem key={item.id} item={item} index={index} />
+                    ))}
+                  </div>
+                </AnimatePresence>
               )}
             </div>
 
