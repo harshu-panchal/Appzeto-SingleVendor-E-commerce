@@ -1,6 +1,6 @@
 import { FiHeart, FiShoppingBag, FiStar, FiLayers } from 'react-icons/fi';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useCartStore } from '../store/useStore';
 import { useWishlistStore } from '../store/wishlistStore';
 import { useCompareStore } from '../store/compareStore';
@@ -9,6 +9,10 @@ import toast from 'react-hot-toast';
 import LazyImage from './LazyImage';
 
 const ProductCard = ({ product }) => {
+  const location = useLocation();
+  // Check if we're in the mobile app section
+  const isMobileApp = location.pathname.startsWith('/app');
+  const productLink = isMobileApp ? `/app/product/${product.id}` : `/product/${product.id}`;
   const addItem = useCartStore((state) => state.addItem);
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
   const { addItem: addToCompare, removeItem: removeFromCompare, isInCompare, canAddMore } = useCompareStore();
@@ -101,7 +105,7 @@ const ProductCard = ({ product }) => {
         </div>
 
         {/* Product Image */}
-        <Link to={`/product/${product.id}`}>
+        <Link to={productLink}>
           <div className="w-full h-28 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden relative group-hover:opacity-90 transition-opacity duration-300">
           <LazyImage
             src={product.image}
@@ -118,7 +122,7 @@ const ProductCard = ({ product }) => {
 
       {/* Product Info */}
       <div className="p-2.5 flex-1 flex flex-col">
-        <Link to={`/product/${product.id}`}>
+        <Link to={productLink}>
           <h3 className="font-bold text-gray-800 mb-0.5 line-clamp-2 text-sm group-hover:text-gradient transition-colors">{product.name}</h3>
         </Link>
         <p className="text-xs text-gray-500 mb-1 font-medium">{product.unit}</p>
