@@ -27,7 +27,7 @@ const MobileCartBar = () => {
       >
         <div className="relative">
           <FiShoppingBag className="text-xl" />
-          <span className="absolute -top-1.5 -right-1.5 w-4.5 h-4.5 bg-white text-primary-600 rounded-full flex items-center justify-center text-[10px] font-bold">
+          <span className="absolute -top-1 -right-1 w-4 h-4 bg-accent-500 text-white rounded-full flex items-center justify-center text-[10px] font-bold border-2 border-white shadow-md">
             {itemCount}
           </span>
         </div>
