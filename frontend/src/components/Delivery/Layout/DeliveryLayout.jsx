@@ -60,7 +60,7 @@ const DeliveryLayout = () => {
                 src={appLogo.src}
                 alt={appLogo.alt}
                 className="h-8 w-auto object-contain origin-left"
-                style={{ transform: "scale(4)" }}
+                style={{ transform: "scale(4) translateX(-3px)" }}
                 onError={(e) => {
                   // Fallback to placeholder if logo doesn't exist
                   e.target.src =
@@ -70,7 +70,7 @@ const DeliveryLayout = () => {
             </div>
           </Link>
           
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2" style={{ marginLeft: '20px' }}>
             <FiTruck className="text-primary-600 text-xl" />
             <h1 className="text-lg font-bold text-gray-800">Delivery</h1>
           </div>
