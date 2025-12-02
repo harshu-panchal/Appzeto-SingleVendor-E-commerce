@@ -151,11 +151,9 @@ const MobileBottomNav = () => {
                   />
                 </motion.div>
 
-                {/* Badge */}
+                {/* Badge Dot */}
                 {item.badge && item.badge > 0 && (
-                  <span className="absolute -top-1 -right-1.5 w-4.5 h-4.5 bg-accent-500 rounded-full flex items-center justify-center text-white text-[9px] font-bold border-2 border-white shadow-md z-20">
-                    {item.badge > 9 ? '9+' : item.badge}
-                  </span>
+                  <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-accent-500 rounded-full border-2 border-white shadow-md z-20" />
                 )}
               </motion.div>
             </Link>
