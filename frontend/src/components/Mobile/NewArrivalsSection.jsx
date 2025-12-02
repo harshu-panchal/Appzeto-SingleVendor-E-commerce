@@ -1,10 +1,12 @@
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { FiTag } from 'react-icons/fi';
-import ProductCard from '../ProductCard';
+import LazyImage from '../LazyImage';
 import { getNewArrivals } from '../../data/products';
 
 const NewArrivalsSection = () => {
+  const location = useLocation();
+  const isMobileApp = location.pathname.startsWith('/app');
   const newArrivals = getNewArrivals(6);
 
   if (newArrivals.length === 0) {
@@ -138,45 +140,54 @@ const NewArrivalsSection = () => {
           </motion.div>
         </div>
 
-        {/* Products Grid */}
+        {/* Products Grid - Image Only */}
         <div className="grid grid-cols-3 gap-2">
-          {newArrivals.map((product, index) => (
-            <motion.div
-              key={product.id}
-              initial={{ opacity: 0, scale: 0.8, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{
-                delay: index * 0.08,
-                type: 'spring',
-                stiffness: 100,
-                damping: 10,
-              }}
-              whileHover={{
-                scale: 1.05,
-                y: -5,
-                transition: { duration: 0.2 },
-              }}
-              whileTap={{ scale: 0.95 }}
-            >
+          {newArrivals.map((product, index) => {
+            const productLink = isMobileApp ? `/app/product/${product.id}` : `/product/${product.id}`;
+            return (
               <motion.div
-                animate={{
-                  boxShadow: [
-                    '0 4px 6px rgba(0,0,0,0.1)',
-                    '0 8px 12px rgba(59, 130, 246, 0.3)',
-                    '0 4px 6px rgba(0,0,0,0.1)',
-                  ],
-                }}
+                key={product.id}
+                initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                  delay: index * 0.2,
+                  delay: index * 0.08,
+                  type: 'spring',
+                  stiffness: 100,
+                  damping: 10,
                 }}
               >
-                <ProductCard product={product} hideRating={true} />
+                <motion.div
+                  animate={{
+                    boxShadow: [
+                      '0 4px 6px rgba(0,0,0,0.1)',
+                      '0 8px 12px rgba(59, 130, 246, 0.3)',
+                      '0 4px 6px rgba(0,0,0,0.1)',
+                    ],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                    delay: index * 0.2,
+                  }}
+                  className="rounded-xl overflow-hidden"
+                >
+                  <Link to={productLink}>
+                    <div className="w-full aspect-square bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden relative rounded-xl">
+                      <LazyImage
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.src = 'https://via.placeholder.com/300x300?text=Product+Image';
+                        }}
+                      />
+                    </div>
+                  </Link>
+                </motion.div>
               </motion.div>
-            </motion.div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </motion.div>
