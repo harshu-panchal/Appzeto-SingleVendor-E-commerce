@@ -30,6 +30,26 @@ import RouteWrapper from "./components/RouteWrapper";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import OrderDetailPage from "./pages/OrderDetail";
 import TrackOrder from "./pages/TrackOrder";
+// Mobile App Routes
+import MobileHome from "./pages/App/Home";
+import MobileProductDetail from "./pages/App/ProductDetail";
+import MobileCategory from "./pages/App/Category";
+import MobileCategories from "./pages/App/categories";
+import MobileCheckout from "./pages/App/Checkout";
+import MobileSearch from "./pages/App/Search";
+import MobileLogin from "./pages/App/Login";
+import MobileRegister from "./pages/App/Register";
+import MobileProfile from "./pages/App/Profile";
+import MobileOrders from "./pages/App/Orders";
+import MobileOrderDetail from "./pages/App/OrderDetail";
+import MobileAddresses from "./pages/App/Addresses";
+import MobileWishlist from "./pages/App/Wishlist";
+import MobileCompare from "./pages/App/Compare";
+import MobileOffers from "./pages/App/Offers";
+import MobileDailyDeals from "./pages/App/DailyDeals";
+import MobileFlashSale from "./pages/App/FlashSale";
+import MobileTrackOrder from "./pages/App/TrackOrder";
+import MobileOrderConfirmation from "./pages/App/OrderConfirmation";
 
 // Inner component that has access to useLocation
 const AppRoutes = () => {
@@ -96,6 +116,53 @@ const AppRoutes = () => {
           <Route path="orders" element={<AdminOrders />} />
           <Route path="orders/:id" element={<OrderDetail />} />
         </Route>
+        {/* Mobile App Routes */}
+        <Route path="/app" element={<RouteWrapper><MobileHome /></RouteWrapper>} />
+        <Route path="/app/product/:id" element={<RouteWrapper><MobileProductDetail /></RouteWrapper>} />
+        <Route path="/app/category/:id" element={<RouteWrapper><MobileCategory /></RouteWrapper>} />
+        <Route path="/app/categories" element={<RouteWrapper><MobileCategories /></RouteWrapper>} />
+        <Route path="/app/checkout" element={<RouteWrapper><MobileCheckout /></RouteWrapper>} />
+        <Route path="/app/search" element={<RouteWrapper><MobileSearch /></RouteWrapper>} />
+        <Route path="/app/login" element={<RouteWrapper><MobileLogin /></RouteWrapper>} />
+        <Route path="/app/register" element={<RouteWrapper><MobileRegister /></RouteWrapper>} />
+        <Route path="/app/wishlist" element={<RouteWrapper><MobileWishlist /></RouteWrapper>} />
+        <Route path="/app/compare" element={<RouteWrapper><MobileCompare /></RouteWrapper>} />
+        <Route path="/app/offers" element={<RouteWrapper><MobileOffers /></RouteWrapper>} />
+        <Route path="/app/daily-deals" element={<RouteWrapper><MobileDailyDeals /></RouteWrapper>} />
+        <Route path="/app/flash-sale" element={<RouteWrapper><MobileFlashSale /></RouteWrapper>} />
+        <Route path="/app/order-confirmation/:orderId" element={<RouteWrapper><MobileOrderConfirmation /></RouteWrapper>} />
+        <Route path="/app/orders/:orderId" element={<RouteWrapper><MobileOrderDetail /></RouteWrapper>} />
+        <Route path="/app/track-order/:orderId" element={<RouteWrapper><MobileTrackOrder /></RouteWrapper>} />
+        <Route
+          path="/app/profile"
+          element={
+            <RouteWrapper>
+              <ProtectedRoute>
+                <MobileProfile />
+              </ProtectedRoute>
+            </RouteWrapper>
+          }
+        />
+        <Route
+          path="/app/orders"
+          element={
+            <RouteWrapper>
+              <ProtectedRoute>
+                <MobileOrders />
+              </ProtectedRoute>
+            </RouteWrapper>
+          }
+        />
+        <Route
+          path="/app/addresses"
+          element={
+            <RouteWrapper>
+              <ProtectedRoute>
+                <MobileAddresses />
+              </ProtectedRoute>
+            </RouteWrapper>
+          }
+        />
       </Routes>
   );
 };

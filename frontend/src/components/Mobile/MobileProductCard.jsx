@@ -1,0 +1,132 @@
+import { FiHeart, FiShoppingBag, FiStar } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
+import { useCartStore } from '../../store/useStore';
+import { useWishlistStore } from '../../store/wishlistStore';
+import { formatPrice } from '../../utils/helpers';
+import toast from 'react-hot-toast';
+import LazyImage from '../LazyImage';
+
+const MobileProductCard = ({ product }) => {
+  const addItem = useCartStore((state) => state.addItem);
+  const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
+  const isFavorite = isInWishlist(product.id);
+
+  const handleAddToCart = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+      quantity: 1,
+    });
+    toast.success('Added to cart!');
+  };
+
+  const handleFavorite = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isFavorite) {
+      removeFromWishlist(product.id);
+      toast.success('Removed from wishlist');
+    } else {
+      addToWishlist({
+        id: product.id,
+        name: product.name,
+        price: product.price,
+        image: product.image,
+      });
+      toast.success('Added to wishlist');
+    }
+  };
+
+  return (
+    <Link to={`/app/product/${product.id}`} className="block">
+      <div className="glass-card rounded-2xl overflow-hidden mb-4">
+        <div className="flex gap-4 p-4">
+          {/* Product Image */}
+          <div className="w-24 h-24 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100">
+            <LazyImage
+              src={product.image}
+              alt={product.name}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.target.src = 'https://via.placeholder.com/200x200?text=Product';
+              }}
+            />
+          </div>
+
+          {/* Product Info */}
+          <div className="flex-1 min-w-0 flex flex-col">
+            <div className="flex items-start justify-between gap-2 mb-1">
+              <h3 className="font-bold text-gray-800 text-sm line-clamp-2 flex-1">
+                {product.name}
+              </h3>
+              <button
+                onClick={handleFavorite}
+                className="flex-shrink-0 p-1.5 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                <FiHeart
+                  className={`text-lg ${isFavorite ? 'text-red-500 fill-red-500' : 'text-gray-400'}`}
+                />
+              </button>
+            </div>
+
+            <p className="text-xs text-gray-500 mb-2">{product.unit}</p>
+
+            {/* Rating */}
+            {product.rating && (
+              <div className="flex items-center gap-1 mb-2">
+                <div className="flex items-center">
+                  {[...Array(5)].map((_, i) => (
+                    <FiStar
+                      key={i}
+                      className={`text-xs ${
+                        i < Math.floor(product.rating)
+                          ? 'text-yellow-400 fill-yellow-400'
+                          : 'text-gray-300'
+                      }`}
+                    />
+                  ))}
+                </div>
+                <span className="text-xs text-gray-600 font-medium">
+                  {product.rating} ({product.reviewCount || 0})
+                </span>
+              </div>
+            )}
+
+            {/* Price */}
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-lg font-bold text-gray-800">
+                {formatPrice(product.price)}
+              </span>
+              {product.originalPrice && (
+                <span className="text-xs text-gray-400 line-through font-medium">
+                  {formatPrice(product.originalPrice)}
+                </span>
+              )}
+            </div>
+
+            {/* Add to Cart Button */}
+            <button
+              onClick={handleAddToCart}
+              disabled={product.stock === 'out_of_stock'}
+              className={`w-full py-3 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 ${
+                product.stock === 'out_of_stock'
+                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  : 'gradient-green text-white hover:shadow-glow-green'
+              }`}
+            >
+              <FiShoppingBag className="text-base" />
+              <span>{product.stock === 'out_of_stock' ? 'Out of Stock' : 'Add to Cart'}</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </Link>
+  );
+};
+
+export default MobileProductCard;
+
