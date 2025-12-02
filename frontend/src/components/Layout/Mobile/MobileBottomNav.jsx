@@ -75,15 +75,6 @@ const MobileBottomNav = () => {
                   />
                 )}
 
-                {/* Active Indicator Dot */}
-                {active && (
-                  <motion.div
-                    initial={{ scale: 0, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary-600 rounded-full"
-                  />
-                )}
-
                 {/* Icon */}
                 <motion.div
                   className="relative z-10 flex items-center justify-center"
