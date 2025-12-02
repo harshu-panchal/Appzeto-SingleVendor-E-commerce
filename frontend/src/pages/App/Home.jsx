@@ -5,6 +5,9 @@ import MobileLayout from '../../components/Layout/Mobile/MobileLayout';
 import ProductCard from '../../components/ProductCard';
 import MobileCategoryGrid from '../../components/Mobile/MobileCategoryGrid';
 import AnimatedBanner from '../../components/Mobile/AnimatedBanner';
+import NewArrivalsSection from '../../components/Mobile/NewArrivalsSection';
+import DailyDealsSection from '../../components/Mobile/DailyDealsSection';
+import RecommendedSection from '../../components/Mobile/RecommendedSection';
 import LazyImage from '../../components/LazyImage';
 import { getMostPopular, getTrending, getFlashSale } from '../../data/products';
 import { categories } from '../../data/categories';
@@ -112,6 +115,9 @@ const MobileHome = () => {
           {/* Animated Banner */}
           <AnimatedBanner />
 
+          {/* New Arrivals */}
+          <NewArrivalsSection />
+
           {/* Promotional Banners */}
           <div className="px-4 py-4">
             <div className="grid grid-cols-2 gap-2">
@@ -204,6 +210,9 @@ const MobileHome = () => {
             </div>
           </div>
 
+          {/* Daily Deals */}
+          <DailyDealsSection />
+
           {/* Trending Banner */}
           <div className="px-4 py-4">
             <motion.div
@@ -277,6 +286,9 @@ const MobileHome = () => {
               ))}
             </div>
           </div>
+
+          {/* Recommended for You */}
+          <RecommendedSection />
 
           {/* Popular Brands */}
           <div className="px-4 py-4">

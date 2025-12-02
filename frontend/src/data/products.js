@@ -188,6 +188,7 @@ export const products = [
     originalPrice: 20.0,
     image: '/images/products/chicken_breast_tenderloins-cover.png',
     flashSale: false,
+    isNew: true,
     stock: 'in_stock',
     stockQuantity: 78,
     rating: 4.6,
@@ -200,6 +201,7 @@ export const products = [
     price: 60.0,
     image: '/images/products/antibacterial_liquid_dish_soap-cover.png',
     flashSale: false,
+    isNew: true,
     stock: 'in_stock',
     stockQuantity: 95,
     rating: 4.4,
@@ -213,6 +215,7 @@ export const products = [
     originalPrice: 38.0,
     image: '/images/products/tic_tac_fruit_adventure_mints-cover.png',
     flashSale: false,
+    isNew: true,
     stock: 'in_stock',
     stockQuantity: 150,
     rating: 4.7,
@@ -238,6 +241,7 @@ export const products = [
     originalPrice: 59.0,
     image: '/images/products/overnight_diapers_size_6-cover.png',
     flashSale: true,
+    isNew: true,
     stock: 'in_stock',
     stockQuantity: 60,
     rating: 4.5,
@@ -251,6 +255,7 @@ export const products = [
     originalPrice: 60.0,
     image: '/images/products/antibacterial_liquid_dish_soap-cover.png',
     flashSale: true,
+    isNew: true,
     stock: 'in_stock',
     stockQuantity: 88,
     rating: 4.6,
@@ -264,6 +269,7 @@ export const products = [
     originalPrice: 25.0,
     image: '/images/products/sensitive_skin_gift_set_for_baby-cover.png',
     flashSale: true,
+    isNew: true,
     stock: 'in_stock',
     stockQuantity: 35,
     rating: 4.8,
@@ -277,6 +283,7 @@ export const products = [
     originalPrice: 20.0,
     image: '/images/products/shampoo.jpg',
     flashSale: true,
+    isNew: true,
     stock: 'low_stock',
     stockQuantity: 12,
     rating: 4.4,
@@ -290,6 +297,7 @@ export const products = [
     originalPrice: 59.0,
     image: '/images/products/lotion.jpg',
     flashSale: true,
+    isNew: true,
     stock: 'in_stock',
     stockQuantity: 52,
     rating: 4.5,
@@ -352,5 +360,95 @@ export const getSimilarProducts = (currentProductId, limit = 6) => {
     .slice(0, remaining);
 
   return [...priceSimilar, ...otherProducts].slice(0, limit);
+};
+
+// Get new arrivals (products marked as new)
+export const getNewArrivals = (limit = 8) => {
+  return products.filter((p) => p.isNew).slice(0, limit);
+};
+
+// Get recommended products based on user behavior
+export const getRecommendedProducts = (limit = 6) => {
+  // Try to get wishlist and cart data from localStorage
+  let wishlistItems = [];
+  let cartItems = [];
+  
+  try {
+    const wishlistStorage = localStorage.getItem('wishlist-storage');
+    if (wishlistStorage) {
+      const parsed = JSON.parse(wishlistStorage);
+      wishlistItems = parsed.state?.items || [];
+    }
+    
+    const cartStorage = localStorage.getItem('cart-storage');
+    if (cartStorage) {
+      const parsed = JSON.parse(cartStorage);
+      cartItems = parsed.state?.items || [];
+    }
+  } catch (error) {
+    // If localStorage access fails, continue with empty arrays
+  }
+
+  let recommended = [];
+  const usedIds = new Set();
+
+  // 1. Get products similar to wishlist items
+  if (wishlistItems.length > 0) {
+    wishlistItems.forEach((item) => {
+      const similar = getSimilarProducts(item.id, 2);
+      similar.forEach((product) => {
+        if (!usedIds.has(product.id) && !wishlistItems.some((w) => w.id === product.id)) {
+          recommended.push(product);
+          usedIds.add(product.id);
+        }
+      });
+    });
+  }
+
+  // 2. Get products similar to cart items
+  if (cartItems.length > 0) {
+    cartItems.forEach((item) => {
+      const similar = getSimilarProducts(item.id, 2);
+      similar.forEach((product) => {
+        if (!usedIds.has(product.id) && !cartItems.some((c) => c.id === product.id)) {
+          recommended.push(product);
+          usedIds.add(product.id);
+        }
+      });
+    });
+  }
+
+  // 3. Fill remaining slots with trending products
+  const trending = getTrending();
+  trending.forEach((product) => {
+    if (recommended.length < limit && !usedIds.has(product.id)) {
+      recommended.push(product);
+      usedIds.add(product.id);
+    }
+  });
+
+  // 4. Fill remaining slots with popular products
+  if (recommended.length < limit) {
+    const popular = getMostPopular();
+    popular.forEach((product) => {
+      if (recommended.length < limit && !usedIds.has(product.id)) {
+        recommended.push(product);
+        usedIds.add(product.id);
+      }
+    });
+  }
+
+  // 5. If still not enough, add any remaining products
+  if (recommended.length < limit) {
+    products.forEach((product) => {
+      if (recommended.length < limit && !usedIds.has(product.id)) {
+        recommended.push(product);
+        usedIds.add(product.id);
+      }
+    });
+  }
+
+  // Shuffle and return
+  return recommended.sort(() => Math.random() - 0.5).slice(0, limit);
 };
 

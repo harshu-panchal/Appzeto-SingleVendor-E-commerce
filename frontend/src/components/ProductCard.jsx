@@ -11,7 +11,7 @@ import useLongPress from '../hooks/useLongPress';
 import LongPressMenu from './Mobile/LongPressMenu';
 import FlyingItem from './Mobile/FlyingItem';
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, hideRating = false }) => {
   const location = useLocation();
   // Check if we're in the mobile app section
   const isMobileApp = location.pathname.startsWith('/app');
@@ -165,7 +165,7 @@ const ProductCard = ({ product }) => {
         <p className="text-xs text-gray-500 mb-1 font-medium">{product.unit}</p>
 
         {/* Rating */}
-        {product.rating && (
+        {product.rating && !hideRating && (
           <div className="flex items-center gap-1 mb-1">
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => (
