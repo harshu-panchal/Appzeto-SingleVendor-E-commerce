@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FiClock } from 'react-icons/fi';
+import { FiClock, FiZap } from 'react-icons/fi';
 import ProductCard from '../ProductCard';
 import { getDailyDeals } from '../../data/products';
 
 const DailyDealsSection = () => {
-  const dailyDeals = getDailyDeals().slice(0, 8);
+  const dailyDeals = getDailyDeals().slice(0, 4);
   const [timeLeft, setTimeLeft] = useState({
     hours: 23,
     minutes: 59,
@@ -48,63 +48,81 @@ const DailyDealsSection = () => {
   }
 
   return (
-    <div className="px-4 py-4 bg-gradient-to-br from-red-50 to-orange-50">
-      {/* Header with Countdown */}
-      <div className="mb-3">
-        <div className="flex items-center justify-between mb-2">
-          <div>
-            <h2 className="text-lg font-bold text-gray-800">Daily Deals</h2>
-            <p className="text-[10px] text-gray-600">Limited time offers</p>
-          </div>
-          <Link
-            to="/app/daily-deals"
-            className="text-xs text-primary-600 font-semibold"
-          >
-            See All
-          </Link>
-        </div>
-
-        {/* Compact Countdown Timer */}
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-white/80 backdrop-blur-sm rounded-lg p-2 flex items-center gap-1.5"
-        >
-          <FiClock className="text-red-500 text-sm flex-shrink-0" />
-          <div className="flex-1">
-            <p className="text-[10px] text-gray-600 mb-0.5">Deal ends in</p>
-            <div className="flex items-center gap-1">
-              <div className="bg-red-500 text-white rounded px-1.5 py-0.5 min-w-[2rem] text-center">
-                <div className="text-xs font-bold">{formatTime(timeLeft.hours)}</div>
-                <div className="text-[7px] opacity-90">H</div>
+    <div className="relative mx-4 my-4 rounded-2xl overflow-hidden shadow-xl border-2 border-red-200 bg-gradient-to-br from-red-500 via-orange-500 to-yellow-500">
+      {/* Decorative Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full blur-2xl"></div>
+      </div>
+      
+      {/* Content */}
+      <div className="relative px-4 py-5">
+        {/* Header with Badge */}
+        <div className="mb-4">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <div className="bg-white/20 backdrop-blur-sm rounded-full p-2">
+                <FiZap className="text-white text-lg" />
               </div>
-              <span className="text-red-500 font-bold text-xs">:</span>
-              <div className="bg-red-500 text-white rounded px-1.5 py-0.5 min-w-[2rem] text-center">
-                <div className="text-xs font-bold">{formatTime(timeLeft.minutes)}</div>
-                <div className="text-[7px] opacity-90">M</div>
-              </div>
-              <span className="text-red-500 font-bold text-xs">:</span>
-              <div className="bg-red-500 text-white rounded px-1.5 py-0.5 min-w-[2rem] text-center animate-pulse">
-                <div className="text-xs font-bold">{formatTime(timeLeft.seconds)}</div>
-                <div className="text-[7px] opacity-90">S</div>
+              <div>
+                <h2 className="text-xl font-extrabold text-white drop-shadow-lg">Daily Deals</h2>
+                <p className="text-xs text-white/90 font-medium">Limited time offers</p>
               </div>
             </div>
+            <Link
+              to="/app/daily-deals"
+              className="bg-white/20 backdrop-blur-sm text-white text-sm font-bold px-3 py-1.5 rounded-lg hover:bg-white/30 transition-all"
+            >
+              See All
+            </Link>
           </div>
-        </motion.div>
-      </div>
 
-      {/* Products Grid */}
-      <div className="grid grid-cols-4 gap-1.5">
-        {dailyDeals.map((product, index) => (
+          {/* Prominent Countdown Timer */}
           <motion.div
-            key={product.id}
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.05 }}
+            className="bg-white rounded-xl p-4 shadow-2xl border-2 border-white/50"
           >
-            <ProductCard product={product} hideRating={true} />
+            <div className="flex items-center gap-3 mb-2">
+              <div className="bg-gradient-to-br from-red-500 to-orange-500 rounded-lg p-2">
+                <FiClock className="text-white text-xl" />
+              </div>
+              <div className="flex-1">
+                <p className="text-xs font-semibold text-gray-700 mb-1">Deal ends in</p>
+                <div className="flex items-center gap-2">
+                  <div className="bg-gradient-to-br from-red-500 to-orange-500 text-white rounded-lg px-3 py-2 min-w-[3rem] text-center shadow-lg">
+                    <div className="text-lg font-extrabold">{formatTime(timeLeft.hours)}</div>
+                    <div className="text-[9px] opacity-90 font-medium">H</div>
+                  </div>
+                  <span className="text-red-500 font-bold text-lg">:</span>
+                  <div className="bg-gradient-to-br from-red-500 to-orange-500 text-white rounded-lg px-3 py-2 min-w-[3rem] text-center shadow-lg">
+                    <div className="text-lg font-extrabold">{formatTime(timeLeft.minutes)}</div>
+                    <div className="text-[9px] opacity-90 font-medium">M</div>
+                  </div>
+                  <span className="text-red-500 font-bold text-lg">:</span>
+                  <div className="bg-gradient-to-br from-red-500 to-orange-500 text-white rounded-lg px-3 py-2 min-w-[3rem] text-center shadow-lg animate-pulse">
+                    <div className="text-lg font-extrabold">{formatTime(timeLeft.seconds)}</div>
+                    <div className="text-[9px] opacity-90 font-medium">S</div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </motion.div>
-        ))}
+        </div>
+
+        {/* Products Grid */}
+        <div className="grid grid-cols-2 gap-3">
+          {dailyDeals.map((product, index) => (
+            <motion.div
+              key={product.id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.05 }}
+            >
+              <ProductCard product={product} hideRating={true} />
+            </motion.div>
+          ))}
+        </div>
       </div>
     </div>
   );
