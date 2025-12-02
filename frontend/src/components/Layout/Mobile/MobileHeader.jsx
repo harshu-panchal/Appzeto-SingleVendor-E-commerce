@@ -8,6 +8,7 @@ import {
   FiPackage,
   FiMapPin,
 } from "react-icons/fi";
+import { HiOutlineUserCircle } from "react-icons/hi";
 import { Link, useNavigate } from "react-router-dom";
 import { useCartStore, useUIStore } from "../../../store/useStore";
 import { useAuthStore } from "../../../store/authStore";
@@ -94,12 +95,10 @@ const MobileHeader = () => {
                     <img
                       src={user.avatar}
                       alt={user.name}
-                      className="w-8 h-8 rounded-full object-cover"
+                      className="w-10 h-10 rounded-full object-cover"
                     />
                   ) : (
-                    <div className="w-8 h-8 rounded-full gradient-green flex items-center justify-center text-white text-xs font-semibold">
-                      {user?.name?.charAt(0).toUpperCase() || "U"}
-                    </div>
+                    <HiOutlineUserCircle className="text-gray-700 text-2xl" />
                   )}
                 </button>
                 {showUserMenu && (
