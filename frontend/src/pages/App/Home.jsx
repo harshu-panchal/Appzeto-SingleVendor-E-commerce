@@ -55,16 +55,6 @@ const MobileHome = () => {
   return (
     <PageTransition>
       <MobileLayout>
-        {/* Pull to Refresh Indicator */}
-        {(isPulling || isRefreshing) && (
-          <div className="flex items-center justify-center py-2">
-            <motion.div
-              animate={{ rotate: isRefreshing ? 360 : 0 }}
-              transition={{ duration: 1, repeat: isRefreshing ? Infinity : 0, ease: "linear" }}
-              className="w-8 h-8 border-4 border-primary-500 border-t-transparent rounded-full"
-            />
-          </div>
-        )}
 
         <div
           ref={elementRef}

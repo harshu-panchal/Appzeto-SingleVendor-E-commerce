@@ -1,11 +1,13 @@
-import { FiPackage, FiRuler, FiBox } from 'react-icons/fi';
+import React from 'react';
+import { FiPackage, FiMaximize, FiBox } from 'react-icons/fi';
 
 const QuickSpecs = ({ specs }) => {
   if (!specs || specs.length === 0) return null;
 
   const iconMap = {
     package: FiPackage,
-    ruler: FiRuler,
+    ruler: FiMaximize,
+    sizes: FiMaximize,
     box: FiBox,
   };
 
