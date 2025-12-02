@@ -120,66 +120,56 @@ const MobileHome = () => {
 
           {/* Promotional Banners */}
           <div className="px-4 py-4">
-            <div className="grid grid-cols-2 gap-2">
-              <Link to="/app/offers" className="block">
+            <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 -mx-4 px-4">
+              <Link to="/app/offers" className="block flex-shrink-0">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 }}
-                  className="bg-gradient-to-br from-teal-400 via-cyan-400 to-blue-400 rounded-xl p-2.5 relative overflow-hidden shadow-lg h-28"
+                  className="relative w-[calc(50vw-1.5rem)] h-32 rounded-xl overflow-hidden shadow-lg"
                 >
-                  {/* Background Pattern */}
-                  <div className="absolute inset-0 opacity-20">
-                    <div className="absolute top-0 right-0 w-16 h-16 bg-white rounded-full blur-xl"></div>
-                    <div className="absolute bottom-0 left-0 w-12 h-12 bg-white rounded-full blur-lg"></div>
-                  </div>
-                  
-                  <div className="relative z-10">
-                    <p className="text-[10px] text-white/90 mb-0.5 font-medium leading-tight">Bring the character</p>
-                    <h3 className="text-xs font-extrabold text-white mb-0 drop-shadow-lg leading-tight">Beauty is</h3>
-                    <h3 className="text-xs font-extrabold text-white mb-0.5 drop-shadow-lg leading-tight">SALE Now</h3>
-                    <h3 className="text-xs font-extrabold text-white mb-1 drop-shadow-lg leading-tight">Boarding</h3>
-                    <p className="text-white font-bold text-[10px] bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full inline-block">
-                      Up to 15% Off
-                    </p>
-                  </div>
-                  <div className="absolute right-0 bottom-0 w-16 h-16 opacity-30">
-                    <LazyImage
-                      src="/images/promotional/beauty.jpg"
-                      alt="Beauty"
-                      className="w-full h-full object-cover rounded-tl-full"
-                    />
-                  </div>
+                  <LazyImage
+                    src="/images/banners/babycare-WEB.avif"
+                    alt="Baby Care"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.src = "https://via.placeholder.com/400x200?text=Baby+Care";
+                    }}
+                  />
                 </motion.div>
               </Link>
-              <Link to="/app/offers" className="block">
+              <Link to="/app/offers" className="block flex-shrink-0">
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.2 }}
-                  className="bg-gradient-to-br from-orange-400 via-pink-400 to-red-400 rounded-xl p-2.5 relative overflow-hidden shadow-lg h-28"
+                  className="relative w-[calc(50vw-1.5rem)] h-32 rounded-xl overflow-hidden shadow-lg"
                 >
-                  {/* Background Pattern */}
-                  <div className="absolute inset-0 opacity-20">
-                    <div className="absolute top-0 right-0 w-16 h-16 bg-white rounded-full blur-xl"></div>
-                    <div className="absolute bottom-0 left-0 w-12 h-12 bg-white rounded-full blur-lg"></div>
-                  </div>
-                  
-                  <div className="relative z-10">
-                    <p className="text-[10px] text-white/90 mb-0.5 font-medium leading-tight">All about your health</p>
-                    <h3 className="text-xs font-extrabold text-white mb-0 drop-shadow-lg leading-tight">Eat Healthy,</h3>
-                    <h3 className="text-xs font-extrabold text-white mb-1 drop-shadow-lg leading-tight">Stay Fit.</h3>
-                    <p className="text-white font-bold text-[10px] bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full inline-block">
-                      Up to 20% Off
-                    </p>
-                  </div>
-                  <div className="absolute right-0 bottom-0 w-16 h-16 opacity-30">
-                    <LazyImage
-                      src="/images/promotional/health.jpg"
-                      alt="Health"
-                      className="w-full h-full object-cover rounded-tl-full"
-                    />
-                  </div>
+                  <LazyImage
+                    src="/images/banners/pharmacy-WEB.avif"
+                    alt="Pharmacy"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.src = "https://via.placeholder.com/400x200?text=Pharmacy";
+                    }}
+                  />
+                </motion.div>
+              </Link>
+              <Link to="/app/offers" className="block flex-shrink-0">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                  className="relative w-[calc(50vw-1.5rem)] h-32 rounded-xl overflow-hidden shadow-lg"
+                >
+                  <LazyImage
+                    src="/images/banners/Pet-Care_WEB.avif"
+                    alt="Pet Care"
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.src = "https://via.placeholder.com/400x200?text=Pet+Care";
+                    }}
+                  />
                 </motion.div>
               </Link>
             </div>
