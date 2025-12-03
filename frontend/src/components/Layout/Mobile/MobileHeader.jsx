@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import {
-  FiSearch,
   FiShoppingBag,
   FiUser,
   FiLogOut,
@@ -15,6 +14,7 @@ import { useAuthStore } from "../../../store/authStore";
 import { appLogo } from "../../../data/logos";
 import { motion } from "framer-motion";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import SearchBar from "../../SearchBar";
 
 const MobileHeader = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -27,6 +27,10 @@ const MobileHeader = () => {
     endX: 0,
     endY: 0,
   });
+  const [isTopRowVisible, setIsTopRowVisible] = useState(true);
+  const [topRowHeight, setTopRowHeight] = useState(70);
+  const lastScrollYRef = useRef(0);
+  const topRowRef = useRef(null);
   const userMenuRef = useRef(null);
   const logoRef = useRef(null);
   const cartRef = useRef(null);
@@ -49,6 +53,44 @@ const MobileHeader = () => {
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  // Measure top row height
+  useEffect(() => {
+    const measureTopRow = () => {
+      if (topRowRef.current) {
+        const height = topRowRef.current.offsetHeight;
+        setTopRowHeight(height);
+      }
+    };
+
+    measureTopRow();
+    window.addEventListener("resize", measureTopRow);
+    return () => window.removeEventListener("resize", measureTopRow);
+  }, []);
+
+  // Handle scroll to hide/show top row
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      const lastScrollY = lastScrollYRef.current;
+      
+      // Show top row when at top or scrolling up
+      if (currentScrollY < 10) {
+        setIsTopRowVisible(true);
+      } else if (currentScrollY < lastScrollY) {
+        // Scrolling up - show top row
+        setIsTopRowVisible(true);
+      } else if (currentScrollY > lastScrollY && currentScrollY > 50) {
+        // Scrolling down and past threshold - hide top row
+        setIsTopRowVisible(false);
+      }
+      
+      lastScrollYRef.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   // Calculate animation positions after component mounts
@@ -146,9 +188,26 @@ const MobileHeader = () => {
   ) : null;
 
   const headerContent = (
-    <header className="bg-white fixed top-0 left-0 right-0 z-[9999] shadow-lg overflow-visible">
+    <motion.header 
+      className="bg-white fixed top-0 left-0 right-0 z-[9999] shadow-lg overflow-visible"
+      initial={false}
+      animate={{
+        y: isTopRowVisible ? 0 : -(topRowHeight + 12),
+      }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}>
       <div className="px-4 py-3 overflow-visible">
-        <div className="flex items-center justify-between gap-3 overflow-visible">
+        {/* First Row: Logo and Actions */}
+        <motion.div
+          ref={topRowRef}
+          className="flex items-center justify-between gap-3 mb-3"
+          initial={false}
+          animate={{
+            opacity: isTopRowVisible ? 1 : 0,
+          }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          style={{
+            pointerEvents: isTopRowVisible ? "auto" : "none",
+          }}>
           {/* Logo */}
           <Link
             to="/app"
@@ -170,12 +229,6 @@ const MobileHeader = () => {
 
           {/* Right Side Actions */}
           <div className="flex items-center gap-2">
-            {/* Search Button */}
-            <button
-              onClick={() => navigate("/app/search")}
-              className="p-2.5 hover:bg-white/50 rounded-full transition-all duration-300">
-              <FiSearch className="text-xl text-gray-700" />
-            </button>
 
             {/* Cart Button */}
             <motion.button
@@ -273,9 +326,14 @@ const MobileHeader = () => {
               </Link>
             )}
           </div>
+        </motion.div>
+
+        {/* Second Row: Search Bar */}
+        <div className="overflow-visible">
+          <SearchBar />
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 
   // Use portal to render outside of transformed containers (like PageTransition)

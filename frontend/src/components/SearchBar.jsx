@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiSearch, FiClock, FiTrendingUp } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
 import { products } from '../data/products';
 
 const RECENT_SEARCHES_KEY = 'recent-searches';
@@ -12,12 +13,24 @@ const SearchBar = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [suggestions, setSuggestions] = useState([]);
+  const [isFocused, setIsFocused] = useState(false);
+  const [currentPlaceholderIndex, setCurrentPlaceholderIndex] = useState(0);
   const navigate = useNavigate();
   const searchRef = useRef(null);
   const suggestionsRef = useRef(null);
+  const inputRef = useRef(null);
 
   // Popular searches (can be made dynamic later)
   const popularSearches = ['Diapers', 'Vegetables', 'Meat', 'Fruits', 'Baby Care'];
+  
+  // Animated placeholder texts
+  const placeholderTexts = [
+    'Search for groceries...',
+    'Find fresh vegetables...',
+    'Looking for fruits?',
+    'Browse baby products...',
+    'Search daily deals...'
+  ];
 
   // Get recent searches from localStorage
   const getRecentSearches = () => {
@@ -155,8 +168,29 @@ const SearchBar = () => {
   };
 
   const handleInputFocus = () => {
+    setIsFocused(true);
     setShowSuggestions(true);
   };
+
+  const handleInputBlur = (e) => {
+    // Delay blur to allow clicking on suggestions
+    setTimeout(() => {
+      if (!searchRef.current?.contains(document.activeElement)) {
+        setIsFocused(false);
+      }
+    }, 200);
+  };
+
+  // Rotate placeholders when not focused and input is empty
+  useEffect(() => {
+    if (!isFocused && !searchQuery.trim()) {
+      const interval = setInterval(() => {
+        setCurrentPlaceholderIndex((prev) => (prev + 1) % placeholderTexts.length);
+      }, 3000); // Change placeholder every 3 seconds
+
+      return () => clearInterval(interval);
+    }
+  }, [isFocused, searchQuery, placeholderTexts.length]);
 
   const recentSearches = getRecentSearches();
   const hasSuggestions = suggestions.length > 0 || recentSearches.length > 0 || popularSearches.length > 0;
@@ -167,14 +201,32 @@ const SearchBar = () => {
         <div className="relative group">
           <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-primary-500 transition-colors z-10" />
           <input
+            ref={inputRef}
             type="text"
             value={searchQuery}
             onChange={handleInputChange}
             onFocus={handleInputFocus}
+            onBlur={handleInputBlur}
             onKeyDown={handleKeyDown}
-            placeholder="Search products..."
-            className="w-full pl-12 pr-4 py-3 glass-card rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:shadow-glow transition-all duration-300 text-gray-700 placeholder:text-gray-400"
+            placeholder=""
+            className="w-full pl-12 pr-4 py-3 glass-card rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:shadow-glow transition-all duration-300 text-gray-700 placeholder:text-transparent"
           />
+          {!searchQuery.trim() && (
+            <div className="absolute left-12 top-1/2 transform -translate-y-1/2 pointer-events-none overflow-hidden z-[1] h-6">
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.span
+                  key={currentPlaceholderIndex}
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: -20, opacity: 0 }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                  className="text-gray-400 text-sm block whitespace-nowrap"
+                >
+                  {placeholderTexts[currentPlaceholderIndex]}
+                </motion.span>
+              </AnimatePresence>
+            </div>
+          )}
         </div>
       </form>
 
