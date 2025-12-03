@@ -9,7 +9,7 @@ import {
   FiPackage,
   FiMapPin,
 } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCartStore, useUIStore } from "../../store/useStore";
 import { useAuthStore } from "../../store/authStore";
 import { useWishlistStore } from "../../store/wishlistStore";
@@ -17,6 +17,16 @@ import SearchBar from "../SearchBar";
 import { appLogo } from "../../data/logos";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { motion } from "framer-motion";
+
+// Category gradient mapping - Very subtle pastel colors
+const categoryGradients = {
+  1: 'from-pink-50 via-rose-50 to-pink-100', // Clothing - Pinkish
+  2: 'from-amber-50 via-amber-100 to-yellow-50', // Footwear - Brownish
+  3: 'from-orange-50 via-orange-100 to-orange-50', // Bags - Orangeish
+  4: 'from-green-50 via-emerald-50 to-teal-50', // Jewelry - Greenish
+  5: 'from-purple-50 via-purple-100 to-indigo-50', // Accessories - Purple
+  6: 'from-blue-50 via-cyan-50 to-teal-50', // Athletic
+};
 
 const Header = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -33,11 +43,42 @@ const Header = () => {
   const logoRef = useRef(null);
   const cartRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const itemCount = useCartStore((state) => state.getItemCount());
   const wishlistCount = useWishlistStore((state) => state.getItemCount());
   const toggleCart = useUIStore((state) => state.toggleCart);
   const { user, isAuthenticated, logout } = useAuthStore();
+
+  // Get current category from URL
+  const getCurrentCategoryId = () => {
+    const match = location.pathname.match(/\/category\/(\d+)/);
+    return match ? parseInt(match[1]) : null;
+  };
+
+  const currentCategoryId = getCurrentCategoryId();
+  
+  // Get gradient background style - More intense at top, fading to white at bottom (fully opaque, moderate intensity)
+  const getHeaderBackgroundStyle = () => {
+    if (currentCategoryId) {
+      const gradientMap = {
+        1: { background: 'linear-gradient(to bottom, rgb(252, 231, 243) 0%, rgb(255, 240, 245) 50%, rgb(255, 255, 255) 100%)' }, // Pink - moderate
+        2: { background: 'linear-gradient(to bottom, rgb(254, 243, 199) 0%, rgb(255, 248, 220) 50%, rgb(255, 255, 255) 100%)' }, // Brown/Amber - moderate
+        3: { background: 'linear-gradient(to bottom, rgb(255, 237, 213) 0%, rgb(255, 245, 230) 50%, rgb(255, 255, 255) 100%)' }, // Orange - moderate
+        4: { background: 'linear-gradient(to bottom, rgb(209, 250, 229) 0%, rgb(236, 253, 245) 50%, rgb(255, 255, 255) 100%)' }, // Green - moderate
+        5: { background: 'linear-gradient(to bottom, rgb(243, 232, 255) 0%, rgb(250, 245, 255) 50%, rgb(255, 255, 255) 100%)' }, // Purple - moderate
+        6: { background: 'linear-gradient(to bottom, rgb(219, 234, 254) 0%, rgb(239, 246, 255) 50%, rgb(255, 255, 255) 100%)' }, // Blue - moderate
+      };
+      return gradientMap[currentCategoryId] || {};
+    }
+    return {};
+  };
+
+  const headerBackgroundStyle = getHeaderBackgroundStyle();
+  // Set default background when no category is active
+  if (!currentCategoryId && !headerBackgroundStyle.background) {
+    headerBackgroundStyle.background = 'linear-gradient(to bottom, #D1E1FD 0%, #F5F8FF 50%, #FFFFFF 100%)';
+  }
 
   // Close menus when clicking outside
   useEffect(() => {
@@ -153,12 +194,14 @@ const Header = () => {
   ) : null;
 
   return (
-    <header className="glass sticky top-0 z-50 shadow-lg overflow-visible">
+    <header 
+      className="sticky top-0 z-50 shadow-lg overflow-visible transition-all duration-500"
+      style={headerBackgroundStyle}>
       {/* Cart Animation - Rendered via Portal */}
       {typeof document !== 'undefined' && createPortal(animationContent, document.body)}
       
       {/* Top Bar */}
-      <div className="border-b border-white/20 overflow-visible">
+      <div className={`border-b ${currentCategoryId ? 'border-white/30' : 'border-white/20'} overflow-visible`}>
         <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3 md:py-4 overflow-visible">
           <div className="flex items-center justify-between gap-2 sm:gap-3 md:gap-4 overflow-visible">
             {/* Logo */}
@@ -297,7 +340,7 @@ const Header = () => {
       </div>
 
       {/* Mobile Search Bar */}
-      <div className="md:hidden border-b border-white/20 px-2 sm:px-4 py-3 bg-white/30">
+      <div className={`md:hidden border-b ${currentCategoryId ? 'border-white/30' : 'border-white/20'} px-2 sm:px-4 py-3 ${currentCategoryId ? 'bg-white/20' : 'bg-white/30'}`}>
         <SearchBar />
       </div>
     </header>

@@ -73,6 +73,7 @@ const Navbar = () => {
                   <Link
                     key={category.id}
                     to={`/category/${category.id}`}
+                    onClick={() => setIsCategoryOpen(false)}
                     className="flex items-center gap-4 px-5 py-3.5 hover:bg-white/60 transition-all duration-300 group mx-2 rounded-xl">
                     <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 ring-2 ring-white/50 group-hover:ring-green-500/50 transition-all duration-300 group-hover:scale-110">
                       <img

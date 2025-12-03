@@ -8,7 +8,7 @@ import {
   FiMapPin,
 } from "react-icons/fi";
 import { HiOutlineUserCircle } from "react-icons/hi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCartStore, useUIStore } from "../../../store/useStore";
 import { useAuthStore } from "../../../store/authStore";
 import { appLogo } from "../../../data/logos";
@@ -16,6 +16,16 @@ import { motion } from "framer-motion";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import SearchBar from "../../SearchBar";
 import MobileCategoryIcons from "../../Mobile/MobileCategoryIcons";
+
+// Category gradient mapping - Very subtle pastel colors
+const categoryGradients = {
+  1: 'from-pink-50 via-rose-50 to-pink-100', // Clothing - Pinkish
+  2: 'from-amber-50 via-amber-100 to-yellow-50', // Footwear - Brownish
+  3: 'from-orange-50 via-orange-100 to-orange-50', // Bags - Orangeish
+  4: 'from-green-50 via-emerald-50 to-teal-50', // Jewelry - Greenish
+  5: 'from-purple-50 via-purple-100 to-indigo-50', // Accessories - Purple
+  6: 'from-blue-50 via-cyan-50 to-teal-50', // Athletic
+};
 
 const MobileHeader = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -36,6 +46,7 @@ const MobileHeader = () => {
   const logoRef = useRef(null);
   const cartRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   const itemCount = useCartStore((state) => state.getItemCount());
   const toggleCart = useUIStore((state) => state.toggleCart);
@@ -43,6 +54,31 @@ const MobileHeader = () => {
     (state) => state.cartAnimationTrigger
   );
   const { user, isAuthenticated, logout } = useAuthStore();
+
+  // Get current category from URL (supports both /category/:id and /app/category/:id)
+  const getCurrentCategoryId = () => {
+    const match = location.pathname.match(/\/(?:app\/)?category\/(\d+)/);
+    return match ? parseInt(match[1]) : null;
+  };
+
+  const currentCategoryId = getCurrentCategoryId();
+  
+  // Get gradient background style - More intense at top, fading to white at bottom (fully opaque, moderate intensity)
+  const getHeaderBackground = () => {
+    if (currentCategoryId) {
+      // More intense at top (0%), medium at middle (50%), fading to white at bottom (100%) - fully opaque, moderate colors
+      const gradientMap = {
+        1: 'linear-gradient(to bottom, rgb(252, 231, 243) 0%, rgb(255, 240, 245) 50%, rgb(255, 255, 255) 100%)', // Pink - moderate
+        2: 'linear-gradient(to bottom, rgb(254, 243, 199) 0%, rgb(255, 248, 220) 50%, rgb(255, 255, 255) 100%)', // Brown/Amber - moderate
+        3: 'linear-gradient(to bottom, rgb(255, 237, 213) 0%, rgb(255, 245, 230) 50%, rgb(255, 255, 255) 100%)', // Orange - moderate
+        4: 'linear-gradient(to bottom, rgb(209, 250, 229) 0%, rgb(236, 253, 245) 50%, rgb(255, 255, 255) 100%)', // Green - moderate
+        5: 'linear-gradient(to bottom, rgb(243, 232, 255) 0%, rgb(250, 245, 255) 50%, rgb(255, 255, 255) 100%)', // Purple - moderate
+        6: 'linear-gradient(to bottom, rgb(219, 234, 254) 0%, rgb(239, 246, 255) 50%, rgb(255, 255, 255) 100%)', // Blue - moderate
+      };
+      return gradientMap[currentCategoryId] || 'linear-gradient(to bottom, #D1E1FD 0%, #F5F8FF 50%, #FFFFFF 100%)';
+    }
+    return 'linear-gradient(to bottom, #D1E1FD 0%, #F5F8FF 50%, #FFFFFF 100%)';
+  };
 
   // Close menus when clicking outside
   useEffect(() => {
@@ -200,7 +236,8 @@ const MobileHeader = () => {
     <motion.header 
       className="fixed top-0 left-0 right-0 z-[9999] shadow-lg overflow-visible"
       style={{
-        background: 'linear-gradient(to bottom, #D1E1FD 0%, #F5F8FF 50%, #FFFFFF 100%)',
+        background: getHeaderBackground(),
+        transition: 'background 0.5s ease-in-out',
       }}
       initial={false}
       animate={{
