@@ -198,7 +198,10 @@ const MobileHeader = () => {
 
   const headerContent = (
     <motion.header 
-      className="bg-white fixed top-0 left-0 right-0 z-[9999] shadow-lg overflow-visible"
+      className="fixed top-0 left-0 right-0 z-[9999] shadow-lg overflow-visible"
+      style={{
+        background: 'linear-gradient(to bottom, #D1E1FD 0%, #F5F8FF 50%, #FFFFFF 100%)',
+      }}
       initial={false}
       animate={{
         y: isTopRowVisible ? 0 : -(topRowHeight + 12),
@@ -353,7 +356,7 @@ const MobileHeader = () => {
         </div>
 
         {/* Third Row: Category Icons */}
-        <div className="overflow-visible border-t border-gray-100 pt-2">
+        <div className="overflow-visible">
           <MobileCategoryIcons />
         </div>
       </div>

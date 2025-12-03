@@ -1,5 +1,6 @@
-import { Link } from "react-router-dom";
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { categories } from "../../data/categories";
 import {
   FiUser,
@@ -21,10 +22,48 @@ const categoryIcons = {
 };
 
 const MobileCategoryIcons = () => {
+  const [isScrolling, setIsScrolling] = useState(false);
+  const lastScrollYRef = useRef(0);
+  const location = useLocation();
+
+  useEffect(() => {
+    let ticking = false;
+
+    const handleScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+
+          // Only show icons when at the top
+          if (currentScrollY < 10) {
+            setIsScrolling(false);
+          } else {
+            // Hide icons when scrolled down
+            setIsScrolling(true);
+          }
+
+          lastScrollYRef.current = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const isActiveCategory = (categoryId) => {
+    return location.pathname === `/app/category/${categoryId}`;
+  };
+
   return (
-    <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-2 -mx-4 px-4">
+    <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4">
       {categories.map((category, index) => {
-        const IconComponent = categoryIcons[category.name] || FiShirt;
+        const IconComponent = categoryIcons[category.name] || FiUser;
+        const isActive = isActiveCategory(category.id);
         return (
           <motion.div
             key={category.id}
@@ -34,11 +73,41 @@ const MobileCategoryIcons = () => {
             className="flex-shrink-0">
             <Link
               to={`/app/category/${category.id}`}
-              className="flex flex-col items-center gap-1.5 w-16">
-              <IconComponent className="text-gray-700 text-lg hover:text-primary-600 transition-colors" />
-              <span className="text-[10px] font-semibold text-gray-700 text-center line-clamp-1">
+              className="flex flex-col items-center gap-1.5 w-16 relative">
+              <AnimatePresence mode="wait">
+                {!isScrolling && (
+                  <motion.div
+                    initial={{ opacity: 0, scale: 0.8 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.8 }}
+                    transition={{ duration: 0.2 }}>
+                    <IconComponent 
+                      className={`text-lg transition-colors ${
+                        isActive 
+                          ? 'text-primary-500' 
+                          : 'text-gray-700 hover:text-primary-600'
+                      }`} 
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <span 
+                className={`text-[10px] font-semibold text-center line-clamp-1 transition-colors ${
+                  isActive 
+                    ? 'text-primary-500' 
+                    : 'text-gray-700'
+                }`}>
                 {category.name}
               </span>
+              {/* Blue indicator line */}
+              {isActive && (
+                <motion.div
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary-500 rounded-full"
+                />
+              )}
             </Link>
           </motion.div>
         );
