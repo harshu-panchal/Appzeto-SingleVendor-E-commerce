@@ -64,13 +64,15 @@ const HeroBanner = () => {
               left: 0,
               right: 0,
               bottom: 0,
+              willChange: "transform, opacity",
+              transform: "translateZ(0)",
             }}
             initial="enter"
             animate="center"
             exit="exit"
             variants={slideVariants}
             transition={{
-              duration: 0.8,
+              duration: 0.6,
               ease: [0.25, 0.1, 0.25, 1],
             }}>
             {currentSlide === 0 ? (

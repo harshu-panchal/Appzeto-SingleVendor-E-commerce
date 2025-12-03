@@ -34,6 +34,8 @@ const FlyingItem = ({
       style={{
         left: 0,
         top: 0,
+        willChange: 'transform, opacity',
+        transform: 'translateZ(0)',
       }}
       initial={{
         x: startPosition.x - 32,
@@ -48,7 +50,7 @@ const FlyingItem = ({
         opacity: [1, 1, 1, 0],
       }}
       transition={{
-        duration: 0.8,
+        duration: 0.7,
         ease: [0.25, 0.46, 0.45, 0.94],
         times: [0, 0.3, 0.7, 1],
       }}
@@ -59,9 +61,10 @@ const FlyingItem = ({
           y: [0, -20, -10, 0],
         }}
         transition={{
-          duration: 0.8,
+          duration: 0.7,
           ease: "easeInOut",
         }}
+        style={{ willChange: 'transform', transform: 'translateZ(0)' }}
         className="w-16 h-16 rounded-xl overflow-hidden shadow-2xl border-2 border-white bg-white"
       >
         <img

@@ -44,55 +44,90 @@ export const staggerContainer = {
   }
 };
 
-// GSAP animation helpers
+// GSAP animation helpers with GPU acceleration and proper return values
 export const gsapAnimations = {
   fadeInUp: (element, delay = 0) => {
-    gsap.fromTo(
+    return gsap.fromTo(
       element,
-      { opacity: 0, y: 30 },
-      { opacity: 1, y: 0, duration: 0.8, delay, ease: 'power3.out' }
+      { opacity: 0, y: 30, force3D: true },
+      { 
+        opacity: 1, 
+        y: 0, 
+        duration: 0.8, 
+        delay, 
+        ease: 'power3.out',
+        force3D: true
+      }
     );
   },
   
   fadeIn: (element, delay = 0) => {
-    gsap.fromTo(
+    return gsap.fromTo(
       element,
-      { opacity: 0 },
-      { opacity: 1, duration: 0.6, delay, ease: 'power2.out' }
+      { opacity: 0, force3D: true },
+      { 
+        opacity: 1, 
+        duration: 0.6, 
+        delay, 
+        ease: 'power2.out',
+        force3D: true
+      }
     );
   },
   
   slideInLeft: (element, delay = 0) => {
-    gsap.fromTo(
+    return gsap.fromTo(
       element,
-      { opacity: 0, x: -50 },
-      { opacity: 1, x: 0, duration: 0.8, delay, ease: 'power3.out' }
+      { opacity: 0, x: -50, force3D: true },
+      { 
+        opacity: 1, 
+        x: 0, 
+        duration: 0.8, 
+        delay, 
+        ease: 'power3.out',
+        force3D: true
+      }
     );
   },
   
   slideInRight: (element, delay = 0) => {
-    gsap.fromTo(
+    return gsap.fromTo(
       element,
-      { opacity: 0, x: 50 },
-      { opacity: 1, x: 0, duration: 0.8, delay, ease: 'power3.out' }
+      { opacity: 0, x: 50, force3D: true },
+      { 
+        opacity: 1, 
+        x: 0, 
+        duration: 0.8, 
+        delay, 
+        ease: 'power3.out',
+        force3D: true
+      }
     );
   },
   
   scaleIn: (element, delay = 0) => {
-    gsap.fromTo(
+    return gsap.fromTo(
       element,
-      { opacity: 0, scale: 0.8 },
-      { opacity: 1, scale: 1, duration: 0.6, delay, ease: 'back.out(1.7)' }
+      { opacity: 0, scale: 0.8, force3D: true },
+      { 
+        opacity: 1, 
+        scale: 1, 
+        duration: 0.6, 
+        delay, 
+        ease: 'back.out(1.7)',
+        force3D: true
+      }
     );
   },
   
   scrollReveal: (element, options = {}) => {
-    gsap.fromTo(
+    return gsap.fromTo(
       element,
       {
         opacity: options.opacity || 0,
         y: options.y || 50,
-        scale: options.scale || 1
+        scale: options.scale || 1,
+        force3D: true
       },
       {
         opacity: 1,
@@ -100,6 +135,7 @@ export const gsapAnimations = {
         scale: 1,
         duration: options.duration || 0.8,
         ease: options.ease || 'power3.out',
+        force3D: true,
         scrollTrigger: {
           trigger: element,
           start: options.start || 'top 80%',

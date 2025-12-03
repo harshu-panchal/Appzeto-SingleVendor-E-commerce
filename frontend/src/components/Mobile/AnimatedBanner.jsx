@@ -32,8 +32,6 @@ const AnimatedBanner = () => {
         { Icon: FiZap, size: 16, delay: 0, duration: 4 },
         { Icon: FiStar, size: 14, delay: 1, duration: 5 },
         { Icon: FiTrendingUp, size: 18, delay: 0.5, duration: 4.5 },
-        { Icon: FiZap, size: 12, delay: 1.5, duration: 5.5 },
-        { Icon: FiStar, size: 16, delay: 2, duration: 4 },
       ],
     },
     {
@@ -49,8 +47,6 @@ const AnimatedBanner = () => {
         { Icon: FiCalendar, size: 16, delay: 0, duration: 4 },
         { Icon: FiGift, size: 18, delay: 0.8, duration: 5 },
         { Icon: FiTag, size: 14, delay: 1.2, duration: 4.5 },
-        { Icon: FiShoppingBag, size: 16, delay: 0.4, duration: 5.5 },
-        { Icon: FiGift, size: 14, delay: 1.8, duration: 4.8 },
       ],
     },
     {
@@ -66,16 +62,14 @@ const AnimatedBanner = () => {
         { Icon: FiAward, size: 18, delay: 0, duration: 4.5 },
         { Icon: FiStar, size: 16, delay: 0.6, duration: 5 },
         { Icon: FiGift, size: 14, delay: 1.2, duration: 4.8 },
-        { Icon: FiAward, size: 16, delay: 0.3, duration: 5.2 },
-        { Icon: FiStar, size: 14, delay: 1.5, duration: 4.5 },
       ],
     },
   ];
 
-  // Generate sparkles
+  // Generate sparkles (reduced from 15 to 6 for performance)
   useEffect(() => {
     const generateSparkles = () => {
-      const newSparkles = Array.from({ length: 15 }, (_, i) => ({
+      const newSparkles = Array.from({ length: 6 }, (_, i) => ({
         id: i,
         x: Math.random() * 100,
         y: Math.random() * 100,
@@ -86,7 +80,7 @@ const AnimatedBanner = () => {
     };
 
     generateSparkles();
-    const interval = setInterval(generateSparkles, 3000);
+    const interval = setInterval(generateSparkles, 4000); // Increased interval
     return () => clearInterval(interval);
   }, []);
 
@@ -97,8 +91,8 @@ const AnimatedBanner = () => {
     return () => clearInterval(interval);
   }, [banners.length]);
 
-  // Generate bubbles with fixed x offset
-  const bubbles = Array.from({ length: 8 }, (_, i) => ({
+  // Generate bubbles with fixed x offset (reduced from 8 to 4 for performance)
+  const bubbles = Array.from({ length: 4 }, (_, i) => ({
     id: i,
     size: 20 + Math.random() * 40,
     left: Math.random() * 100,
@@ -144,6 +138,7 @@ const AnimatedBanner = () => {
                   duration: 0.5,
                   ease: [0.25, 0.1, 0.25, 1],
                 }}
+                style={{ willChange: 'transform, opacity' }}
                 className={`absolute inset-0 bg-gradient-to-br ${banner.gradient} p-4 relative`}
               >
                 {/* Animated Gradient Overlay */}
@@ -208,12 +203,14 @@ const AnimatedBanner = () => {
                   {bubbles.map((bubble) => (
                     <motion.div
                       key={bubble.id}
-                      className="absolute rounded-full bg-white/20 backdrop-blur-sm"
+                      className="absolute rounded-full bg-white/20"
                       style={{
                         width: bubble.size,
                         height: bubble.size,
                         left: `${bubble.left}%`,
                         bottom: -bubble.size,
+                        willChange: 'transform, opacity',
+                        transform: 'translateZ(0)',
                       }}
                       animate={{
                         y: [-bubble.size, -400],
@@ -241,6 +238,8 @@ const AnimatedBanner = () => {
                         left: `${sparkle.x}%`,
                         top: `${sparkle.y}%`,
                         boxShadow: '0 0 6px 2px rgba(255, 255, 255, 0.8)',
+                        willChange: 'transform, opacity',
+                        transform: 'translateZ(0)',
                       }}
                       animate={{
                         opacity: [0, 1, 0],
@@ -261,7 +260,7 @@ const AnimatedBanner = () => {
                 <div className="absolute inset-0 overflow-hidden pointer-events-none">
                   {banner.floatingIcons.map((iconData, index) => {
                     const IconComponent = iconData.Icon;
-                    const startX = 10 + (index * 18) + (index % 2 === 0 ? 5 : -5);
+                    const startX = 10 + (index * 30) + (index % 2 === 0 ? 5 : -5);
                     const endX = startX + (index % 2 === 0 ? 15 : -15);
                     const fallDistance = 200 + (index * 20);
                     const xOffset = endX - startX;
@@ -274,6 +273,8 @@ const AnimatedBanner = () => {
                           left: `${startX}%`,
                           top: '-30px',
                           fontSize: `${iconData.size}px`,
+                          willChange: 'transform, opacity',
+                          transform: 'translateZ(0)',
                         }}
                         animate={{
                           y: [-30, fallDistance],
@@ -295,7 +296,7 @@ const AnimatedBanner = () => {
                   })}
                 </div>
 
-                {/* Animated Background Elements */}
+                {/* Animated Background Elements - Simplified */}
                 <div className="absolute inset-0 overflow-hidden">
                   <motion.div
                     animate={{
@@ -307,6 +308,7 @@ const AnimatedBanner = () => {
                       repeat: Infinity,
                       ease: 'linear',
                     }}
+                    style={{ willChange: 'transform', transform: 'translateZ(0)' }}
                     className="absolute -top-10 -right-10 w-32 h-32 bg-white/20 rounded-full blur-2xl"
                   />
                   <motion.div
@@ -319,51 +321,12 @@ const AnimatedBanner = () => {
                       repeat: Infinity,
                       ease: 'linear',
                     }}
+                    style={{ willChange: 'transform', transform: 'translateZ(0)' }}
                     className="absolute -bottom-10 -left-10 w-40 h-40 bg-white/15 rounded-full blur-3xl"
-                  />
-                  <motion.div
-                    animate={{
-                      x: [0, 20, 0],
-                      y: [0, -20, 0],
-                    }}
-                    transition={{
-                      duration: 6,
-                      repeat: Infinity,
-                      ease: 'easeInOut',
-                    }}
-                    className="absolute top-1/2 right-1/4 w-16 h-16 bg-white/10 rounded-full blur-xl"
                   />
                 </div>
 
-                {/* Particle Trails */}
-                <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                  {Array.from({ length: 5 }, (_, i) => {
-                    const xOffset = (Math.random() - 0.5) * 30;
-                    const duration = 3 + Math.random() * 2;
-                    return (
-                      <motion.div
-                        key={i}
-                        className="absolute w-2 h-2 rounded-full bg-white/40"
-                        style={{
-                          left: `${20 + i * 15}%`,
-                          top: '50%',
-                        }}
-                        animate={{
-                          y: ['50%', '-50%', '50%'],
-                          x: ['0px', `${xOffset}px`],
-                          opacity: [0, 0.6, 0],
-                          scale: [0.5, 1, 0.5],
-                        }}
-                        transition={{
-                          duration: duration,
-                          delay: i * 0.3,
-                          repeat: Infinity,
-                          ease: 'easeInOut',
-                        }}
-                      />
-                    );
-                  })}
-                </div>
+                {/* Particle Trails - Removed for performance */}
 
                 {/* Ripple Effects */}
                 <div className="absolute inset-0 overflow-hidden pointer-events-none z-20">
@@ -465,7 +428,8 @@ const AnimatedBanner = () => {
                       initial={{ opacity: 0, scale: 0.9 }}
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: 0.5, type: 'spring' }}
-                      className="inline-flex items-center gap-2 bg-white/25 backdrop-blur-sm px-3 py-1.5 rounded-full relative overflow-hidden"
+                      style={{ willChange: 'transform', transform: 'translateZ(0)' }}
+                      className="inline-flex items-center gap-2 bg-white/25 px-3 py-1.5 rounded-full relative overflow-hidden"
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.95 }}
                     >

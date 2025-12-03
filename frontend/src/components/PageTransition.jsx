@@ -24,7 +24,7 @@ const pageVariants = {
 const pageTransition = {
   type: 'tween',
   ease: [0.25, 0.1, 0.25, 1],
-  duration: 0.3
+  duration: 0.25
 };
 
 /**
@@ -83,6 +83,7 @@ const PageTransition = ({ children }) => {
       exit="exit"
       variants={pageVariants}
       transition={pageTransition}
+      style={{ willChange: 'transform, opacity', transform: 'translateZ(0)' }}
       className="w-full"
       {...(isMobileApp ? swipeHandlers : {})}
     >

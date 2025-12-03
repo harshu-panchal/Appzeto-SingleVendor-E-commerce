@@ -124,16 +124,15 @@ const CartDrawer = () => {
 
   return (
           <motion.div
-        layout
         initial={hasAnimated ? false : { opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0, x: swipeOffset }}
         exit={{ opacity: 0, x: '100%' }}
         transition={{ 
           type: 'spring', 
           stiffness: 300, 
-          damping: 30,
-          layout: { duration: 0.2 }
+          damping: 30
         }}
+        style={{ willChange: 'transform, opacity', transform: 'translateZ(0)' }}
         className="relative"
         onTouchStart={swipeHandlers.onTouchStart}
         onTouchMove={swipeHandlers.onTouchMove}
@@ -186,6 +185,7 @@ const CartDrawer = () => {
                 initial={{ scale: 1.2 }}
                 animate={{ scale: 1 }}
                 transition={{ duration: 0.2 }}
+                style={{ willChange: 'transform', transform: 'translateZ(0)' }}
                 className="text-sm font-semibold text-gray-800 min-w-[2rem] text-center"
               >
                             {item.quantity}
@@ -249,6 +249,7 @@ const CartDrawer = () => {
                 toggleCart();
               }
             }}
+            style={{ willChange: 'transform', transform: 'translateZ(0)' }}
             className="fixed right-0 top-0 h-full w-full sm:w-96 bg-white shadow-2xl z-[10000] flex flex-col"
           >
             {/* Drag Handle (Mobile Only) */}

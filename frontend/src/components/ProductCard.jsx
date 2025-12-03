@@ -125,6 +125,7 @@ const ProductCard = ({ product, hideRating = false }) => {
       <motion.div
         whileHover={{ y: -8, scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
+        style={{ willChange: 'transform', transform: 'translateZ(0)' }}
         className="glass-card rounded-2xl overflow-hidden hover-lift group cursor-pointer h-full flex flex-col"
         {...longPressHandlers}
       >
@@ -148,6 +149,7 @@ const ProductCard = ({ product, hideRating = false }) => {
             src={product.image}
             alt={product.name}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            style={{ willChange: 'transform', transform: 'translateZ(0)' }}
             onError={(e) => {
               e.target.src = 'https://via.placeholder.com/300x300?text=Product+Image';
             }}
@@ -206,6 +208,7 @@ const ProductCard = ({ product, hideRating = false }) => {
           animate={isAdding ? {
             scale: [1, 1.1, 1],
           } : {}}
+          style={{ willChange: 'transform', transform: 'translateZ(0)' }}
           className={`w-full py-1.5 rounded-lg font-semibold text-xs transition-all duration-300 flex items-center justify-center gap-1.5 mt-auto ${
             product.stock === 'out_of_stock'
               ? 'bg-gray-300 text-gray-500 cursor-not-allowed'

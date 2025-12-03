@@ -1,5 +1,12 @@
 import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { gsapAnimations } from '../utils/animations';
+
+// Register ScrollTrigger if not already registered
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 /**
  * Custom hook for GSAP animations
@@ -9,11 +16,26 @@ import { gsapAnimations } from '../utils/animations';
  */
 export const useGSAPAnimation = (animationType, delay = 0, dependencies = []) => {
   const elementRef = useRef(null);
+  const animationRef = useRef(null);
 
   useEffect(() => {
     if (elementRef.current && gsapAnimations[animationType]) {
-      gsapAnimations[animationType](elementRef.current, delay);
+      // Kill any existing animation
+      if (animationRef.current) {
+        animationRef.current.kill();
+      }
+      
+      // Create new animation and store reference
+      animationRef.current = gsapAnimations[animationType](elementRef.current, delay);
     }
+
+    // Cleanup function
+    return () => {
+      if (animationRef.current) {
+        animationRef.current.kill();
+        animationRef.current = null;
+      }
+    };
   }, dependencies);
 
   return elementRef;
@@ -25,11 +47,31 @@ export const useGSAPAnimation = (animationType, delay = 0, dependencies = []) =>
  */
 export const useScrollAnimation = (options = {}) => {
   const elementRef = useRef(null);
+  const scrollTriggerRef = useRef(null);
 
   useEffect(() => {
     if (elementRef.current) {
-      gsapAnimations.scrollReveal(elementRef.current, options);
+      // Kill any existing ScrollTrigger
+      if (scrollTriggerRef.current) {
+        scrollTriggerRef.current.kill();
+      }
+
+      // Create animation and get ScrollTrigger instance
+      const animation = gsapAnimations.scrollReveal(elementRef.current, options);
+      
+      // Get the ScrollTrigger instance from the animation
+      if (animation && animation.scrollTrigger) {
+        scrollTriggerRef.current = animation.scrollTrigger;
+      }
     }
+
+    // Cleanup function
+    return () => {
+      if (scrollTriggerRef.current) {
+        scrollTriggerRef.current.kill();
+        scrollTriggerRef.current = null;
+      }
+    };
   }, []);
 
   return elementRef;

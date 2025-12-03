@@ -60,24 +60,30 @@ body::-webkit-scrollbar {
 @layer utilities {
   .glass {
     background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.3);
+    transform: translateZ(0);
+    will-change: backdrop-filter;
   }
 
   .glass-dark {
     background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     border: 1px solid rgba(255, 255, 255, 0.1);
+    transform: translateZ(0);
+    will-change: backdrop-filter;
   }
 
   .glass-card {
     background: #ffffff;
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.4);
     box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+    transform: translateZ(0);
+    will-change: backdrop-filter;
   }
 
   .gradient-primary {
@@ -117,11 +123,29 @@ body::-webkit-scrollbar {
 
   .hover-lift {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    will-change: transform;
+    transform: translateZ(0);
   }
 
   .hover-lift:hover {
-    transform: translateY(-8px);
+    transform: translateY(-8px) translateZ(0);
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  /* GPU acceleration utilities */
+  .gpu-accelerate {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+
+  .gpu-accelerate-opacity {
+    transform: translateZ(0);
+    will-change: transform, opacity;
+  }
+
+  .gpu-accelerate-all {
+    transform: translateZ(0);
+    will-change: transform, opacity, filter;
   }
 
   .shimmer {
@@ -142,5 +166,44 @@ body::-webkit-scrollbar {
     100% {
       background-position: 200% 0;
     }
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .shimmer {
+    animation: none !important;
+  }
+
+  .hover-lift {
+    transition: none !important;
+  }
+
+  .hover-lift:hover {
+    transform: none !important;
+  }
+}
+
+/* Performance optimizations */
+@layer utilities {
+  .optimize-animation {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+
+  .optimize-scroll {
+    will-change: scroll-position;
+    transform: translateZ(0);
   }
 }
