@@ -59,7 +59,7 @@ const ImageGallery = ({ images, productName = 'Product' }) => {
     <>
       <div className="w-full">
         {/* Main Image */}
-        <div className="relative w-full aspect-square bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl overflow-hidden mb-4 group">
+        <div className="relative w-full aspect-square bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl overflow-hidden mb-4 group" data-gallery>
           <motion.div
             key={selectedIndex}
             className={`w-full h-full cursor-zoom-in transition-transform duration-300 ${

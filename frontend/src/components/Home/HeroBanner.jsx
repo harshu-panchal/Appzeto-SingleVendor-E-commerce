@@ -35,6 +35,7 @@ const HeroBanner = () => {
       <div
         ref={containerRef}
         className="relative w-full max-w-[1366px] mx-auto h-[200px] sm:h-[300px] md:h-[400px] lg:h-[500px] xl:h-[550px] overflow-hidden rounded-2xl sm:rounded-3xl my-4 sm:my-6 shadow-2xl"
+        data-carousel
         style={{
           position: "relative",
           width: "100%",

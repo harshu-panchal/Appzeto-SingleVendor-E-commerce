@@ -140,6 +140,7 @@ const MobileHome = () => {
           <div className="px-4 py-4">
             <div 
               className="relative w-full h-48 rounded-2xl overflow-hidden"
+              data-carousel
               onTouchStart={onTouchStart}
               onTouchMove={onTouchMove}
               onTouchEnd={onTouchEnd}

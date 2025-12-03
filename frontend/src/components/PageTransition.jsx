@@ -1,7 +1,6 @@
 import { motion } from 'framer-motion';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import useSwipeGesture from '../hooks/useSwipeGesture';
 
 const pageVariants = {
   initial: (direction) => ({
@@ -32,7 +31,6 @@ const pageTransition = {
  */
 const PageTransition = ({ children }) => {
   const location = useLocation();
-  const navigate = useNavigate();
   const [direction, setDirection] = useState('none');
   const [prevPath, setPrevPath] = useState(location.pathname);
 
@@ -58,19 +56,6 @@ const PageTransition = ({ children }) => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [location.pathname]);
 
-  // Swipe navigation (only on mobile app routes)
-  const isMobileApp = location.pathname.startsWith('/app');
-  const canGoBack = window.history.length > 1;
-  
-  const swipeHandlers = useSwipeGesture({
-    onSwipeRight: () => {
-      if (isMobileApp && canGoBack) {
-        navigate(-1);
-      }
-    },
-    threshold: 100,
-  });
-
   // Use location.pathname + search for unique key to force remount
   const uniqueKey = location.pathname + location.search;
 
@@ -85,7 +70,6 @@ const PageTransition = ({ children }) => {
       transition={pageTransition}
       style={{ willChange: 'transform, opacity', transform: 'translateZ(0)' }}
       className="w-full"
-      {...(isMobileApp ? swipeHandlers : {})}
     >
       {children}
     </motion.div>
