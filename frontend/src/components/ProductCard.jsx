@@ -123,32 +123,32 @@ const ProductCard = ({ product, hideRating = false }) => {
   return (
     <>
       <motion.div
-        whileHover={{ y: -8, scale: 1.02 }}
+        whileHover={{ y: -4, scale: 1.01 }}
         whileTap={{ scale: 0.98 }}
         style={{ willChange: 'transform', transform: 'translateZ(0)' }}
-        className="glass-card rounded-2xl overflow-hidden hover-lift group cursor-pointer h-full flex flex-col"
+        className="glass-card rounded-lg overflow-hidden hover-lift group cursor-pointer h-full flex flex-col"
         {...longPressHandlers}
       >
       <div className="relative">
         {/* Favorite Icon */}
-        <div className="absolute top-2 right-2 z-10">
+        <div className="absolute top-1.5 right-1.5 z-10">
           <button
             onClick={handleFavorite}
-            className="p-1.5 glass rounded-full shadow-lg hover:bg-white/80 transition-all duration-300 hover:scale-110 group"
+            className="p-1 glass rounded-full shadow-lg hover:bg-white/80 transition-all duration-300 hover:scale-110 group"
           >
             <FiHeart
-              className={`text-sm transition-all duration-300 ${isFavorite ? 'text-red-500 fill-red-500 scale-110' : 'text-gray-600 group-hover:text-red-400'}`}
+              className={`text-xs transition-all duration-300 ${isFavorite ? 'text-red-500 fill-red-500 scale-110' : 'text-gray-600 group-hover:text-red-400'}`}
             />
           </button>
         </div>
 
         {/* Product Image */}
         <Link to={productLink}>
-          <div className="w-full h-28 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden relative group-hover:opacity-90 transition-opacity duration-300">
+          <div className="w-full h-32 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden relative group-hover:opacity-90 transition-opacity duration-300">
           <LazyImage
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500"
             style={{ willChange: 'transform', transform: 'translateZ(0)' }}
             onError={(e) => {
               e.target.src = 'https://via.placeholder.com/300x300?text=Product+Image';
@@ -160,20 +160,20 @@ const ProductCard = ({ product, hideRating = false }) => {
       </div>
 
       {/* Product Info */}
-      <div className="p-2.5 flex-1 flex flex-col">
+      <div className="p-2 flex-1 flex flex-col">
         <Link to={productLink}>
-          <h3 className="font-bold text-gray-800 mb-0.5 line-clamp-2 text-sm group-hover:text-gradient transition-colors">{product.name}</h3>
+          <h3 className="font-bold text-gray-800 mb-0.5 line-clamp-2 text-xs group-hover:text-gradient transition-colors leading-tight">{product.name}</h3>
         </Link>
-        <p className="text-xs text-gray-500 mb-1 font-medium">{product.unit}</p>
+        <p className="text-[10px] text-gray-500 mb-0.5 font-medium">{product.unit}</p>
 
         {/* Rating */}
         {product.rating && !hideRating && (
-          <div className="flex items-center gap-1 mb-1">
+          <div className="flex items-center gap-0.5 mb-0.5">
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => (
                 <FiStar
                   key={i}
-                  className={`text-[10px] ${
+                  className={`text-[8px] ${
                     i < Math.floor(product.rating)
                       ? 'text-yellow-400 fill-yellow-400'
                       : 'text-gray-300'
@@ -181,19 +181,19 @@ const ProductCard = ({ product, hideRating = false }) => {
                 />
               ))}
             </div>
-            <span className="text-[10px] text-gray-600 font-medium">
-              {product.rating} ({product.reviewCount || 0})
+            <span className="text-[9px] text-gray-600 font-medium">
+              {product.rating}
             </span>
           </div>
         )}
 
         {/* Price */}
-        <div className="flex items-center gap-2 mb-1.5">
-          <span className="text-sm font-bold text-gray-800">
+        <div className="flex items-center gap-1.5 mb-1">
+          <span className="text-xs font-bold text-gray-800">
             {formatPrice(product.price)}
           </span>
           {product.originalPrice && (
-            <span className="text-[10px] text-gray-400 line-through font-medium">
+            <span className="text-[9px] text-gray-400 line-through font-medium">
               {formatPrice(product.originalPrice)}
             </span>
           )}
@@ -209,7 +209,7 @@ const ProductCard = ({ product, hideRating = false }) => {
             scale: [1, 1.1, 1],
           } : {}}
           style={{ willChange: 'transform', transform: 'translateZ(0)' }}
-          className={`w-full py-1.5 rounded-lg font-semibold text-xs transition-all duration-300 flex items-center justify-center gap-1.5 mt-auto ${
+          className={`w-full py-1 rounded-md font-semibold text-[10px] transition-all duration-300 flex items-center justify-center gap-1 mt-auto ${
             product.stock === 'out_of_stock'
               ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
               : 'gradient-green text-white hover:shadow-glow-green hover:scale-105 group/btn'
@@ -221,9 +221,9 @@ const ProductCard = ({ product, hideRating = false }) => {
             } : {}}
             transition={{ duration: 0.5 }}
           >
-            <FiShoppingBag className="text-sm group-hover/btn:scale-110 transition-transform" />
+            <FiShoppingBag className="text-xs group-hover/btn:scale-110 transition-transform" />
           </motion.div>
-          <span>{product.stock === 'out_of_stock' ? 'Out of Stock' : isAdding ? 'Adding...' : 'Add to Cart'}</span>
+          <span>{product.stock === 'out_of_stock' ? 'Out of Stock' : isAdding ? 'Adding...' : 'Add'}</span>
         </motion.button>
       </div>
     </motion.div>
