@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import {
   FiSearch,
   FiHeart,
@@ -14,10 +15,23 @@ import { useAuthStore } from "../../store/authStore";
 import { useWishlistStore } from "../../store/wishlistStore";
 import SearchBar from "../SearchBar";
 import { appLogo } from "../../data/logos";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { motion } from "framer-motion";
 
 const Header = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showCartAnimation, setShowCartAnimation] = useState(false);
+  const [positionsReady, setPositionsReady] = useState(false);
+  const [hasPlayed, setHasPlayed] = useState(false);
+  const [animationPositions, setAnimationPositions] = useState({
+    startX: 0,
+    startY: 0,
+    endX: 0,
+    endY: 0,
+  });
   const userMenuRef = useRef(null);
+  const logoRef = useRef(null);
+  const cartRef = useRef(null);
   const navigate = useNavigate();
 
   const itemCount = useCartStore((state) => state.getItemCount());
@@ -37,14 +51,112 @@ const Header = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Calculate animation positions after component mounts
+  useEffect(() => {
+    const calculatePositions = () => {
+      if (logoRef.current && cartRef.current) {
+        const logoRect = logoRef.current.getBoundingClientRect();
+        const cartRect = cartRef.current.getBoundingClientRect();
+        
+        const positions = {
+          startX: logoRect.left + logoRect.width / 2,
+          startY: logoRect.top + logoRect.height / 2,
+          endX: cartRect.left + cartRect.width / 2,
+          endY: cartRect.top + cartRect.height / 2,
+        };
+        
+        // Only set positions if they're valid and animation hasn't played yet
+        if (positions.startX > 0 && positions.endX > 0 && positions.startY > 0 && positions.endY > 0 && !hasPlayed) {
+          setAnimationPositions(positions);
+          setPositionsReady(true);
+          // Start animation once positions are ready
+          setShowCartAnimation(true);
+          setHasPlayed(true);
+        }
+      }
+    };
+
+    // Calculate positions after a short delay to ensure elements are rendered
+    const timer1 = setTimeout(calculatePositions, 100);
+    const timer2 = setTimeout(calculatePositions, 500);
+    const timer3 = setTimeout(calculatePositions, 1000);
+    
+    // Recalculate on resize
+    window.addEventListener("resize", calculatePositions);
+    
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      clearTimeout(timer3);
+      window.removeEventListener("resize", calculatePositions);
+    };
+  }, []);
+
+  // Hide animation after it completes
+  useEffect(() => {
+    if (showCartAnimation) {
+      const timer = setTimeout(() => {
+        setShowCartAnimation(false);
+      }, 2500); // Hide after 2.5 seconds (2s animation + 0.5s buffer)
+      return () => clearTimeout(timer);
+    }
+  }, [showCartAnimation]);
+
   const handleLogout = () => {
     logout();
     setShowUserMenu(false);
     navigate("/");
   };
 
+  // Animation content
+  const shouldShowAnimation = showCartAnimation && positionsReady && animationPositions.startX > 0 && animationPositions.endX > 0;
+
+  const animationContent = shouldShowAnimation ? (
+    <motion.div
+      className="fixed pointer-events-none"
+      style={{
+        left: 0,
+        top: 0,
+        zIndex: 10001,
+        willChange: 'transform, opacity',
+        transform: 'translateZ(0)',
+      }}
+      initial={{
+        x: animationPositions.startX - 40,
+        y: animationPositions.startY - 40,
+        scale: 1,
+        opacity: 1,
+      }}
+      animate={{
+        x: animationPositions.endX - 40,
+        y: animationPositions.endY - 40,
+        scale: [1, 1.2, 0.8],
+        opacity: [1, 1, 0],
+      }}
+      transition={{
+        duration: 2,
+        ease: [0.25, 0.46, 0.45, 0.94],
+        times: [0, 0.7, 1],
+      }}
+      onAnimationComplete={() => {
+        setShowCartAnimation(false);
+      }}>
+      <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center relative">
+        <DotLottieReact
+          src="https://lottie.host/083a2680-e854-4006-a50b-674276be82cd/oQMRcuZUkS.lottie"
+          autoplay
+          loop={false}
+          style={{ width: '100%', height: '100%' }}
+        />
+      </div>
+    </motion.div>
+  ) : null;
+
   return (
     <header className="glass sticky top-0 z-50 shadow-lg overflow-visible">
+      {/* Cart Animation - Rendered via Portal */}
+      {typeof document !== 'undefined' && createPortal(animationContent, document.body)}
+      
       {/* Top Bar */}
       <div className="border-b border-white/20 overflow-visible">
         <div className="container mx-auto px-2 sm:px-4 py-2 sm:py-3 md:py-4 overflow-visible">
@@ -53,7 +165,7 @@ const Header = () => {
             <Link
               to="/"
               className="flex items-center flex-shrink-0 group cursor-pointer min-w-0 overflow-visible relative z-10">
-              <div className="overflow-visible">
+              <div ref={logoRef} className="overflow-visible">
                 <img
                   src={appLogo.src}
                   alt={appLogo.alt}
@@ -168,6 +280,7 @@ const Header = () => {
 
               {/* Cart Button */}
               <button
+                ref={cartRef}
                 onClick={toggleCart}
                 className="flex items-center gap-1 sm:gap-2 gradient-green text-white px-2 sm:px-3 md:px-4 py-1.5 sm:py-2 rounded-lg hover:shadow-glow-green transition-all duration-300 font-semibold text-xs sm:text-sm md:text-base hover:scale-105">
                 <FiShoppingBag className="text-base sm:text-lg" />
