@@ -98,7 +98,7 @@ const MobileHeader = () => {
     navigate("/app");
   };
 
-  // Animation content
+  // Animation content - straight line movement only
   const shouldShowAnimation = showCartAnimation && positionsReady && animationPositions.startX > 0 && animationPositions.endX > 0;
 
   const animationContent = shouldShowAnimation ? (
@@ -110,6 +110,8 @@ const MobileHeader = () => {
         zIndex: 10001,
         willChange: 'transform, opacity',
         transform: 'translateZ(0)',
+        backfaceVisibility: 'hidden',
+        WebkitBackfaceVisibility: 'hidden',
       }}
       initial={{
         x: animationPositions.startX - 40,
@@ -120,13 +122,14 @@ const MobileHeader = () => {
       animate={{
         x: animationPositions.endX - 40,
         y: animationPositions.endY - 40,
-        scale: [1, 1.2, 0.8],
-        opacity: [1, 1, 0],
+        scale: [1, 1.05, 0.95],
+        opacity: [1, 1, 0.8, 0],
       }}
       transition={{
-        duration: 2,
-        ease: [0.25, 0.46, 0.45, 0.94],
-        times: [0, 0.7, 1],
+        duration: 4,
+        ease: [0.25, 0.1, 0.25, 1],
+        times: [0, 0.7, 0.9, 1],
+        type: "tween",
       }}
       onAnimationComplete={() => {
         setShowCartAnimation(false);
