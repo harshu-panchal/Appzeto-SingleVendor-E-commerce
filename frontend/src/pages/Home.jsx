@@ -4,6 +4,7 @@ import Header from '../components/Layout/Header';
 import Navbar from '../components/Layout/Navbar';
 import Footer from '../components/Layout/Footer';
 import HeroBanner from '../components/Home/HeroBanner';
+import BrandLogosScroll from '../components/Home/BrandLogosScroll';
 import CategoriesSection from '../components/Home/CategoriesSection';
 import PromotionalBanners from '../components/Home/PromotionalBanners';
 import MostPopularSection from '../components/Home/MostPopularSection';
@@ -33,6 +34,7 @@ const Home = () => {
         <Navbar />
         <main className="w-full overflow-x-hidden" style={{ paddingTop: `${headerHeight}px` }}>
           <HeroBanner />
+          <BrandLogosScroll />
           <CategoriesSection />
           <PromotionalBanners />
           <MostPopularSection />

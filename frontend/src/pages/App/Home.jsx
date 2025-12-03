@@ -16,6 +16,10 @@ import toast from "react-hot-toast";
 
 const MobileHome = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  const [dragOffset, setDragOffset] = useState(0);
+  const [autoSlidePaused, setAutoSlidePaused] = useState(false);
 
   const slides = [
     { image: "/images/hero/slide1.png" },
@@ -28,12 +32,70 @@ const MobileHome = () => {
   const trending = getTrending();
   const flashSale = getFlashSale();
 
+  // Auto-slide functionality (pauses when user is dragging)
   useEffect(() => {
+    if (autoSlidePaused) return;
+    
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, [slides.length]);
+  }, [slides.length, autoSlidePaused]);
+
+  // Minimum swipe distance (in pixels) to trigger slide change
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e) => {
+    e.stopPropagation(); // Prevent pull-to-refresh from interfering
+    setTouchEnd(null);
+    const touch = e.targetTouches[0];
+    setTouchStart(touch.clientX);
+    setDragOffset(0);
+    setAutoSlidePaused(true);
+  };
+
+  const onTouchMove = (e) => {
+    if (touchStart === null) return;
+    e.stopPropagation(); // Prevent pull-to-refresh from interfering
+    const touch = e.targetTouches[0];
+    const currentX = touch.clientX;
+    const diff = touchStart - currentX;
+    // Constrain the drag offset to prevent over-dragging
+    const maxDrag = 300; // Maximum drag distance
+    setDragOffset(Math.max(-maxDrag, Math.min(maxDrag, diff)));
+    setTouchEnd(currentX);
+  };
+
+  const onTouchEnd = (e) => {
+    if (e) e.stopPropagation(); // Prevent pull-to-refresh from interfering
+    
+    if (touchStart === null) {
+      setAutoSlidePaused(false);
+      return;
+    }
+
+    const distance = touchStart - (touchEnd || touchStart);
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      // Swipe left - go to next slide
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
+    } else if (isRightSwipe) {
+      // Swipe right - go to previous slide
+      setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+    }
+
+    // Reset touch state
+    setTouchStart(null);
+    setTouchEnd(null);
+    setDragOffset(0);
+    
+    // Resume auto-slide after a short delay
+    setTimeout(() => {
+      setAutoSlidePaused(false);
+    }, 2000);
+  };
 
   // Pull to refresh handler
   const handleRefresh = async () => {
@@ -70,22 +132,34 @@ const MobileHome = () => {
           }}>
           {/* Hero Banner */}
           <div className="px-4 py-4">
-            <div className="relative w-full h-48 rounded-2xl overflow-hidden">
-              <AnimatePresence initial={false}>
+            <div 
+              className="relative w-full h-48 rounded-2xl overflow-hidden"
+              onTouchStart={onTouchStart}
+              onTouchMove={onTouchMove}
+              onTouchEnd={onTouchEnd}
+              style={{ touchAction: 'pan-y', userSelect: 'none' }}>
+              <AnimatePresence initial={false} mode="wait">
                 <motion.div
                   key={currentSlide}
-                  initial={{ x: "100%" }}
-                  animate={{ x: 0 }}
-                  exit={{ x: "-100%" }}
+                  initial={{ x: "100%", opacity: 1 }}
+                  animate={{ 
+                    x: dragOffset !== 0 ? dragOffset : 0, 
+                    opacity: dragOffset !== 0 ? Math.max(0.3, 1 - Math.abs(dragOffset) / 400) : 1
+                  }}
+                  exit={{ x: "-100%", opacity: 0 }}
                   transition={{
-                    duration: 0.6,
+                    duration: dragOffset !== 0 ? 0 : 0.5,
                     ease: [0.25, 0.1, 0.25, 1],
                   }}
-                  className="absolute inset-0">
+                  className="absolute inset-0"
+                  style={{
+                    willChange: dragOffset !== 0 ? 'transform, opacity' : 'auto',
+                  }}>
                   <LazyImage
                     src={slides[currentSlide].image}
                     alt={`Slide ${currentSlide + 1}`}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover pointer-events-none select-none"
+                    draggable={false}
                     onError={(e) => {
                       e.target.src = `https://via.placeholder.com/400x200?text=Slide+${
                         currentSlide + 1
@@ -94,12 +168,16 @@ const MobileHome = () => {
                   />
                 </motion.div>
               </AnimatePresence>
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
+              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10 pointer-events-none">
                 {slides.map((_, index) => (
                   <button
                     key={index}
-                    onClick={() => setCurrentSlide(index)}
-                    className={`h-1.5 rounded-full transition-all ${
+                    onClick={() => {
+                      setCurrentSlide(index);
+                      setAutoSlidePaused(true);
+                      setTimeout(() => setAutoSlidePaused(false), 2000);
+                    }}
+                    className={`h-1.5 rounded-full transition-all pointer-events-auto ${
                       index === currentSlide
                         ? "bg-white w-6"
                         : "bg-white/50 w-1.5"
