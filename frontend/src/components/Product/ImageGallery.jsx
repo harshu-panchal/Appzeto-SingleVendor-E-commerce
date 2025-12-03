@@ -83,7 +83,7 @@ const ImageGallery = ({ images, productName = 'Product' }) => {
             <LazyImage
               src={imageArray[selectedIndex]}
               alt={`${productName} - Image ${selectedIndex + 1}`}
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain p-6 scale-75"
               onError={(e) => {
                 e.target.src = 'https://via.placeholder.com/500x500?text=Product+Image';
               }}

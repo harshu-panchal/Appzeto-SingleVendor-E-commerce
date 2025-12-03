@@ -74,11 +74,11 @@ export const mockOrders = [
 
 // Top products
 export const topProducts = [
-  { id: 1, name: 'Overnight Diapers Size 6', sales: 245, revenue: 8156.25, stock: 45 },
-  { id: 2, name: 'Potato Regular', sales: 189, revenue: 1852.20, stock: 120 },
-  { id: 3, name: 'Cauliflower', sales: 156, revenue: 7020.00, stock: 8 },
-  { id: 4, name: 'Coriander Leaves', sales: 142, revenue: 6070.50, stock: 65 },
-  { id: 5, name: 'Beef Meat', sales: 128, revenue: 4480.00, stock: 30 },
+  { id: 1, name: 'Classic White T-Shirt', sales: 245, revenue: 6122.55, stock: 45 },
+  { id: 2, name: 'Slim Fit Blue Jeans', sales: 189, revenue: 15118.11, stock: 120 },
+  { id: 3, name: 'Floral Summer Dress', sales: 156, revenue: 9358.44, stock: 8 },
+  { id: 4, name: 'Leather Crossbody Bag', sales: 142, revenue: 12778.58, stock: 65 },
+  { id: 5, name: 'Casual Canvas Sneakers', sales: 128, revenue: 6398.72, stock: 30 },
 ];
 
 // Customers data

@@ -24,7 +24,7 @@ const WishlistGridItem = ({ item, index, onMoveToCart, onRemove }) => {
             <LazyImage
               src={item.image}
               alt={item.name}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain p-4 scale-75"
               onError={(e) => {
                 e.target.src = 'https://via.placeholder.com/300x300?text=Product';
               }}
