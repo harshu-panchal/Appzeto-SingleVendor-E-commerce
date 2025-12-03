@@ -23,35 +23,39 @@ const categoryIcons = {
 
 const MobileCategoryIcons = () => {
   const [isScrolling, setIsScrolling] = useState(false);
-  const lastScrollYRef = useRef(0);
+  const scrollYRef = useRef(0);
   const location = useLocation();
 
   useEffect(() => {
-    let ticking = false;
-
     const handleScroll = () => {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          const currentScrollY = window.scrollY;
+      const currentScrollY = window.scrollY;
+      scrollYRef.current = currentScrollY;
 
-          // Only show icons when at the top
-          if (currentScrollY < 10) {
-            setIsScrolling(false);
-          } else {
-            // Hide icons when scrolled down
-            setIsScrolling(true);
-          }
+      // Smooth transition: show icons when at top, hide when scrolled
+      // Use a small threshold for immediate response
+      setIsScrolling(currentScrollY >= 8);
+    };
 
-          lastScrollYRef.current = currentScrollY;
-          ticking = false;
+    // Use requestAnimationFrame for smooth 60fps updates
+    let rafId = null;
+    const onScroll = () => {
+      if (rafId === null) {
+        rafId = requestAnimationFrame(() => {
+          handleScroll();
+          rafId = null;
         });
-        ticking = true;
       }
     };
 
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true });
+    // Initial check
+    handleScroll();
+    
     return () => {
-      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", onScroll);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
     };
   }, []);
 
@@ -60,7 +64,12 @@ const MobileCategoryIcons = () => {
   };
 
   return (
-    <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4">
+    <motion.div 
+      className="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4"
+      style={{ 
+        scrollBehavior: 'smooth',
+        WebkitOverflowScrolling: 'touch'
+      }}>
       {categories.map((category, index) => {
         const IconComponent = categoryIcons[category.name] || FiUser;
         const isActive = isActiveCategory(category.id);
@@ -69,7 +78,11 @@ const MobileCategoryIcons = () => {
             key={category.id}
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: index * 0.05 }}
+            transition={{ 
+              delay: index * 0.05,
+              duration: 0.3,
+              ease: [0.25, 0.1, 0.25, 1]
+            }}
             className="flex-shrink-0">
             <Link
               to={`/app/category/${category.id}`}
@@ -77,10 +90,13 @@ const MobileCategoryIcons = () => {
               <AnimatePresence mode="wait">
                 {!isScrolling && (
                   <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ duration: 0.2 }}>
+                    initial={{ opacity: 0, scale: 0.8, y: -5 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    exit={{ opacity: 0, scale: 0.8, y: -5 }}
+                    transition={{ 
+                      duration: 0.3,
+                      ease: [0.25, 0.1, 0.25, 1]
+                    }}>
                     <IconComponent 
                       className={`text-lg transition-colors ${
                         isActive 
@@ -91,20 +107,31 @@ const MobileCategoryIcons = () => {
                   </motion.div>
                 )}
               </AnimatePresence>
-              <span 
-                className={`text-[10px] font-semibold text-center line-clamp-1 transition-colors ${
+              <motion.span 
+                className={`text-[10px] font-semibold text-center line-clamp-1 ${
                   isActive 
                     ? 'text-primary-500' 
                     : 'text-gray-700'
-                }`}>
+                }`}
+                animate={{
+                  y: isScrolling ? -2 : 0,
+                  opacity: 1
+                }}
+                transition={{
+                  duration: 0.25,
+                  ease: [0.16, 1, 0.3, 1] // Even smoother easing
+                }}>
                 {category.name}
-              </span>
+              </motion.span>
               {/* Blue indicator line */}
               {isActive && (
                 <motion.div
                   initial={{ scaleX: 0 }}
                   animate={{ scaleX: 1 }}
-                  transition={{ duration: 0.3, ease: "easeOut" }}
+                  transition={{ 
+                    duration: 0.3, 
+                    ease: [0.25, 0.1, 0.25, 1]
+                  }}
                   className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary-500 rounded-full"
                 />
               )}
@@ -112,7 +139,7 @@ const MobileCategoryIcons = () => {
           </motion.div>
         );
       })}
-    </div>
+    </motion.div>
   );
 };
 

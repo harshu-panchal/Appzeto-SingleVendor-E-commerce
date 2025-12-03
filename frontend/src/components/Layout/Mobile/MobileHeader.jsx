@@ -165,14 +165,14 @@ const MobileHeader = () => {
         WebkitBackfaceVisibility: 'hidden',
       }}
       initial={{
-        x: animationPositions.startX - 40,
-        y: animationPositions.startY - 40,
+        x: animationPositions.startX - 24,
+        y: animationPositions.startY - 24,
         scale: 0.8,
         opacity: 0,
       }}
       animate={{
-        x: animationPositions.endX - 40,
-        y: animationPositions.endY - 40,
+        x: animationPositions.endX - 24,
+        y: animationPositions.endY - 24,
         scale: [0.8, 1, 1.05, 0.95],
         opacity: [0, 1, 1, 0.8, 0],
       }}
@@ -185,7 +185,7 @@ const MobileHeader = () => {
       onAnimationComplete={() => {
         setShowCartAnimation(false);
       }}>
-      <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
+      <div className="w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center">
         <DotLottieReact
           src="https://lottie.host/083a2680-e854-4006-a50b-674276be82cd/oQMRcuZUkS.lottie"
           autoplay
