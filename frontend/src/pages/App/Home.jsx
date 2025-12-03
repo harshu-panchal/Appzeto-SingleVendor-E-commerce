@@ -60,11 +60,13 @@ const MobileHome = () => {
     e.stopPropagation(); // Prevent pull-to-refresh from interfering
     const touch = e.targetTouches[0];
     const currentX = touch.clientX;
+    // Calculate difference: positive when swiping left, negative when swiping right
     const diff = touchStart - currentX;
     // Constrain the drag offset to prevent over-dragging
     // Use container width for better responsiveness
     const containerWidth = e.currentTarget?.offsetWidth || 400;
     const maxDrag = containerWidth * 0.5; // Maximum drag distance (50% of container)
+    // dragOffset: positive = swiping left (show next), negative = swiping right (show previous)
     setDragOffset(Math.max(-maxDrag, Math.min(maxDrag, diff)));
     setTouchEnd(currentX);
   };
@@ -77,15 +79,16 @@ const MobileHome = () => {
       return;
     }
 
+    // Calculate swipe distance: positive = left swipe, negative = right swipe
     const distance = touchStart - (touchEnd || touchStart);
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
+    const isLeftSwipe = distance > minSwipeDistance;  // Finger moved left = show next slide
+    const isRightSwipe = distance < -minSwipeDistance; // Finger moved right = show previous slide
 
     if (isLeftSwipe) {
-      // Swipe left - go to next slide
+      // Swipe left (finger moved left) - go to next slide (slide moves left)
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     } else if (isRightSwipe) {
-      // Swipe right - go to previous slide
+      // Swipe right (finger moved right) - go to previous slide (slide moves right)
       setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
     }
 
@@ -150,7 +153,7 @@ const MobileHome = () => {
                 }}
                 animate={{
                   x: dragOffset !== 0 
-                    ? `calc(-${currentSlide * (100 / slides.length)}% + ${dragOffset}px)`
+                    ? `calc(-${currentSlide * (100 / slides.length)}% - ${dragOffset}px)`
                     : `-${currentSlide * (100 / slides.length)}%`,
                 }}
                 transition={{

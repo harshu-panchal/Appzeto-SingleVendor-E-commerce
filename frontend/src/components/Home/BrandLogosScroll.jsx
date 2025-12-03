@@ -18,24 +18,27 @@ const BrandLogosScroll = () => {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-50px" }}
                 transition={{ delay: index * 0.05, duration: 0.3 }}
-                className="flex-shrink-0"
+                className="flex-shrink-0 flex flex-col items-center"
                 style={{
                   width: 'calc((100vw - 2rem - 0.75rem * 3) / 4)',
                   minWidth: 'calc((100vw - 2rem - 0.75rem * 3) / 4)',
                   maxWidth: 'calc((100vw - 2rem - 0.75rem * 3) / 4)',
                 }}
               >
-                <div className="bg-white rounded-xl sm:rounded-2xl p-3 sm:p-4 md:p-5 shadow-md hover:shadow-xl transition-all duration-300 flex items-center justify-center w-full aspect-square group cursor-pointer hover:scale-105 border border-gray-100">
+                <div className="bg-white rounded-xl sm:rounded-2xl p-2 sm:p-2.5 md:p-3 shadow-md hover:shadow-xl transition-all duration-300 flex items-center justify-center w-full aspect-square group cursor-pointer hover:scale-105 border border-gray-100 mb-2">
                   <img
                     src={brand.logo}
                     alt={brand.name}
-                    className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                    className="w-[85%] h-[85%] object-contain group-hover:scale-110 transition-transform duration-300"
                     onError={(e) => {
                       e.target.src = 'https://via.placeholder.com/120x80?text=Brand';
                     }}
                     loading="lazy"
                   />
                 </div>
+                <p className="text-xs sm:text-sm font-semibold text-black text-center group-hover:text-primary-600 transition-colors truncate w-full px-1">
+                  {brand.name}
+                </p>
               </motion.div>
             ))}
           </div>

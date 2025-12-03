@@ -48,7 +48,7 @@ const DailyDealsSection = () => {
   }
 
   return (
-    <div className="relative mx-4 my-4 rounded-2xl overflow-hidden shadow-xl border-2 border-red-200 bg-gradient-to-br from-red-500 via-orange-500 to-yellow-500">
+    <div className="relative my-4 rounded-2xl overflow-hidden shadow-xl border-2 border-red-200 bg-gradient-to-br from-red-500 via-orange-500 to-yellow-500">
       {/* Decorative Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl"></div>
@@ -56,7 +56,7 @@ const DailyDealsSection = () => {
       </div>
       
       {/* Content */}
-      <div className="relative px-4 py-5">
+      <div className="relative px-3 py-5">
         {/* Header with Badge */}
         <div className="mb-4">
           <div className="flex items-center justify-between mb-3">
