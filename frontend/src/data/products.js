@@ -451,7 +451,8 @@ export const getRecommendedProducts = (limit = 6) => {
     });
   }
 
-  // Shuffle and return
-  return recommended.sort(() => Math.random() - 0.5).slice(0, limit);
+  // Return products in their determined priority order (wishlist -> cart -> trending -> popular)
+  // No random shuffle to maintain stability across renders
+  return recommended.slice(0, limit);
 };
 
