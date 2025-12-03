@@ -62,11 +62,11 @@ const ProductListItem = ({ product, index }) => {
       <div className="flex gap-4">
         {/* Product Image */}
         <Link to={productLink} className="flex-shrink-0">
-          <div className="w-24 h-24 rounded-xl overflow-hidden bg-gray-100 flex items-center justify-center">
+          <div className="w-24 h-24 rounded-xl overflow-hidden bg-gray-100">
             <LazyImage
               src={product.image}
               alt={product.name}
-              className="w-full h-full object-contain p-2 scale-75"
+              className="w-full h-full object-cover"
               onError={(e) => {
                 e.target.src = 'https://via.placeholder.com/200x200?text=Product';
               }}

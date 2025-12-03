@@ -148,7 +148,7 @@ const ProductCard = ({ product, hideRating = false }) => {
           <LazyImage
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-contain p-4 scale-75 group-hover:scale-90 transition-transform duration-500"
+            className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500"
             style={{ willChange: 'transform', transform: 'translateZ(0)' }}
             onError={(e) => {
               e.target.src = 'https://via.placeholder.com/300x300?text=Product+Image';

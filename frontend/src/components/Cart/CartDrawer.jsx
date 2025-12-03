@@ -147,11 +147,11 @@ const CartDrawer = () => {
           )}
           
                       {/* Product Image */}
-          <div className="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-200 relative z-10 flex items-center justify-center">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 rounded-lg overflow-hidden bg-gray-200 relative z-10">
                         <img
                           src={item.image}
                           alt={item.name}
-                          className="w-full h-full object-contain p-2 scale-75"
+                          className="w-full h-full object-cover"
                         />
                       </div>
 
