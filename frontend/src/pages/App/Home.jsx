@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
+import { FiHeart } from "react-icons/fi";
 import MobileLayout from "../../components/Layout/Mobile/MobileLayout";
 import ProductCard from "../../components/ProductCard";
 import AnimatedBanner from "../../components/Mobile/AnimatedBanner";
@@ -371,39 +372,37 @@ const MobileHome = () => {
           {/* Recommended for You */}
           <RecommendedSection />
 
-          {/* Popular Brands */}
-          <div className="px-4 py-4">
-            <h2 className="text-xl font-bold text-gray-800 mb-4">
-              Popular Brands
-            </h2>
-            <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-2 -mx-4 px-4">
-              {[
-                "dove",
-                "pampers",
-                "great_value",
-                "nature_valley",
-                "oxi_clean",
-                "suave",
-              ].map((brand, index) => (
-                <motion.div
-                  key={brand}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="flex-shrink-0">
-                  <Link to="/app/search" className="block">
-                    <div className="w-24 h-24 rounded-xl overflow-hidden bg-gray-100 p-3">
-                      <LazyImage
-                        src={`/images/brands/${brand}-cover.png`}
-                        alt={brand}
-                        className="w-full h-full object-contain"
-                      />
-                    </div>
-                  </Link>
-                </motion.div>
-              ))}
-            </div>
-          </div>
+          {/* Tagline Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="px-4 py-12 text-left"
+          >
+            <motion.h2
+              className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-400 leading-tight flex items-center justify-start gap-3 flex-wrap"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <span>Bringing Shopping to Your Fingertips.</span>
+              <motion.span
+                animate={{
+                  scale: [1, 1.2, 1],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  repeatDelay: 2,
+                }}
+                className="text-red-500 inline-block"
+              >
+                <FiHeart className="text-4xl sm:text-5xl md:text-6xl fill-red-500" />
+              </motion.span>
+            </motion.h2>
+          </motion.div>
 
           {/* Bottom Spacing */}
           <div className="h-4" />
