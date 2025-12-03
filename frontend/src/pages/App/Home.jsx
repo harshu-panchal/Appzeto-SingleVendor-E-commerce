@@ -381,7 +381,7 @@ const MobileHome = () => {
             className="px-4 py-12 text-left"
           >
             <motion.h2
-              className="text-3xl sm:text-4xl md:text-5xl font-black text-gray-400 leading-tight flex items-center justify-start gap-3 flex-wrap"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-gray-400 leading-tight flex items-center justify-start gap-3 flex-wrap"
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
@@ -399,7 +399,7 @@ const MobileHome = () => {
                 }}
                 className="text-red-500 inline-block"
               >
-                <FiHeart className="text-4xl sm:text-5xl md:text-6xl fill-red-500" />
+                <FiHeart className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl fill-red-500" />
               </motion.span>
             </motion.h2>
           </motion.div>
