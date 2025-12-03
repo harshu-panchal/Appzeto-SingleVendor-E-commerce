@@ -7,6 +7,7 @@ import AnimatedBanner from "../../components/Mobile/AnimatedBanner";
 import NewArrivalsSection from "../../components/Mobile/NewArrivalsSection";
 import DailyDealsSection from "../../components/Mobile/DailyDealsSection";
 import RecommendedSection from "../../components/Mobile/RecommendedSection";
+import BrandLogosScroll from "../../components/Home/BrandLogosScroll";
 import LazyImage from "../../components/LazyImage";
 import { getMostPopular, getTrending, getFlashSale } from "../../data/products";
 import { categories } from "../../data/categories";
@@ -61,7 +62,9 @@ const MobileHome = () => {
     const currentX = touch.clientX;
     const diff = touchStart - currentX;
     // Constrain the drag offset to prevent over-dragging
-    const maxDrag = 300; // Maximum drag distance
+    // Use container width for better responsiveness
+    const containerWidth = e.currentTarget?.offsetWidth || 400;
+    const maxDrag = containerWidth * 0.5; // Maximum drag distance (50% of container)
     setDragOffset(Math.max(-maxDrag, Math.min(maxDrag, diff)));
     setTouchEnd(currentX);
   };
@@ -138,36 +141,45 @@ const MobileHome = () => {
               onTouchMove={onTouchMove}
               onTouchEnd={onTouchEnd}
               style={{ touchAction: 'pan-y', userSelect: 'none' }}>
-              <AnimatePresence initial={false} mode="wait">
-                <motion.div
-                  key={currentSlide}
-                  initial={{ x: "100%", opacity: 1 }}
-                  animate={{ 
-                    x: dragOffset !== 0 ? dragOffset : 0, 
-                    opacity: dragOffset !== 0 ? Math.max(0.3, 1 - Math.abs(dragOffset) / 400) : 1
-                  }}
-                  exit={{ x: "-100%", opacity: 0 }}
-                  transition={{
-                    duration: dragOffset !== 0 ? 0 : 0.5,
-                    ease: [0.25, 0.1, 0.25, 1],
-                  }}
-                  className="absolute inset-0"
-                  style={{
-                    willChange: dragOffset !== 0 ? 'transform, opacity' : 'auto',
-                  }}>
-                  <LazyImage
-                    src={slides[currentSlide].image}
-                    alt={`Slide ${currentSlide + 1}`}
-                    className="w-full h-full object-cover pointer-events-none select-none"
-                    draggable={false}
-                    onError={(e) => {
-                      e.target.src = `https://via.placeholder.com/400x200?text=Slide+${
-                        currentSlide + 1
-                      }`;
-                    }}
-                  />
-                </motion.div>
-              </AnimatePresence>
+              {/* Slider Container - All slides in a row */}
+              <motion.div
+                className="flex h-full"
+                style={{
+                  width: `${slides.length * 100}%`,
+                  height: "100%",
+                }}
+                animate={{
+                  x: dragOffset !== 0 
+                    ? `calc(-${currentSlide * (100 / slides.length)}% + ${dragOffset}px)`
+                    : `-${currentSlide * (100 / slides.length)}%`,
+                }}
+                transition={{
+                  duration: dragOffset !== 0 ? 0 : 0.6,
+                  ease: [0.25, 0.46, 0.45, 0.94], // Smooth easing
+                  type: "tween",
+                }}>
+                {slides.map((slide, index) => (
+                  <div
+                    key={index}
+                    className="flex-shrink-0"
+                    style={{
+                      width: `${100 / slides.length}%`,
+                      height: "100%",
+                    }}>
+                    <LazyImage
+                      src={slide.image}
+                      alt={`Slide ${index + 1}`}
+                      className="w-full h-full object-cover pointer-events-none select-none"
+                      draggable={false}
+                      onError={(e) => {
+                        e.target.src = `https://via.placeholder.com/400x200?text=Slide+${
+                          index + 1
+                        }`;
+                      }}
+                    />
+                  </div>
+                ))}
+              </motion.div>
               <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10 pointer-events-none">
                 {slides.map((_, index) => (
                   <button
@@ -187,6 +199,9 @@ const MobileHome = () => {
               </div>
             </div>
           </div>
+
+          {/* Brand Logos Scroll */}
+          <BrandLogosScroll />
 
           {/* Animated Banner */}
           <AnimatedBanner />
