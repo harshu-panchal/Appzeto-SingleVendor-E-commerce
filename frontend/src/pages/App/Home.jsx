@@ -18,10 +18,10 @@ const MobileHome = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const slides = [
-    { image: "/images/hero/slide1.jpg" },
-    { image: "/images/hero/slide2.jpg" },
-    { image: "/images/hero/slide3.jpg" },
-    { image: "/images/hero/slide4.jpg" },
+    { image: "/images/hero/slide1.png" },
+    { image: "/images/hero/slide2.png" },
+    { image: "/images/hero/slide3.png" },
+    { image: "/images/hero/slide4.png" },
   ];
 
   const mostPopular = getMostPopular();
