@@ -98,7 +98,8 @@ const MobileBottomNav = () => {
                     key={item.badge}
                     initial={{ scale: 0, rotate: -180 }}
                     animate={{ scale: 1, rotate: 0 }}
-                    className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-accent-500 rounded-full border-2 border-white shadow-md z-20 flex items-center justify-center">
+                    className="absolute -top-0.5 -right-0.5 w-5 h-5 rounded-full border-2 border-white shadow-md z-20 flex items-center justify-center"
+                    style={{ backgroundColor: '#ffc101' }}>
                     <span className="text-[8px] font-bold text-white">
                       {item.badge > 9 ? "9+" : item.badge}
                     </span>

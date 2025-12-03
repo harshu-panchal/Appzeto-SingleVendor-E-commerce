@@ -193,7 +193,9 @@ const Header = () => {
                 className="p-1.5 sm:p-2 md:p-2.5 hover:bg-white/50 rounded-full transition-all duration-300 hover:scale-110 relative group">
                 <FiHeart className="text-primary-500 text-base sm:text-lg md:text-xl group-hover:text-accent-500 transition-colors" />
                 {wishlistCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 w-4 h-4 sm:w-5 sm:h-5 bg-accent-500 rounded-full flex items-center justify-center text-white text-[10px] sm:text-xs font-bold">
+                  <span 
+                    className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 w-4 h-4 sm:w-5 sm:h-5 rounded-full flex items-center justify-center text-white text-[10px] sm:text-xs font-bold"
+                    style={{ backgroundColor: '#ffc101' }}>
                     {wishlistCount > 9 ? "9+" : wishlistCount}
                   </span>
                 )}
