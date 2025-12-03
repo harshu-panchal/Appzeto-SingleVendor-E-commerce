@@ -69,24 +69,32 @@ const MobileHeader = () => {
     return () => window.removeEventListener("resize", measureTopRow);
   }, []);
 
-  // Handle scroll to hide/show top row
+  // Handle scroll to hide/show top row with smooth throttling
   useEffect(() => {
+    let ticking = false;
+    
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      const lastScrollY = lastScrollYRef.current;
-      
-      // Show top row when at top or scrolling up
-      if (currentScrollY < 10) {
-        setIsTopRowVisible(true);
-      } else if (currentScrollY < lastScrollY) {
-        // Scrolling up - show top row
-        setIsTopRowVisible(true);
-      } else if (currentScrollY > lastScrollY && currentScrollY > 50) {
-        // Scrolling down and past threshold - hide top row
-        setIsTopRowVisible(false);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY;
+          const lastScrollY = lastScrollYRef.current;
+          
+          // Show top row when at top or scrolling up
+          if (currentScrollY < 10) {
+            setIsTopRowVisible(true);
+          } else if (currentScrollY < lastScrollY) {
+            // Scrolling up - show top row
+            setIsTopRowVisible(true);
+          } else if (currentScrollY > lastScrollY && currentScrollY > 50) {
+            // Scrolling down and past threshold - hide top row
+            setIsTopRowVisible(false);
+          }
+          
+          lastScrollYRef.current = currentScrollY;
+          ticking = false;
+        });
+        ticking = true;
       }
-      
-      lastScrollYRef.current = currentScrollY;
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -194,7 +202,12 @@ const MobileHeader = () => {
       animate={{
         y: isTopRowVisible ? 0 : -(topRowHeight + 12),
       }}
-      transition={{ duration: 0.3, ease: "easeInOut" }}>
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 30,
+        mass: 0.8,
+      }}>
       <div className="px-4 py-3 overflow-visible">
         {/* First Row: Logo and Actions */}
         <motion.div
@@ -204,7 +217,12 @@ const MobileHeader = () => {
           animate={{
             opacity: isTopRowVisible ? 1 : 0,
           }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
+          transition={{
+            type: "spring",
+            stiffness: 400,
+            damping: 35,
+            mass: 0.6,
+          }}
           style={{
             pointerEvents: isTopRowVisible ? "auto" : "none",
           }}>
