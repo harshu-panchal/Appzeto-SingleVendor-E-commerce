@@ -1,33 +1,39 @@
 export const categories = [
   {
     id: 1,
-    name: 'Fresh Vegetables',
-    image: '/images/categories/fresh_vegetables-thumb.png',
+    name: 'Clothing',
+    description: 'All apparel items (Tops, Bottoms, Dresses, Outerwear)',
+    image: '/images/categories/clothing-thumb.png',
   },
   {
     id: 2,
-    name: 'Fresh Fruits',
-    image: '/images/categories/fresh_fruits-thumb.png',
+    name: 'Footwear',
+    description: 'All shoes and boots',
+    image: '/images/categories/footwear-thumb.png',
   },
   {
     id: 3,
-    name: 'Nuts & Dry Fruits',
-    image: '/images/categories/nuts_&_dry_fruits-thumb.png',
+    name: 'Bags',
+    description: 'Handbags and crossbody bags',
+    image: '/images/categories/bags-thumb.png',
   },
   {
     id: 4,
-    name: 'Chicken',
-    image: '/images/categories/chicken-thumb.png',
+    name: 'Jewelry',
+    description: 'Necklaces and watches',
+    image: '/images/categories/jewelry-thumb.png',
   },
   {
     id: 5,
-    name: 'Beef',
-    image: '/images/categories/beef-thumb.png',
+    name: 'Accessories',
+    description: 'Sunglasses, belts, scarves',
+    image: '/images/categories/accessories-thumb.png',
   },
   {
     id: 6,
-    name: 'Frozen Fish',
-    image: '/images/categories/frozen_fish-thumb.png',
+    name: 'Athletic',
+    description: 'Sport-specific clothing and shoes',
+    image: '/images/categories/athletic-thumb.png',
   },
 ];
 

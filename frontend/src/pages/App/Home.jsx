@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import MobileLayout from "../../components/Layout/Mobile/MobileLayout";
 import ProductCard from "../../components/ProductCard";
-import MobileCategoryGrid from "../../components/Mobile/MobileCategoryGrid";
 import AnimatedBanner from "../../components/Mobile/AnimatedBanner";
 import NewArrivalsSection from "../../components/Mobile/NewArrivalsSection";
 import DailyDealsSection from "../../components/Mobile/DailyDealsSection";
@@ -110,9 +109,6 @@ const MobileHome = () => {
               </div>
             </div>
           </div>
-
-          {/* Categories */}
-          <MobileCategoryGrid />
 
           {/* Animated Banner */}
           <AnimatedBanner />

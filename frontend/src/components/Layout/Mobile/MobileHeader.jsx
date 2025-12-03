@@ -15,6 +15,7 @@ import { appLogo } from "../../../data/logos";
 import { motion } from "framer-motion";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import SearchBar from "../../SearchBar";
+import MobileCategoryIcons from "../../Mobile/MobileCategoryIcons";
 
 const MobileHeader = () => {
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -347,8 +348,13 @@ const MobileHeader = () => {
         </motion.div>
 
         {/* Second Row: Search Bar */}
-        <div className="overflow-visible">
+        <div className="overflow-visible mb-2">
           <SearchBar />
+        </div>
+
+        {/* Third Row: Category Icons */}
+        <div className="overflow-visible border-t border-gray-100 pt-2">
+          <MobileCategoryIcons />
         </div>
       </div>
     </motion.header>

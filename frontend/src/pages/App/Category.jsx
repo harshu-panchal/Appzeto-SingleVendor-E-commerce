@@ -29,19 +29,24 @@ const MobileCategory = () => {
 
   const categoryMap = {
     1: [
-      "potato",
-      "cauliflower",
-      "onion",
-      "okra",
-      "coriander",
-      "vegetable",
-      "vegetables",
+      "t-shirt",
+      "shirt",
+      "jeans",
+      "dress",
+      "gown",
+      "skirt",
+      "blazer",
+      "jacket",
+      "cardigan",
+      "sweater",
+      "flannel",
+      "maxi",
     ],
-    2: ["tomato", "cherry", "fruit", "fruits", "apple", "banana", "orange"],
-    3: ["nuts", "dry", "fruits", "almond", "cashew", "walnut", "raisin"],
-    4: ["chicken", "poultry"],
-    5: ["beef", "steak", "meat"],
-    6: ["fish", "frozen", "salmon", "tuna"],
+    2: ["sneakers", "pumps", "boots", "heels", "shoes"],
+    3: ["bag", "crossbody", "handbag"],
+    4: ["necklace", "watch", "wristwatch"],
+    5: ["sunglasses", "belt", "scarf"],
+    6: ["athletic", "running", "track", "sporty"],
   };
 
   const categoryProducts = useMemo(() => {
