@@ -98,7 +98,7 @@ const MobileHeader = () => {
     navigate("/app");
   };
 
-  // Animation content - straight line movement only
+  // Animation content - straight line movement only, starting from behind logo
   const shouldShowAnimation = showCartAnimation && positionsReady && animationPositions.startX > 0 && animationPositions.endX > 0;
 
   const animationContent = shouldShowAnimation ? (
@@ -107,7 +107,7 @@ const MobileHeader = () => {
       style={{
         left: 0,
         top: 0,
-        zIndex: 10001,
+        zIndex: 10000, // Above navbar but will be behind logo due to stacking context
         willChange: 'transform, opacity',
         transform: 'translateZ(0)',
         backfaceVisibility: 'hidden',
@@ -116,19 +116,19 @@ const MobileHeader = () => {
       initial={{
         x: animationPositions.startX - 40,
         y: animationPositions.startY - 40,
-        scale: 1,
-        opacity: 1,
+        scale: 0.8,
+        opacity: 0,
       }}
       animate={{
         x: animationPositions.endX - 40,
         y: animationPositions.endY - 40,
-        scale: [1, 1.05, 0.95],
-        opacity: [1, 1, 0.8, 0],
+        scale: [0.8, 1, 1.05, 0.95],
+        opacity: [0, 1, 1, 0.8, 0],
       }}
       transition={{
         duration: 4,
         ease: [0.25, 0.1, 0.25, 1],
-        times: [0, 0.7, 0.9, 1],
+        times: [0, 0.1, 0.7, 0.9, 1],
         type: "tween",
       }}
       onAnimationComplete={() => {
@@ -152,13 +152,13 @@ const MobileHeader = () => {
           {/* Logo */}
           <Link
             to="/app"
-            className="flex items-center flex-shrink-0 overflow-visible relative z-10">
-            <div ref={logoRef} className="overflow-visible">
+            className="flex items-center flex-shrink-0 overflow-visible relative z-[10001]">
+            <div ref={logoRef} className="overflow-visible relative z-[10002]">
               <img
                 src={appLogo.src}
                 alt={appLogo.alt}
-                className="h-8 w-auto object-contain origin-left"
-                style={{ transform: "scale(4)" }}
+                className="h-8 w-auto object-contain origin-left relative z-[10003]"
+                style={{ transform: "scale(4)", position: "relative" }}
                 onError={(e) => {
                   // Fallback to placeholder if logo doesn't exist
                   e.target.src =
