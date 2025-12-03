@@ -13,8 +13,11 @@ import FlashSaleSection from '../components/Home/FlashSaleSection';
 import PopularBrandsSection from '../components/Home/PopularBrandsSection';
 import FeaturesSection from '../components/Home/FeaturesSection';
 import PageTransition from '../components/PageTransition';
+import useHeaderHeight from '../hooks/useHeaderHeight';
 
 const Home = () => {
+  const headerHeight = useHeaderHeight();
+  
   // Ensure body scroll is restored when component mounts
   useEffect(() => {
     document.body.style.overflowY = '';
@@ -28,7 +31,7 @@ const Home = () => {
       <div className="min-h-screen bg-background w-full overflow-x-hidden">
         <Header />
         <Navbar />
-        <main className="w-full overflow-x-hidden">
+        <main className="w-full overflow-x-hidden" style={{ paddingTop: `${headerHeight}px` }}>
           <HeroBanner />
           <CategoriesSection />
           <PromotionalBanners />

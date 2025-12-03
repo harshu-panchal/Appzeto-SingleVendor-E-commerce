@@ -13,10 +13,12 @@ import Breadcrumbs from '../components/Layout/Breadcrumbs';
 import Badge from '../components/Badge';
 import useInfiniteScroll from '../hooks/useInfiniteScroll';
 import ProductGridSkeleton from '../components/Skeletons/ProductGridSkeleton';
+import useHeaderHeight from '../hooks/useHeaderHeight';
 
 const Offers = () => {
   const location = useLocation();
   const allOffers = getOffers();
+  const headerHeight = useHeaderHeight();
   const [viewMode, setViewMode] = useState('grid');
   const [sortBy, setSortBy] = useState('discount'); // discount, price-low, price-high, rating
   const [showFilters, setShowFilters] = useState(false);
@@ -86,7 +88,7 @@ const Offers = () => {
       <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 w-full overflow-x-hidden">
         <Header />
         <Navbar />
-        <main className="w-full overflow-x-hidden">
+        <main className="w-full overflow-x-hidden" style={{ paddingTop: `${headerHeight}px` }}>
           <div className="container mx-auto px-2 sm:px-4 py-6 sm:py-8">
             <div className="max-w-7xl mx-auto">
               <Breadcrumbs />

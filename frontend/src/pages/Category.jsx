@@ -12,12 +12,13 @@ import PageTransition from '../components/PageTransition';
 import ProductCard from '../components/ProductCard';
 import Breadcrumbs from '../components/Layout/Breadcrumbs';
 import useInfiniteScroll from '../hooks/useInfiniteScroll';
+import useHeaderHeight from '../hooks/useHeaderHeight';
 
 const Category = () => {
   const { id } = useParams();
   const categoryId = parseInt(id);
   const category = categories.find((cat) => cat.id === categoryId);
-
+  const headerHeight = useHeaderHeight();
   const [viewMode, setViewMode] = useState('grid');
   const [sortBy, setSortBy] = useState('default'); // default, price-low, price-high, rating
   const [showFilters, setShowFilters] = useState(false);
@@ -77,7 +78,7 @@ const Category = () => {
         <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 w-full overflow-x-hidden">
           <Header />
           <Navbar />
-          <main className="w-full overflow-x-hidden">
+          <main className="w-full overflow-x-hidden" style={{ paddingTop: `${headerHeight}px` }}>
             <div className="container mx-auto px-2 sm:px-4 py-12 text-center">
               <h1 className="text-3xl font-bold text-gray-800 mb-4">Category Not Found</h1>
               <p className="text-gray-600">The category you're looking for doesn't exist.</p>
@@ -94,7 +95,7 @@ const Category = () => {
       <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 w-full overflow-x-hidden">
         <Header />
         <Navbar />
-        <main className="w-full overflow-x-hidden">
+        <main className="w-full overflow-x-hidden" style={{ paddingTop: `${headerHeight}px` }}>
           <div className="container mx-auto px-2 sm:px-4 py-6 sm:py-8">
             <div className="max-w-7xl mx-auto">
               <Breadcrumbs />

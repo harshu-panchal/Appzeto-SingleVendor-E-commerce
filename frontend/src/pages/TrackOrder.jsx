@@ -11,11 +11,13 @@ import PageTransition from '../components/PageTransition';
 import Breadcrumbs from '../components/Layout/Breadcrumbs';
 import Badge from '../components/Badge';
 import ProtectedRoute from '../components/Auth/ProtectedRoute';
+import useHeaderHeight from '../hooks/useHeaderHeight';
 
 const TrackOrder = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
   const { getOrder } = useOrderStore();
+  const headerHeight = useHeaderHeight();
   const order = getOrder(orderId);
 
   useEffect(() => {
@@ -108,7 +110,7 @@ const TrackOrder = () => {
         <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 w-full overflow-x-hidden">
           <Header />
           <Navbar />
-          <main className="w-full overflow-x-hidden">
+          <main className="w-full overflow-x-hidden" style={{ paddingTop: `${headerHeight}px` }}>
             <div className="container mx-auto px-2 sm:px-4 py-8">
               <Breadcrumbs />
               

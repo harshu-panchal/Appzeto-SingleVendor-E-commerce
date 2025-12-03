@@ -10,10 +10,12 @@ import Header from '../components/Layout/Header';
 import Navbar from '../components/Layout/Navbar';
 import Footer from '../components/Layout/Footer';
 import PageTransition from '../components/PageTransition';
+import useHeaderHeight from '../hooks/useHeaderHeight';
 
 const Register = () => {
   const navigate = useNavigate();
   const { register: registerUser, isLoading } = useAuthStore();
+  const headerHeight = useHeaderHeight();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -41,7 +43,7 @@ const Register = () => {
       <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 w-full overflow-x-hidden">
         <Header />
         <Navbar />
-        <main className="w-full overflow-x-hidden">
+        <main className="w-full overflow-x-hidden" style={{ paddingTop: `${headerHeight}px` }}>
           <div className="container mx-auto px-2 sm:px-4 py-8 sm:py-12">
             <div className="max-w-md mx-auto">
               <motion.div

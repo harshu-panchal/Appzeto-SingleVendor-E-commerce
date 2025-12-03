@@ -11,10 +11,12 @@ import ProtectedRoute from '../components/Auth/ProtectedRoute';
 import Badge from '../components/Badge';
 import { useOrderStore } from '../store/orderStore';
 import { useAuthStore } from '../store/authStore';
+import useHeaderHeight from '../hooks/useHeaderHeight';
 
 const Orders = () => {
   const { getAllOrders } = useOrderStore();
   const { user } = useAuthStore();
+  const headerHeight = useHeaderHeight();
   const [selectedStatus, setSelectedStatus] = useState('all');
 
   const statusOptions = [
@@ -78,7 +80,7 @@ const Orders = () => {
         <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 w-full overflow-x-hidden">
           <Header />
           <Navbar />
-          <main className="w-full overflow-x-hidden">
+          <main className="w-full overflow-x-hidden" style={{ paddingTop: `${headerHeight}px` }}>
             <div className="container mx-auto px-2 sm:px-4 py-8">
               <div className="max-w-6xl mx-auto">
                 <h1 className="text-3xl font-bold text-gray-800 mb-8">My Orders</h1>

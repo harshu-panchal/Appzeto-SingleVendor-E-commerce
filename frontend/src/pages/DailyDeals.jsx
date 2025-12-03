@@ -11,9 +11,11 @@ import PageTransition from '../components/PageTransition';
 import ProductCard from '../components/ProductCard';
 import Breadcrumbs from '../components/Layout/Breadcrumbs';
 import Badge from '../components/Badge';
+import useHeaderHeight from '../hooks/useHeaderHeight';
 
 const DailyDeals = () => {
   const allDeals = getDailyDeals();
+  const headerHeight = useHeaderHeight();
   const [viewMode, setViewMode] = useState('grid');
   const [timeLeft, setTimeLeft] = useState({
     hours: 23,
@@ -66,7 +68,7 @@ const DailyDeals = () => {
       <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 w-full overflow-x-hidden">
         <Header />
         <Navbar />
-        <main className="w-full overflow-x-hidden">
+        <main className="w-full overflow-x-hidden" style={{ paddingTop: `${headerHeight}px` }}>
           <div className="container mx-auto px-2 sm:px-4 py-6 sm:py-8">
             <div className="max-w-7xl mx-auto">
               <Breadcrumbs />

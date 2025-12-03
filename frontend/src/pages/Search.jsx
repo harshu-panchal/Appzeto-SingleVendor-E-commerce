@@ -12,9 +12,11 @@ import PageTransition from '../components/PageTransition';
 import Breadcrumbs from '../components/Layout/Breadcrumbs';
 import useInfiniteScroll from '../hooks/useInfiniteScroll';
 import ProductGridSkeleton from '../components/Skeletons/ProductGridSkeleton';
+import useHeaderHeight from '../hooks/useHeaderHeight';
 
 const Search = () => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const headerHeight = useHeaderHeight();
   const [searchQuery, setSearchQuery] = useState(searchParams.get('q') || '');
   const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
@@ -114,7 +116,7 @@ const Search = () => {
       <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 w-full overflow-x-hidden">
         <Header />
         <Navbar />
-        <main className="w-full overflow-x-hidden">
+        <main className="w-full overflow-x-hidden" style={{ paddingTop: `${headerHeight}px` }}>
           <div className="container mx-auto px-2 sm:px-4 py-8">
           <Breadcrumbs />
           {/* Search Header */}

@@ -9,10 +9,12 @@ import Footer from '../components/Layout/Footer';
 import PageTransition from '../components/PageTransition';
 import ProtectedRoute from '../components/Auth/ProtectedRoute';
 import { useAddressStore } from '../store/addressStore';
+import useHeaderHeight from '../hooks/useHeaderHeight';
 
 const Addresses = () => {
   const { addresses, addAddress, updateAddress, deleteAddress, setDefaultAddress } =
     useAddressStore();
+  const headerHeight = useHeaderHeight();
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingAddress, setEditingAddress] = useState(null);
 
@@ -61,7 +63,7 @@ const Addresses = () => {
         <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 w-full overflow-x-hidden">
           <Header />
           <Navbar />
-          <main className="w-full overflow-x-hidden">
+          <main className="w-full overflow-x-hidden" style={{ paddingTop: `${headerHeight}px` }}>
             <div className="container mx-auto px-2 sm:px-4 py-8">
               <div className="max-w-4xl mx-auto">
                 <div className="flex items-center justify-between mb-8">

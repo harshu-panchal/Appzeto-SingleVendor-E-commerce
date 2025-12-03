@@ -11,10 +11,12 @@ import Navbar from '../components/Layout/Navbar';
 import Footer from '../components/Layout/Footer';
 import PageTransition from '../components/PageTransition';
 import ProductCard from '../components/ProductCard';
+import useHeaderHeight from '../hooks/useHeaderHeight';
 
 const Wishlist = () => {
   const { items, removeItem, moveToCart, clearWishlist } = useWishlistStore();
   const { addItem } = useCartStore();
+  const headerHeight = useHeaderHeight();
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
 
   const handleMoveToCart = (item) => {
@@ -45,7 +47,7 @@ const Wishlist = () => {
       <div className="min-h-screen bg-gradient-to-b from-gray-50 via-white to-gray-50 w-full overflow-x-hidden">
         <Header />
         <Navbar />
-        <main className="w-full overflow-x-hidden">
+        <main className="w-full overflow-x-hidden" style={{ paddingTop: `${headerHeight}px` }}>
           <div className="container mx-auto px-2 sm:px-4 py-8">
             <div className="max-w-7xl mx-auto">
               {/* Header */}

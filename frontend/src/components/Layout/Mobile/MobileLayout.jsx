@@ -4,9 +4,11 @@ import MobileHeader from './MobileHeader';
 import MobileBottomNav from './MobileBottomNav';
 import MobileCartBar from './MobileCartBar';
 import CartDrawer from '../../Cart/CartDrawer';
+import useMobileHeaderHeight from '../../../hooks/useMobileHeaderHeight';
 
 const MobileLayout = ({ children, showBottomNav = true, showCartBar = true }) => {
   const location = useLocation();
+  const headerHeight = useMobileHeaderHeight();
   // Always show bottom nav on /app routes
   const shouldShowBottomNav = location.pathname.startsWith('/app') ? true : showBottomNav;
   
@@ -21,7 +23,10 @@ const MobileLayout = ({ children, showBottomNav = true, showCartBar = true }) =>
   return (
     <>
       <MobileHeader />
-      <main className={`min-h-screen w-full overflow-x-hidden pt-16 ${shouldShowBottomNav ? 'pb-20' : ''} ${showCartBar ? 'pb-24' : ''}`}>
+      <main 
+        className={`min-h-screen w-full overflow-x-hidden ${shouldShowBottomNav ? 'pb-20' : ''} ${showCartBar ? 'pb-24' : ''}`}
+        style={{ paddingTop: `${headerHeight}px` }}
+      >
         {children}
       </main>
       {showCartBar && <MobileCartBar />}
