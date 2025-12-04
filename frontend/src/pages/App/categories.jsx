@@ -263,6 +263,9 @@ const MobileCategories = () => {
     (cat) => cat.id === selectedCategoryId
   );
 
+  // Check if any filter is active
+  const hasActiveFilters = filters.minPrice || filters.maxPrice || filters.minRating;
+
   // Calculate available height for content (accounting for bottom nav and cart bar)
   const contentHeight = `calc(100vh - 80px)`;
 
@@ -319,7 +322,9 @@ const MobileCategories = () => {
                       className={`p-2 hover:bg-gray-100 rounded-full transition-colors ${
                         showFilters ? "bg-gray-100" : ""
                       }`}>
-                      <FiFilter className="text-xl text-gray-700" />
+                      <FiFilter className={`text-xl transition-colors ${
+                        hasActiveFilters ? "text-blue-600" : "text-gray-700"
+                      }`} />
                     </button>
 
                     {/* Filter Dropdown */}
