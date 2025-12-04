@@ -211,6 +211,66 @@ const MobileSearch = () => {
         <div className="w-full pb-24">
           {/* Search Header */}
           <div className="px-4 py-4 bg-white border-b border-gray-200 sticky top-1 z-30">
+            <form onSubmit={handleSearch} className="mb-3">
+              <div className="relative">
+                <FiSearch className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 text-xl z-10" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => {
+                    setSearchQuery(e.target.value);
+                    setShowSuggestions(true);
+                  }}
+                  onFocus={() => setShowSuggestions(true)}
+                  placeholder="Search products..."
+                  className="w-full pl-12 pr-20 py-3 glass-card rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500 text-gray-700 placeholder:text-gray-400 text-base"
+                  autoFocus
+                />
+                <div className="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
+                  <motion.button
+                    type="button"
+                    onClick={handleVoiceSearch}
+                    whileTap={{ scale: 0.9 }}
+                    className={`p-2 rounded-lg transition-colors ${
+                      isListening 
+                        ? 'bg-red-100 text-red-600' 
+                        : 'hover:bg-gray-100 text-gray-400'
+                    }`}
+                  >
+                    <motion.div
+                      animate={isListening ? {
+                        scale: [1, 1.2, 1],
+                      } : {}}
+                      transition={{ duration: 0.5, repeat: isListening ? Infinity : 0 }}
+                    >
+                      <FiMic className="text-lg" />
+                    </motion.div>
+                  </motion.button>
+                  {searchQuery && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchQuery('');
+                        setSearchParams({});
+                        setShowSuggestions(false);
+                      }}
+                      className="p-2 hover:bg-gray-100 rounded-lg transition-colors text-gray-400"
+                    >
+                      <FiX className="text-lg" />
+                    </button>
+                  )}
+                </div>
+                <SearchSuggestions
+                  query={searchQuery}
+                  isOpen={showSuggestions}
+                  onSelect={handleSuggestionSelect}
+                  onClose={() => setShowSuggestions(false)}
+                  recentSearches={recentSearches}
+                  onDeleteRecent={deleteRecentSearch}
+                />
+              </div>
+            </form>
+
             {/* Filter Toggle and View Mode */}
             <div className="flex items-center justify-between">
               <p className="text-sm text-gray-600">
