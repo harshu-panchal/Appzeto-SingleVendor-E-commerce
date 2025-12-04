@@ -291,7 +291,7 @@ const MobileCategories = () => {
                 {selectedCategory && (
                   <div
                     key={`header-${selectedCategoryId}`}
-                    className="mb-4 pb-3 border-b border-gray-200">
+                    className="mb-4">
                     <h2 className="text-lg font-bold text-gray-800 mb-1">
                       {selectedCategory.name}
                     </h2>
@@ -306,7 +306,7 @@ const MobileCategories = () => {
                 {selectedCategoryId &&
                   subcategories[selectedCategoryId] &&
                   subcategories[selectedCategoryId].length > 0 && (
-                    <div className="mb-3">
+                    <div className="mb-3 -mt-2.5 pb-3 border-b border-gray-200">
                       <div
                         className="overflow-x-auto scrollbar-hide -mx-3 px-3"
                         style={{
