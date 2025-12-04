@@ -66,19 +66,22 @@ const MobileCategories = () => {
     if (activeCategoryRef.current && categoryListRef.current) {
       const categoryElement = activeCategoryRef.current;
       const listContainer = categoryListRef.current;
-      
+
       const elementTop = categoryElement.offsetTop;
       const elementHeight = categoryElement.offsetHeight;
       const containerHeight = listContainer.clientHeight;
       const scrollTop = listContainer.scrollTop;
-      
+
       // Check if element is not fully visible
-      if (elementTop < scrollTop || elementTop + elementHeight > scrollTop + containerHeight) {
+      if (
+        elementTop < scrollTop ||
+        elementTop + elementHeight > scrollTop + containerHeight
+      ) {
         // Use requestAnimationFrame for smoother scrolling
         requestAnimationFrame(() => {
           listContainer.scrollTo({
             top: elementTop - listContainer.offsetTop - 10,
-            behavior: 'smooth'
+            behavior: "smooth",
           });
         });
       }
@@ -89,7 +92,9 @@ const MobileCategories = () => {
     setSelectedCategoryId(categoryId);
   };
 
-  const selectedCategory = categories.find((cat) => cat.id === selectedCategoryId);
+  const selectedCategory = categories.find(
+    (cat) => cat.id === selectedCategoryId
+  );
 
   // Calculate available height for panels (accounting for header, bottom nav, and cart bar)
   const panelHeight = `calc(100vh - ${headerHeight}px - 80px)`;
@@ -125,25 +130,23 @@ const MobileCategories = () => {
             <div
               ref={categoryListRef}
               className="w-[22%] bg-gray-50 border-r border-gray-200 overflow-y-auto flex-shrink-0"
-              style={{ 
+              style={{
                 maxHeight: panelHeight,
-                position: 'sticky',
+                position: "sticky",
                 top: `${headerHeight}px`,
-                alignSelf: 'flex-start'
-              }}
-            >
-              <div className="py-2">
+                alignSelf: "flex-start",
+              }}>
+              <div className="pb-[190px]">
                 {categories.map((category) => {
                   const isActive = category.id === selectedCategoryId;
                   return (
                     <div
                       key={category.id}
                       ref={isActive ? activeCategoryRef : null}
-                      style={{ 
-                        willChange: isActive ? 'transform' : 'auto',
-                        transform: 'translateZ(0)'
-                      }}
-                    >
+                      style={{
+                        willChange: isActive ? "transform" : "auto",
+                        transform: "translateZ(0)",
+                      }}>
                       <motion.button
                         onClick={() => handleCategorySelect(category.id)}
                         initial={isInitialMount ? { opacity: 0 } : false}
@@ -151,19 +154,19 @@ const MobileCategories = () => {
                         transition={{ duration: 0.2 }}
                         whileTap={{ scale: 0.95 }}
                         className={`w-full px-2 py-3 text-left transition-all duration-200 relative ${
-                          isActive
-                            ? "bg-white shadow-sm"
-                            : "hover:bg-gray-100"
+                          isActive ? "bg-white shadow-sm" : "hover:bg-gray-100"
                         }`}
-                        style={{ willChange: 'transform' }}
-                      >
+                        style={{ willChange: "transform" }}>
                         <div className="flex flex-col items-center gap-1.5">
                           <div
                             className={`w-10 h-10 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 transition-all duration-200 ${
-                              isActive ? "ring-2 ring-primary-500 ring-offset-1 scale-105" : ""
+                              isActive
+                                ? "ring-2 ring-primary-500 ring-offset-1 scale-105"
+                                : ""
                             }`}
-                            style={{ willChange: isActive ? 'transform' : 'auto' }}
-                          >
+                            style={{
+                              willChange: isActive ? "transform" : "auto",
+                            }}>
                             <LazyImage
                               src={category.image}
                               alt={category.name}
@@ -176,11 +179,8 @@ const MobileCategories = () => {
                           </div>
                           <span
                             className={`text-[10px] font-semibold text-center leading-tight transition-colors ${
-                              isActive
-                                ? "text-primary-600"
-                                : "text-gray-700"
-                            }`}
-                          >
+                              isActive ? "text-primary-600" : "text-gray-700"
+                            }`}>
                             {category.name}
                           </span>
                         </div>
@@ -194,15 +194,13 @@ const MobileCategories = () => {
             {/* Right Panel - Products Grid (78%) */}
             <div
               className="w-[78%] overflow-y-auto bg-white flex-shrink-0"
-              style={{ maxHeight: panelHeight }}
-            >
+              style={{ maxHeight: panelHeight }}>
               <div className="p-3">
                 {/* Category Header */}
                 {selectedCategory && (
                   <div
                     key={`header-${selectedCategoryId}`}
-                    className="mb-4 pb-3 border-b border-gray-200"
-                  >
+                    className="mb-4 pb-3 border-b border-gray-200">
                     <h2 className="text-lg font-bold text-gray-800 mb-1">
                       {selectedCategory.name}
                     </h2>
@@ -215,11 +213,10 @@ const MobileCategories = () => {
 
                 {/* Products Grid */}
                 {filteredProducts.length === 0 ? (
-                  <div
-                    key="empty"
-                    className="text-center py-12"
-                  >
-                    <div className="text-6xl text-gray-300 mx-auto mb-4">📦</div>
+                  <div key="empty" className="text-center py-12">
+                    <div className="text-6xl text-gray-300 mx-auto mb-4">
+                      📦
+                    </div>
                     <h3 className="text-lg font-bold text-gray-800 mb-2">
                       No products found
                     </h3>
@@ -233,13 +230,12 @@ const MobileCategories = () => {
                     key={`products-${selectedCategoryId}`}
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
-                    transition={{ duration: 0.15, ease: 'easeOut' }}
+                    transition={{ duration: 0.15, ease: "easeOut" }}
                     className="grid grid-cols-2 gap-2"
-                    style={{ 
-                      willChange: 'opacity',
-                      transform: 'translateZ(0)'
-                    }}
-                  >
+                    style={{
+                      willChange: "opacity",
+                      transform: "translateZ(0)",
+                    }}>
                     {filteredProducts.map((product) => (
                       <div key={product.id}>
                         <ProductCard product={product} />

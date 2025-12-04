@@ -88,3 +88,4 @@ npm run copy-images
 This will copy all images from `data/products` to `frontend/public/images/products`.
 
 
+
