@@ -15,7 +15,8 @@ const MobileCategories = () => {
   const navigate = useNavigate();
   const defaultHeaderHeight = useMobileHeaderHeight();
   // Header is hidden on categories page, so use 0
-  const headerHeight = location.pathname === '/app/categories' ? 0 : defaultHeaderHeight;
+  const headerHeight =
+    location.pathname === "/app/categories" ? 0 : defaultHeaderHeight;
   const [selectedCategoryId, setSelectedCategoryId] = useState(
     categories[0]?.id || null
   );
@@ -64,30 +65,10 @@ const MobileCategories = () => {
       "Dresses & Kurtis",
       "Hoodies & Jackets",
     ],
-    2: [
-      "Sneakers",
-      "Sandals & Slippers",
-      "Formal Shoes",
-      "Sports Shoes",
-    ],
-    3: [
-      "Backpacks",
-      "Handbags",
-      "Sling Bags",
-      "Travel & Duffel Bags",
-    ],
-    4: [
-      "Necklaces",
-      "Earrings",
-      "Rings",
-      "Bracelets & Bangles",
-    ],
-    5: [
-      "Watches",
-      "Sunglasses",
-      "Belts",
-      "Wallets",
-    ],
+    2: ["Sneakers", "Sandals & Slippers", "Formal Shoes", "Sports Shoes"],
+    3: ["Backpacks", "Handbags", "Sling Bags", "Travel & Duffel Bags"],
+    4: ["Necklaces", "Earrings", "Rings", "Bracelets & Bangles"],
+    5: ["Watches", "Sunglasses", "Belts", "Wallets"],
     6: [
       "Gym Wear",
       "Sports Shoes",
@@ -102,22 +83,22 @@ const MobileCategories = () => {
     "Jeans & Trousers": ["jeans", "trouser", "pants", "denim"],
     "Dresses & Kurtis": ["dress", "kurti", "gown", "maxi"],
     "Hoodies & Jackets": ["hoodie", "jacket", "blazer", "cardigan", "sweater"],
-    "Sneakers": ["sneaker", "sneakers"],
+    Sneakers: ["sneaker", "sneakers"],
     "Sandals & Slippers": ["sandal", "slipper", "flip"],
     "Formal Shoes": ["formal", "oxford", "loafer", "dress shoe"],
     "Sports Shoes": ["sport", "athletic", "running", "training"],
-    "Backpacks": ["backpack", "rucksack"],
-    "Handbags": ["handbag", "bag", "purse", "tote"],
+    Backpacks: ["backpack", "rucksack"],
+    Handbags: ["handbag", "bag", "purse", "tote"],
     "Sling Bags": ["sling", "crossbody", "messenger"],
     "Travel & Duffel Bags": ["travel", "duffel", "duffle", "luggage"],
-    "Necklaces": ["necklace", "pendant", "chain"],
-    "Earrings": ["earring", "ear ring"],
-    "Rings": ["ring"],
+    Necklaces: ["necklace", "pendant", "chain"],
+    Earrings: ["earring", "ear ring"],
+    Rings: ["ring"],
     "Bracelets & Bangles": ["bracelet", "bangle", "cuff"],
-    "Watches": ["watch", "wristwatch", "timepiece"],
-    "Sunglasses": ["sunglass", "sunglasses", "shades"],
-    "Belts": ["belt"],
-    "Wallets": ["wallet", "purse"],
+    Watches: ["watch", "wristwatch", "timepiece"],
+    Sunglasses: ["sunglass", "sunglasses", "shades"],
+    Belts: ["belt"],
+    Wallets: ["wallet", "purse"],
     "Gym Wear": ["gym", "athletic", "workout", "training"],
     "Fitness Accessories": ["fitness", "gym", "workout", "resistance"],
     "Yoga & Training Gear": ["yoga", "mat", "training", "fitness"],
@@ -264,7 +245,8 @@ const MobileCategories = () => {
   );
 
   // Check if any filter is active
-  const hasActiveFilters = filters.minPrice || filters.maxPrice || filters.minRating;
+  const hasActiveFilters =
+    filters.minPrice || filters.maxPrice || filters.minRating;
 
   // Calculate available height for content (accounting for bottom nav and cart bar)
   const contentHeight = `calc(100vh - 80px)`;
@@ -296,11 +278,15 @@ const MobileCategories = () => {
   return (
     <PageTransition>
       <MobileLayout showBottomNav={true} showCartBar={true}>
-        <div className="w-full flex flex-col" style={{ minHeight: contentHeight }}>
+        <div
+          className="w-full flex flex-col"
+          style={{ minHeight: contentHeight }}>
           {/* Category Header - Fixed at top */}
           {selectedCategory && (
             <div className="sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-3">
-              <div key={`header-${selectedCategoryId}`} className="flex items-center gap-3">
+              <div
+                key={`header-${selectedCategoryId}`}
+                className="flex items-center gap-3">
                 <button
                   onClick={() => navigate(-1)}
                   className="p-2 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0">
@@ -322,9 +308,11 @@ const MobileCategories = () => {
                       className={`p-2 hover:bg-gray-100 rounded-full transition-colors ${
                         showFilters ? "bg-gray-100" : ""
                       }`}>
-                      <FiFilter className={`text-xl transition-colors ${
-                        hasActiveFilters ? "text-blue-600" : "text-gray-700"
-                      }`} />
+                      <FiFilter
+                        className={`text-xl transition-colors ${
+                          hasActiveFilters ? "text-blue-600" : "text-gray-700"
+                        }`}
+                      />
                     </button>
 
                     {/* Filter Dropdown */}
@@ -343,89 +331,121 @@ const MobileCategories = () => {
                             initial={{ opacity: 0, y: -10, scale: 0.95 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                            transition={{
+                              type: "spring",
+                              stiffness: 300,
+                              damping: 30,
+                            }}
                             className="filter-dropdown absolute right-0 top-full w-56 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 overflow-hidden"
                             style={{ marginTop: "-32px" }}>
-                          {/* Header */}
-                          <div className="flex items-center justify-between px-2 py-1.5 border-b border-gray-200 bg-gray-50">
-                            <div className="flex items-center gap-1.5">
-                              <FiFilter className="text-sm text-gray-700" />
-                              <h3 className="text-sm font-bold text-gray-800">Filters</h3>
+                            {/* Header */}
+                            <div className="flex items-center justify-between px-2 py-1.5 border-b border-gray-200 bg-gray-50">
+                              <div className="flex items-center gap-1.5">
+                                <FiFilter className="text-sm text-gray-700" />
+                                <h3 className="text-sm font-bold text-gray-800">
+                                  Filters
+                                </h3>
+                              </div>
+                              <button
+                                onClick={() => setShowFilters(false)}
+                                className="p-0.5 hover:bg-gray-200 rounded-full transition-colors">
+                                <FiX className="text-sm text-gray-600" />
+                              </button>
                             </div>
-                            <button
-                              onClick={() => setShowFilters(false)}
-                              className="p-0.5 hover:bg-gray-200 rounded-full transition-colors">
-                              <FiX className="text-sm text-gray-600" />
-                            </button>
-                          </div>
 
-                          {/* Filter Content */}
-                          <div className="max-h-[50vh] overflow-y-auto scrollbar-hide">
-                            <div className="p-2 space-y-2">
-                              {/* Price Range */}
-                              <div>
-                                <h4 className="font-semibold text-gray-700 mb-1 text-xs">Price Range</h4>
-                                <div className="space-y-1.5">
-                                  <input
-                                    type="number"
-                                    placeholder="Min Price"
-                                    value={filters.minPrice}
-                                    onChange={(e) => handleFilterChange("minPrice", e.target.value)}
-                                    className="w-full px-2 py-1.5 rounded-md border border-gray-200 bg-white focus:outline-none focus:ring-1 focus:ring-primary-500 text-xs"
-                                  />
-                                  <input
-                                    type="number"
-                                    placeholder="Max Price"
-                                    value={filters.maxPrice}
-                                    onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
-                                    className="w-full px-2 py-1.5 rounded-md border border-gray-200 bg-white focus:outline-none focus:ring-1 focus:ring-primary-500 text-xs"
-                                  />
+                            {/* Filter Content */}
+                            <div className="max-h-[50vh] overflow-y-auto scrollbar-hide">
+                              <div className="p-2 space-y-2">
+                                {/* Price Range */}
+                                <div>
+                                  <h4 className="font-semibold text-gray-700 mb-1 text-xs">
+                                    Price Range
+                                  </h4>
+                                  <div className="space-y-1.5">
+                                    <input
+                                      type="number"
+                                      placeholder="Min Price"
+                                      value={filters.minPrice}
+                                      onChange={(e) =>
+                                        handleFilterChange(
+                                          "minPrice",
+                                          e.target.value
+                                        )
+                                      }
+                                      className="w-full px-2 py-1.5 rounded-md border border-gray-200 bg-white focus:outline-none focus:ring-1 focus:ring-primary-500 text-xs"
+                                    />
+                                    <input
+                                      type="number"
+                                      placeholder="Max Price"
+                                      value={filters.maxPrice}
+                                      onChange={(e) =>
+                                        handleFilterChange(
+                                          "maxPrice",
+                                          e.target.value
+                                        )
+                                      }
+                                      className="w-full px-2 py-1.5 rounded-md border border-gray-200 bg-white focus:outline-none focus:ring-1 focus:ring-primary-500 text-xs"
+                                    />
+                                  </div>
+                                </div>
+
+                                {/* Rating Filter */}
+                                <div>
+                                  <h4 className="font-semibold text-gray-700 mb-1 text-xs">
+                                    Minimum Rating
+                                  </h4>
+                                  <div className="space-y-0.5">
+                                    {[4, 3, 2, 1].map((rating) => (
+                                      <label
+                                        key={rating}
+                                        className="flex items-center gap-1.5 cursor-pointer p-1 rounded-md hover:bg-gray-50 transition-colors">
+                                        <input
+                                          type="radio"
+                                          name="minRating"
+                                          value={rating}
+                                          checked={
+                                            filters.minRating ===
+                                            rating.toString()
+                                          }
+                                          onChange={(e) =>
+                                            handleFilterChange(
+                                              "minRating",
+                                              e.target.value
+                                            )
+                                          }
+                                          className="w-3 h-3 appearance-none rounded-full border-2 border-gray-300 bg-white checked:bg-white checked:border-primary-500 relative cursor-pointer"
+                                          style={{
+                                            backgroundImage:
+                                              filters.minRating ===
+                                              rating.toString()
+                                                ? "radial-gradient(circle, #10b981 40%, transparent 40%)"
+                                                : "none",
+                                          }}
+                                        />
+                                        <span className="text-xs text-gray-700">
+                                          {rating}+ Stars
+                                        </span>
+                                      </label>
+                                    ))}
+                                  </div>
                                 </div>
                               </div>
-
-                              {/* Rating Filter */}
-                              <div>
-                                <h4 className="font-semibold text-gray-700 mb-1 text-xs">Minimum Rating</h4>
-                                <div className="space-y-0.5">
-                                  {[4, 3, 2, 1].map((rating) => (
-                                    <label
-                                      key={rating}
-                                      className="flex items-center gap-1.5 cursor-pointer p-1 rounded-md hover:bg-gray-50 transition-colors">
-                                      <input
-                                        type="radio"
-                                        name="minRating"
-                                        value={rating}
-                                        checked={filters.minRating === rating.toString()}
-                                        onChange={(e) => handleFilterChange("minRating", e.target.value)}
-                                        className="w-3 h-3 appearance-none rounded-full border-2 border-gray-300 bg-white checked:bg-white checked:border-primary-500 relative cursor-pointer"
-                                        style={{
-                                          backgroundImage: filters.minRating === rating.toString() 
-                                            ? 'radial-gradient(circle, #10b981 40%, transparent 40%)' 
-                                            : 'none'
-                                        }}
-                                      />
-                                      <span className="text-xs text-gray-700">{rating}+ Stars</span>
-                                    </label>
-                                  ))}
-                                </div>
-                              </div>
                             </div>
-                          </div>
 
-                          {/* Footer */}
-                          <div className="border-t border-gray-200 p-2 bg-gray-50 space-y-1.5">
-                            <button
-                              onClick={clearFilters}
-                              className="w-full py-1.5 bg-gray-200 text-gray-700 rounded-md font-semibold text-xs hover:bg-gray-300 transition-colors">
-                              Clear All
-                            </button>
-                            <button
-                              onClick={() => setShowFilters(false)}
-                              className="w-full py-1.5 gradient-green text-white rounded-md font-semibold text-xs hover:shadow-glow-green transition-all">
-                              Apply Filters
-                            </button>
-                          </div>
-                        </motion.div>
+                            {/* Footer */}
+                            <div className="border-t border-gray-200 p-2 bg-gray-50 space-y-1.5">
+                              <button
+                                onClick={clearFilters}
+                                className="w-full py-1.5 bg-gray-200 text-gray-700 rounded-md font-semibold text-xs hover:bg-gray-300 transition-colors">
+                                Clear All
+                              </button>
+                              <button
+                                onClick={() => setShowFilters(false)}
+                                className="w-full py-1.5 gradient-green text-white rounded-md font-semibold text-xs hover:shadow-glow-green transition-all">
+                                Apply Filters
+                              </button>
+                            </div>
+                          </motion.div>
                         </>
                       )}
                     </AnimatePresence>
@@ -436,7 +456,11 @@ const MobileCategories = () => {
           )}
 
           {/* Main Content Area - Sidebar and Products */}
-          <div className="flex flex-1" style={{ minHeight: `calc(${contentHeight} - ${headerSectionHeight}px)` }}>
+          <div
+            className="flex flex-1"
+            style={{
+              minHeight: `calc(${contentHeight} - ${headerSectionHeight}px)`,
+            }}>
             {/* Left Panel - Vertical Category Sidebar */}
             <div
               ref={categoryListRef}
@@ -502,7 +526,9 @@ const MobileCategories = () => {
             {/* Right Panel - Products Grid */}
             <div
               className="w-[78%] overflow-y-auto bg-white flex-shrink-0"
-              style={{ maxHeight: `calc(${contentHeight} - ${headerSectionHeight}px)` }}>
+              style={{
+                maxHeight: `calc(${contentHeight} - ${headerSectionHeight}px)`,
+              }}>
               <div className="p-3">
                 {/* Subcategory Selector - Above product cards */}
                 {selectedCategoryId &&
