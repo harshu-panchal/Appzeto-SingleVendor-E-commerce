@@ -196,8 +196,8 @@ const MobileCheckout = () => {
       <MobileLayout showBottomNav={false} showCartBar={false}>
         <div className="w-full pb-24">
           {/* Header */}
-          <div className="px-3 py-2 bg-white border-b border-gray-200 sticky top-1 z-30">
-            <div className="flex items-center gap-3 mb-2">
+          <div className="px-4 py-4 bg-white border-b border-gray-200 sticky top-1 z-30">
+            <div className="flex items-center gap-3 mb-4">
               <button
                 onClick={() => navigate(-1)}
                 className="p-2 hover:bg-gray-100 rounded-full transition-colors"
@@ -211,20 +211,20 @@ const MobileCheckout = () => {
 
           {/* Guest Checkout Option */}
           {!isAuthenticated && !isGuest && (
-            <div className="px-3 py-3 bg-white border-b border-gray-200">
-              <div className="glass-card rounded-xl p-3 sm:p-4">
-                <h3 className="text-sm sm:text-base font-bold text-gray-800 mb-1.5 sm:mb-2">Have an account?</h3>
-                <p className="text-xs sm:text-sm text-gray-600 mb-3 sm:mb-4">Sign in for faster checkout</p>
-                <div className="flex gap-2 sm:gap-3">
+            <div className="px-4 py-4 bg-white border-b border-gray-200">
+              <div className="glass-card rounded-xl p-4">
+                <h3 className="text-base font-bold text-gray-800 mb-2">Have an account?</h3>
+                <p className="text-sm text-gray-600 mb-4">Sign in for faster checkout</p>
+                <div className="flex gap-3">
                   <Link
                     to="/app/login"
-                    className="flex-1 py-2 sm:py-2.5 gradient-green text-white rounded-xl font-semibold text-sm sm:text-base text-center transition-all"
+                    className="flex-1 py-2.5 gradient-green text-white rounded-xl font-semibold text-center hover:shadow-glow-green transition-all"
                   >
                     Sign In
                   </Link>
                   <button
                     onClick={() => setIsGuest(true)}
-                    className="flex-1 py-2 sm:py-2.5 bg-gray-100 text-gray-700 rounded-xl font-semibold text-sm sm:text-base hover:bg-gray-200 transition-colors"
+                    className="flex-1 py-2.5 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
                   >
                     Continue as Guest
                   </button>
@@ -239,23 +239,23 @@ const MobileCheckout = () => {
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="px-3 py-3"
+                className="px-4 py-4"
               >
-                <h2 className="text-base sm:text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                  <FiTruck className="text-primary-600 text-lg" />
+                <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                  <FiTruck className="text-primary-600" />
                   Shipping Information
                 </h2>
 
                 {/* Saved Addresses */}
                 {isAuthenticated && addresses.length > 0 && (
-                  <div className="mb-3">
-                    <h3 className="text-xs sm:text-sm font-semibold text-gray-700 mb-2">Saved Addresses</h3>
-                    <div className="space-y-2 mb-2">
+                  <div className="mb-4">
+                    <h3 className="text-sm font-semibold text-gray-700 mb-3">Saved Addresses</h3>
+                    <div className="space-y-2 mb-3">
                       {addresses.map((address) => (
                         <div
                           key={address.id}
                           onClick={() => handleSelectAddress(address)}
-                          className={`p-2.5 sm:p-3 rounded-xl border-2 cursor-pointer transition-all ${
+                          className={`p-3 rounded-xl border-2 cursor-pointer transition-all ${
                             selectedAddressId === address.id
                               ? 'border-primary-500 bg-primary-50'
                               : 'border-gray-200'
@@ -292,9 +292,9 @@ const MobileCheckout = () => {
                 )}
 
                 {/* Address Form */}
-                <div className="space-y-3">
+                <div className="space-y-4">
                   <div>
-                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Full Name
                     </label>
                     <input
@@ -303,11 +303,11 @@ const MobileCheckout = () => {
                       value={formData.name}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
+                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Email
                     </label>
                     <input
@@ -316,11 +316,11 @@ const MobileCheckout = () => {
                       value={formData.email}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
+                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Phone Number
                     </label>
                     <input
@@ -329,11 +329,11 @@ const MobileCheckout = () => {
                       value={formData.phone}
                       onChange={handleInputChange}
                       required
-                      className="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
+                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
                     />
                   </div>
                   <div>
-                    <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
                       Address
                     </label>
                     <textarea
@@ -342,54 +342,54 @@ const MobileCheckout = () => {
                       onChange={handleInputChange}
                       required
                       rows={3}
-                      className="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
+                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
                     />
                   </div>
-                  <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                  <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">City</label>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">City</label>
                       <input
                         type="text"
                         name="city"
                         value={formData.city}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">State</label>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">State</label>
                       <input
                         type="text"
                         name="state"
                         value={formData.state}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
                       />
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-2 sm:gap-3">
+                  <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">ZIP Code</label>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">ZIP Code</label>
                       <input
                         type="text"
                         name="zipCode"
                         value={formData.zipCode}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">Country</label>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Country</label>
                       <input
                         type="text"
                         name="country"
                         value={formData.country}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
+                        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
                       />
                     </div>
                   </div>
@@ -402,17 +402,17 @@ const MobileCheckout = () => {
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="px-3 py-3"
+                className="px-4 py-4"
               >
-                <h2 className="text-base sm:text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-                  <FiCreditCard className="text-primary-600 text-lg" />
+                <h2 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                  <FiCreditCard className="text-primary-600" />
                   Payment Method
                 </h2>
-                <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
+                <div className="space-y-3 mb-6">
                   {['card', 'cash', 'bank'].map((method) => (
                     <label
                       key={method}
-                      className={`flex items-center gap-2 sm:gap-3 p-3 sm:p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                      className={`flex items-center gap-3 p-4 rounded-xl border-2 cursor-pointer transition-all ${
                         formData.paymentMethod === method
                           ? 'border-primary-500 bg-primary-50'
                           : 'border-gray-200'
@@ -424,9 +424,9 @@ const MobileCheckout = () => {
                         value={method}
                         checked={formData.paymentMethod === method}
                         onChange={handleInputChange}
-                        className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500"
+                        className="w-5 h-5 text-primary-500"
                       />
-                      <span className="font-semibold text-gray-800 capitalize text-sm sm:text-base">
+                      <span className="font-semibold text-gray-800 capitalize text-base">
                         {method === 'card' ? 'Credit/Debit Card' : method === 'cash' ? 'Cash on Delivery' : 'Bank Transfer'}
                       </span>
                     </label>
@@ -435,62 +435,58 @@ const MobileCheckout = () => {
 
                 {/* Shipping Options */}
                 {total < 100 && (
-                  <div className="mb-4 sm:mb-6">
-                    <h3 className="text-sm sm:text-base font-semibold text-gray-800 mb-2 sm:mb-3">Shipping Options</h3>
-                    <div className="space-y-2 sm:space-y-3">
+                  <div className="mb-6">
+                    <h3 className="text-base font-semibold text-gray-800 mb-3">Shipping Options</h3>
+                    <div className="space-y-3">
                       <label
-                        className={`flex items-center justify-between p-3 sm:p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                        className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${
                           shippingOption === 'standard'
                             ? 'border-primary-500 bg-primary-50'
                             : 'border-gray-200'
                         }`}
                       >
-                        <div className="flex items-center gap-2 sm:gap-3">
+                        <div>
                           <input
                             type="radio"
                             name="shippingOption"
                             value="standard"
                             checked={shippingOption === 'standard'}
                             onChange={(e) => setShippingOption(e.target.value)}
-                            className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500"
+                            className="w-5 h-5 text-primary-500 mr-3"
                           />
-                          <div>
-                            <span className="font-semibold text-gray-800 text-sm sm:text-base block">Standard Shipping</span>
-                            <p className="text-xs text-gray-600">5-7 business days</p>
-                          </div>
+                          <span className="font-semibold text-gray-800 text-base">Standard Shipping</span>
+                          <p className="text-xs text-gray-600">5-7 business days</p>
                         </div>
-                        <span className="font-bold text-gray-800 text-sm sm:text-base">{formatPrice(50)}</span>
+                        <span className="font-bold text-gray-800">{formatPrice(50)}</span>
                       </label>
                       <label
-                        className={`flex items-center justify-between p-3 sm:p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                        className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${
                           shippingOption === 'express'
                             ? 'border-primary-500 bg-primary-50'
                             : 'border-gray-200'
                         }`}
                       >
-                        <div className="flex items-center gap-2 sm:gap-3">
+                        <div>
                           <input
                             type="radio"
                             name="shippingOption"
                             value="express"
                             checked={shippingOption === 'express'}
                             onChange={(e) => setShippingOption(e.target.value)}
-                            className="w-4 h-4 sm:w-5 sm:h-5 text-primary-500"
+                            className="w-5 h-5 text-primary-500 mr-3"
                           />
-                          <div>
-                            <span className="font-semibold text-gray-800 text-sm sm:text-base block">Express Shipping</span>
-                            <p className="text-xs text-gray-600">2-3 business days</p>
-                          </div>
+                          <span className="font-semibold text-gray-800 text-base">Express Shipping</span>
+                          <p className="text-xs text-gray-600">2-3 business days</p>
                         </div>
-                        <span className="font-bold text-gray-800 text-sm sm:text-base">{formatPrice(100)}</span>
+                        <span className="font-bold text-gray-800">{formatPrice(100)}</span>
                       </label>
                     </div>
                   </div>
                 )}
 
                 {/* Coupon Code */}
-                <div className="mb-4 sm:mb-6">
-                  <h3 className="text-sm sm:text-base font-semibold text-gray-800 mb-2 sm:mb-3">Coupon Code</h3>
+                <div className="mb-6">
+                  <h3 className="text-base font-semibold text-gray-800 mb-3">Coupon Code</h3>
                   {!appliedCoupon ? (
                     <div className="flex gap-2">
                       <input
@@ -498,20 +494,20 @@ const MobileCheckout = () => {
                         value={couponCode}
                         onChange={(e) => setCouponCode(e.target.value)}
                         placeholder="Enter code"
-                        className="flex-1 px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
+                        className="flex-1 px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
                       />
                       <button
                         type="button"
                         onClick={handleApplyCoupon}
-                        className="px-3 py-2.5 sm:px-4 sm:py-3 gradient-green text-white rounded-xl font-semibold text-sm sm:text-base transition-all"
+                        className="px-4 py-3 gradient-green text-white rounded-xl font-semibold hover:shadow-glow-green transition-all"
                       >
                         Apply
                       </button>
                     </div>
                   ) : (
-                    <div className="flex items-center justify-between p-2.5 sm:p-3 bg-green-50 rounded-xl">
+                    <div className="flex items-center justify-between p-3 bg-green-50 rounded-xl">
                       <div>
-                        <p className="text-xs sm:text-sm font-semibold text-green-800">{appliedCoupon.name} Applied</p>
+                        <p className="text-sm font-semibold text-green-800">{appliedCoupon.name} Applied</p>
                         <p className="text-xs text-green-600">Code: {couponCode}</p>
                       </div>
                       <button
@@ -522,16 +518,16 @@ const MobileCheckout = () => {
                         }}
                         className="text-red-600 hover:text-red-700"
                       >
-                        <FiX className="text-base sm:text-lg" />
+                        <FiX className="text-lg" />
                       </button>
                     </div>
                   )}
                 </div>
 
                 {/* Order Summary */}
-                <div className="glass-card rounded-xl p-3 sm:p-4">
-                  <h3 className="text-sm sm:text-base font-bold text-gray-800 mb-2 sm:mb-3">Order Summary</h3>
-                  <div className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm">
+                <div className="glass-card rounded-xl p-4">
+                  <h3 className="text-base font-bold text-gray-800 mb-3">Order Summary</h3>
+                  <div className="space-y-2 text-sm">
                     <div className="flex justify-between text-gray-600">
                       <span>Subtotal</span>
                       <span>{formatPrice(total)}</span>
@@ -550,7 +546,7 @@ const MobileCheckout = () => {
                       <span>Tax</span>
                       <span>{formatPrice(tax)}</span>
                     </div>
-                    <div className="flex justify-between text-base sm:text-lg font-bold text-gray-800 pt-2 border-t border-gray-200">
+                    <div className="flex justify-between text-lg font-bold text-gray-800 pt-2 border-t border-gray-200">
                       <span>Total</span>
                       <span className="text-primary-600">{formatPrice(finalTotal)}</span>
                     </div>
@@ -564,45 +560,45 @@ const MobileCheckout = () => {
               <motion.div
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="px-3 py-3"
+                className="px-4 py-4"
               >
-                <h2 className="text-base sm:text-lg font-bold text-gray-800 mb-3">Order Review</h2>
-                <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
-                  <div className="flex items-start gap-2 sm:gap-3 p-2.5 sm:p-3 bg-gray-50 rounded-xl">
-                    <FiMapPin className="text-primary-600 text-lg sm:text-xl flex-shrink-0 mt-0.5" />
+                <h2 className="text-lg font-bold text-gray-800 mb-4">Order Review</h2>
+                <div className="space-y-3 mb-6">
+                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
+                    <FiMapPin className="text-primary-600 text-xl flex-shrink-0 mt-0.5" />
                     <div>
-                      <p className="font-semibold text-gray-800 text-xs sm:text-sm">{formData.address}</p>
+                      <p className="font-semibold text-gray-800 text-sm">{formData.address}</p>
                       <p className="text-xs text-gray-600">
                         {formData.city}, {formData.zipCode}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-gray-50 rounded-xl">
-                    <FiPhone className="text-primary-600 text-lg sm:text-xl" />
-                    <p className="font-semibold text-gray-800 text-xs sm:text-sm">{formData.phone}</p>
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                    <FiPhone className="text-primary-600 text-xl" />
+                    <p className="font-semibold text-gray-800 text-sm">{formData.phone}</p>
                   </div>
-                  <div className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-gray-50 rounded-xl">
-                    <FiMail className="text-primary-600 text-lg sm:text-xl" />
-                    <p className="font-semibold text-gray-800 text-xs sm:text-sm">{formData.email}</p>
+                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
+                    <FiMail className="text-primary-600 text-xl" />
+                    <p className="font-semibold text-gray-800 text-sm">{formData.email}</p>
                   </div>
                 </div>
-                <div className="mb-4 sm:mb-6">
-                  <h3 className="font-bold text-gray-800 mb-2 sm:mb-3 text-sm sm:text-base">Order Items</h3>
+                <div className="mb-6">
+                  <h3 className="font-bold text-gray-800 mb-3 text-base">Order Items</h3>
                   <div className="space-y-2">
                     {items.map((item) => (
-                      <div key={item.id} className="flex items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-gray-50 rounded-xl">
+                      <div key={item.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
                         <img
                           src={item.image}
                           alt={item.name}
-                          className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg object-cover"
+                          className="w-12 h-12 rounded-lg object-cover"
                         />
-                        <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-gray-800 text-xs sm:text-sm truncate">{item.name}</p>
+                        <div className="flex-1">
+                          <p className="font-semibold text-gray-800 text-sm">{item.name}</p>
                           <p className="text-xs text-gray-600">
                             {formatPrice(item.price)} × {item.quantity}
                           </p>
                         </div>
-                        <p className="font-bold text-gray-800 text-xs sm:text-sm">
+                        <p className="font-bold text-gray-800 text-sm">
                           {formatPrice(item.price * item.quantity)}
                         </p>
                       </div>
@@ -613,20 +609,20 @@ const MobileCheckout = () => {
             )}
 
             {/* Navigation Buttons */}
-            <div className="fixed bottom-16 left-0 right-0 bg-white border-t border-gray-200 p-3 sm:p-4 z-40 safe-area-bottom">
-              <div className="flex gap-2 sm:gap-3">
+            <div className="fixed bottom-16 left-0 right-0 bg-white border-t border-gray-200 p-4 z-40 safe-area-bottom">
+              <div className="flex gap-3">
                 {step > 1 && (
                   <button
                     type="button"
                     onClick={() => setStep(step - 1)}
-                    className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold text-sm sm:text-base hover:bg-gray-300 transition-colors"
+                    className="px-6 py-3 bg-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-300 transition-colors"
                   >
                     Back
                   </button>
                 )}
                 <button
                   type="submit"
-                  className="flex-1 gradient-green text-white py-2.5 sm:py-3 rounded-xl font-semibold text-sm sm:text-base transition-all duration-300"
+                  className="flex-1 gradient-green text-white py-3 rounded-xl font-semibold hover:shadow-glow-green transition-all duration-300"
                 >
                   {step === 3 ? 'Place Order' : 'Continue'}
                 </button>
@@ -684,120 +680,120 @@ const AddressFormModal = ({ onSubmit, onCancel }) => {
         animate={{ y: 0 }}
         exit={{ y: '100%' }}
         onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-t-3xl p-4 sm:p-6 w-full max-h-[90vh] overflow-y-auto"
+        className="bg-white rounded-t-3xl p-6 w-full max-h-[90vh] overflow-y-auto"
       >
-        <div className="flex items-center justify-between mb-4 sm:mb-6">
-          <h3 className="text-lg sm:text-xl font-bold text-gray-800">Add New Address</h3>
+        <div className="flex items-center justify-between mb-6">
+          <h3 className="text-xl font-bold text-gray-800">Add New Address</h3>
           <button
             onClick={onCancel}
             className="p-2 hover:bg-gray-100 rounded-full"
           >
-            <FiX className="text-lg sm:text-xl" />
+            <FiX className="text-xl" />
           </button>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">Address Label</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Address Label</label>
             <input
               type="text"
               name="name"
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
               placeholder="Home, Work, etc."
             />
           </div>
           <div>
-            <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">Full Name</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Full Name</label>
             <input
               type="text"
               name="fullName"
               value={formData.fullName}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
             />
           </div>
           <div>
-            <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">Phone Number</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Phone Number</label>
             <input
               type="tel"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
             />
           </div>
           <div>
-            <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">Street Address</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Street Address</label>
             <input
               type="text"
               name="address"
               value={formData.address}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
             />
           </div>
-          <div className="grid grid-cols-3 gap-2 sm:gap-3">
+          <div className="grid grid-cols-3 gap-3">
             <div>
-              <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">City</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">City</label>
               <input
                 type="text"
                 name="city"
                 value={formData.city}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
               />
             </div>
             <div>
-              <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">State</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">State</label>
               <input
                 type="text"
                 name="state"
                 value={formData.state}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
               />
             </div>
             <div>
-              <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">Zip Code</label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Zip Code</label>
               <input
                 type="text"
                 name="zipCode"
                 value={formData.zipCode}
                 onChange={handleChange}
                 required
-                className="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
+                className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
               />
             </div>
           </div>
           <div>
-            <label className="block text-xs sm:text-sm font-semibold text-gray-700 mb-1.5">Country</label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Country</label>
             <input
               type="text"
               name="country"
               value={formData.country}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2.5 sm:px-4 sm:py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-sm sm:text-base"
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary-500 text-base"
             />
           </div>
-          <div className="flex gap-2 sm:gap-3 pt-3 sm:pt-4">
+          <div className="flex gap-3 pt-4">
             <button
               type="submit"
-              className="flex-1 gradient-green text-white py-2.5 sm:py-3 rounded-xl font-semibold text-sm sm:text-base transition-all"
+              className="flex-1 gradient-green text-white py-3 rounded-xl font-semibold hover:shadow-glow-green transition-all"
             >
               Add Address
             </button>
             <button
               type="button"
               onClick={onCancel}
-              className="px-4 sm:px-6 py-2.5 sm:py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold text-sm sm:text-base hover:bg-gray-200 transition-colors"
+              className="px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-semibold hover:bg-gray-200 transition-colors"
             >
               Cancel
             </button>
