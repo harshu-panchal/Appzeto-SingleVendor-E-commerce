@@ -251,7 +251,7 @@ const MobileCategories = () => {
             {/* Left Panel - Vertical Category Sidebar */}
             <div
               ref={categoryListRef}
-              className="w-[22%] bg-gray-50 border-r border-gray-200 overflow-y-auto flex-shrink-0"
+              className="w-[22%] bg-gray-50 border-r border-gray-200 overflow-y-auto scrollbar-hide flex-shrink-0"
               style={{
                 maxHeight: `calc(${contentHeight} - ${headerSectionHeight}px)`,
               }}>
