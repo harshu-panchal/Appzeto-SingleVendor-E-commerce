@@ -366,14 +366,14 @@ const MobileCategories = () => {
                                     placeholder="Min Price"
                                     value={filters.minPrice}
                                     onChange={(e) => handleFilterChange("minPrice", e.target.value)}
-                                    className="w-full px-2 py-1.5 rounded-md border border-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 text-xs"
+                                    className="w-full px-2 py-1.5 rounded-md border border-gray-200 bg-white focus:outline-none focus:ring-1 focus:ring-primary-500 text-xs"
                                   />
                                   <input
                                     type="number"
                                     placeholder="Max Price"
                                     value={filters.maxPrice}
                                     onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
-                                    className="w-full px-2 py-1.5 rounded-md border border-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 text-xs"
+                                    className="w-full px-2 py-1.5 rounded-md border border-gray-200 bg-white focus:outline-none focus:ring-1 focus:ring-primary-500 text-xs"
                                   />
                                 </div>
                               </div>
@@ -392,7 +392,12 @@ const MobileCategories = () => {
                                         value={rating}
                                         checked={filters.minRating === rating.toString()}
                                         onChange={(e) => handleFilterChange("minRating", e.target.value)}
-                                        className="w-3 h-3 text-primary-500"
+                                        className="w-3 h-3 appearance-none rounded-full border-2 border-gray-300 bg-white checked:bg-white checked:border-primary-500 relative cursor-pointer"
+                                        style={{
+                                          backgroundImage: filters.minRating === rating.toString() 
+                                            ? 'radial-gradient(circle, #10b981 40%, transparent 40%)' 
+                                            : 'none'
+                                        }}
                                       />
                                       <span className="text-xs text-gray-700">{rating}+ Stars</span>
                                     </label>
