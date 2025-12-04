@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
-import { FiArrowLeft } from "react-icons/fi";
+import { FiArrowLeft, FiFilter, FiX } from "react-icons/fi";
 import MobileLayout from "../../components/Layout/Mobile/MobileLayout";
 import { categories } from "../../data/categories";
 import { products } from "../../data/products";
@@ -21,8 +21,17 @@ const MobileCategories = () => {
   );
   const categoryListRef = useRef(null);
   const activeCategoryRef = useRef(null);
+  const filterButtonRef = useRef(null);
   const [isInitialMount, setIsInitialMount] = useState(true);
   const [selectedSubcategory, setSelectedSubcategory] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+  const [filters, setFilters] = useState({
+    category: "",
+    minPrice: "",
+    maxPrice: "",
+    minRating: "",
+  });
 
   // Category to product keywords mapping
   const categoryMap = {
@@ -124,7 +133,7 @@ const MobileCategories = () => {
     }
   }, [selectedCategoryId]);
 
-  // Filter products based on selected category and subcategory
+  // Filter products based on selected category, subcategory, search query, and filters
   const filteredProducts = useMemo(() => {
     if (!selectedCategoryId) return [];
 
@@ -145,8 +154,34 @@ const MobileCategories = () => {
       });
     }
 
+    // Filter by search query
+    if (searchQuery) {
+      filtered = filtered.filter((product) =>
+        product.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+
+    // Filter by price range
+    if (filters.minPrice) {
+      filtered = filtered.filter(
+        (product) => product.price >= parseFloat(filters.minPrice)
+      );
+    }
+    if (filters.maxPrice) {
+      filtered = filtered.filter(
+        (product) => product.price <= parseFloat(filters.maxPrice)
+      );
+    }
+
+    // Filter by minimum rating
+    if (filters.minRating) {
+      filtered = filtered.filter(
+        (product) => product.rating >= parseFloat(filters.minRating)
+      );
+    }
+
     return filtered;
-  }, [selectedCategoryId, selectedSubcategory]);
+  }, [selectedCategoryId, selectedSubcategory, searchQuery, filters]);
 
   // Mark initial mount as complete after first render
   useEffect(() => {
@@ -188,6 +223,41 @@ const MobileCategories = () => {
   const handleCategorySelect = (categoryId) => {
     setSelectedCategoryId(categoryId);
   };
+
+  const handleFilterChange = (name, value) => {
+    setFilters({ ...filters, [name]: value });
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      category: "",
+      minPrice: "",
+      maxPrice: "",
+      minRating: "",
+    });
+  };
+
+  // Close filter dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        showFilters &&
+        filterButtonRef.current &&
+        !filterButtonRef.current.contains(event.target) &&
+        !event.target.closest(".filter-dropdown")
+      ) {
+        setShowFilters(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [showFilters]);
 
   const selectedCategory = categories.find(
     (cat) => cat.id === selectedCategoryId
@@ -241,6 +311,115 @@ const MobileCategories = () => {
                     {filteredProducts.length} product
                     {filteredProducts.length !== 1 ? "s" : ""} available
                   </p>
+                </div>
+                <div className="flex items-center gap-2 flex-shrink-0 relative">
+                  <div ref={filterButtonRef} className="relative">
+                    <button
+                      onClick={() => setShowFilters(!showFilters)}
+                      className={`p-2 hover:bg-gray-100 rounded-full transition-colors ${
+                        showFilters ? "bg-gray-100" : ""
+                      }`}>
+                      <FiFilter className="text-xl text-gray-700" />
+                    </button>
+
+                    {/* Filter Dropdown */}
+                    <AnimatePresence>
+                      {showFilters && (
+                        <>
+                          {/* Backdrop */}
+                          <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onClick={() => setShowFilters(false)}
+                            className="fixed inset-0 bg-black/20 z-40"
+                          />
+                          <motion.div
+                            initial={{ opacity: 0, y: -10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: -10, scale: 0.95 }}
+                            transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                            className="filter-dropdown absolute right-0 top-full w-56 bg-white rounded-xl shadow-2xl border border-gray-200 z-50 overflow-hidden"
+                            style={{ marginTop: "-32px" }}>
+                          {/* Header */}
+                          <div className="flex items-center justify-between px-2 py-1.5 border-b border-gray-200 bg-gray-50">
+                            <div className="flex items-center gap-1.5">
+                              <FiFilter className="text-sm text-gray-700" />
+                              <h3 className="text-sm font-bold text-gray-800">Filters</h3>
+                            </div>
+                            <button
+                              onClick={() => setShowFilters(false)}
+                              className="p-0.5 hover:bg-gray-200 rounded-full transition-colors">
+                              <FiX className="text-sm text-gray-600" />
+                            </button>
+                          </div>
+
+                          {/* Filter Content */}
+                          <div className="max-h-[50vh] overflow-y-auto scrollbar-hide">
+                            <div className="p-2 space-y-2">
+                              {/* Price Range */}
+                              <div>
+                                <h4 className="font-semibold text-gray-700 mb-1 text-xs">Price Range</h4>
+                                <div className="space-y-1.5">
+                                  <input
+                                    type="number"
+                                    placeholder="Min Price"
+                                    value={filters.minPrice}
+                                    onChange={(e) => handleFilterChange("minPrice", e.target.value)}
+                                    className="w-full px-2 py-1.5 rounded-md border border-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 text-xs"
+                                  />
+                                  <input
+                                    type="number"
+                                    placeholder="Max Price"
+                                    value={filters.maxPrice}
+                                    onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
+                                    className="w-full px-2 py-1.5 rounded-md border border-gray-200 focus:outline-none focus:ring-1 focus:ring-primary-500 text-xs"
+                                  />
+                                </div>
+                              </div>
+
+                              {/* Rating Filter */}
+                              <div>
+                                <h4 className="font-semibold text-gray-700 mb-1 text-xs">Minimum Rating</h4>
+                                <div className="space-y-0.5">
+                                  {[4, 3, 2, 1].map((rating) => (
+                                    <label
+                                      key={rating}
+                                      className="flex items-center gap-1.5 cursor-pointer p-1 rounded-md hover:bg-gray-50 transition-colors">
+                                      <input
+                                        type="radio"
+                                        name="minRating"
+                                        value={rating}
+                                        checked={filters.minRating === rating.toString()}
+                                        onChange={(e) => handleFilterChange("minRating", e.target.value)}
+                                        className="w-3 h-3 text-primary-500"
+                                      />
+                                      <span className="text-xs text-gray-700">{rating}+ Stars</span>
+                                    </label>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Footer */}
+                          <div className="border-t border-gray-200 p-2 bg-gray-50 space-y-1.5">
+                            <button
+                              onClick={clearFilters}
+                              className="w-full py-1.5 bg-gray-200 text-gray-700 rounded-md font-semibold text-xs hover:bg-gray-300 transition-colors">
+                              Clear All
+                            </button>
+                            <button
+                              onClick={() => setShowFilters(false)}
+                              className="w-full py-1.5 gradient-green text-white rounded-md font-semibold text-xs hover:shadow-glow-green transition-all">
+                              Apply Filters
+                            </button>
+                          </div>
+                        </motion.div>
+                        </>
+                      )}
+                    </AnimatePresence>
+                  </div>
                 </div>
               </div>
             </div>
