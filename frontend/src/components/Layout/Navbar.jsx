@@ -52,9 +52,8 @@ const Navbar = () => {
           {/* Browse Category Button with Dropdown */}
           <div
             className="relative"
-            onMouseEnter={() => setIsCategoryOpen(true)}
-            onMouseLeave={() => setIsCategoryOpen(false)}>
-            <button className="flex items-center gap-2 sm:gap-3 gradient-primary text-white px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl hover:shadow-glow transition-all duration-300 font-semibold text-sm sm:text-base hover:scale-105">
+            onClick={() => setIsCategoryOpen(!isCategoryOpen)}>
+            <button className="flex items-center gap-2 sm:gap-3 gradient-primary text-white px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl transition-all duration-300 font-semibold text-sm sm:text-base">
               <FiGrid className="text-lg sm:text-xl" />
               <span className="hidden sm:inline">Browse Category</span>
               <span className="sm:hidden">Category</span>
@@ -74,8 +73,8 @@ const Navbar = () => {
                     key={category.id}
                     to={`/category/${category.id}`}
                     onClick={() => setIsCategoryOpen(false)}
-                    className="flex items-center gap-4 px-5 py-3.5 hover:bg-white/60 transition-all duration-300 group mx-2 rounded-xl">
-                    <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 ring-2 ring-white/50 group-hover:ring-green-500/50 transition-all duration-300 group-hover:scale-110">
+                    className="flex items-center gap-4 px-5 py-3.5 transition-all duration-300 group mx-2 rounded-xl">
+                    <div className="w-12 h-12 rounded-xl overflow-hidden flex-shrink-0 ring-2 ring-white/50 transition-all duration-300">
                       <img
                         src={category.image}
                         alt={category.name}
@@ -86,7 +85,7 @@ const Navbar = () => {
                         }}
                       />
                     </div>
-                    <span className="text-gray-800 font-semibold group-hover:text-gradient transition-colors">
+                    <span className="text-gray-800 font-semibold transition-colors">
                       {category.name}
                     </span>
                   </Link>
@@ -101,9 +100,8 @@ const Navbar = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className="text-gray-700 hover:text-gradient font-semibold transition-all duration-300 relative group">
+                className="text-gray-700 font-semibold transition-all duration-300 relative group">
                 {link.label}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-green-500 to-blue-500 group-hover:w-full transition-all duration-300"></span>
               </Link>
             ))}
           </div>
@@ -111,7 +109,7 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="md:hidden p-2.5 text-gray-700 hover:bg-white/50 rounded-lg transition-all duration-300">
+            className="md:hidden p-2.5 text-gray-700 rounded-lg transition-all duration-300">
             {isMenuOpen ? (
               <FiX className="text-2xl" />
             ) : (
@@ -128,7 +126,7 @@ const Navbar = () => {
                 key={link.path}
                 to={link.path}
                 onClick={() => setIsMenuOpen(false)}
-                className="block py-3 px-4 text-gray-700 hover:text-gradient hover:bg-white/50 rounded-lg transition-all duration-300 font-semibold">
+                className="block py-3 px-4 text-gray-700 rounded-lg transition-all duration-300 font-semibold">
                 {link.label}
               </Link>
             ))}

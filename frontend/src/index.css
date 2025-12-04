@@ -127,11 +127,6 @@ body::-webkit-scrollbar {
     transform: translateZ(0);
   }
 
-  .hover-lift:hover {
-    transform: translateY(-8px) translateZ(0);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  }
-
   /* GPU acceleration utilities */
   .gpu-accelerate {
     transform: translateZ(0);
@@ -186,10 +181,6 @@ body::-webkit-scrollbar {
 
   .hover-lift {
     transition: none !important;
-  }
-
-  .hover-lift:hover {
-    transform: none !important;
   }
 }
 

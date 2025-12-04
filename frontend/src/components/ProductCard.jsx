@@ -123,10 +123,9 @@ const ProductCard = ({ product, hideRating = false }) => {
   return (
     <>
       <motion.div
-        whileHover={{ y: -4, scale: 1.01 }}
         whileTap={{ scale: 0.98 }}
         style={{ willChange: 'transform', transform: 'translateZ(0)' }}
-        className="glass-card rounded-lg overflow-hidden hover-lift group cursor-pointer h-full flex flex-col"
+        className="glass-card rounded-lg overflow-hidden group cursor-pointer h-full flex flex-col"
         {...longPressHandlers}
       >
       <div className="relative">
@@ -134,27 +133,26 @@ const ProductCard = ({ product, hideRating = false }) => {
         <div className="absolute top-1.5 right-1.5 z-10">
           <button
             onClick={handleFavorite}
-            className="p-1 glass rounded-full shadow-lg hover:bg-white/80 transition-all duration-300 hover:scale-110 group"
+            className="p-1 glass rounded-full shadow-lg transition-all duration-300 group"
           >
             <FiHeart
-              className={`text-xs transition-all duration-300 ${isFavorite ? 'text-red-500 fill-red-500 scale-110' : 'text-gray-600 group-hover:text-red-400'}`}
+              className={`text-xs transition-all duration-300 ${isFavorite ? 'text-red-500 fill-red-500 scale-110' : 'text-gray-600'}`}
             />
           </button>
         </div>
 
         {/* Product Image */}
         <Link to={productLink}>
-          <div className="w-full h-32 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden relative group-hover:opacity-90 transition-opacity duration-300">
+          <div className="w-full h-32 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden relative">
           <LazyImage
             src={product.image}
             alt={product.name}
-            className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500"
+            className="w-full h-full object-contain p-2"
             style={{ willChange: 'transform', transform: 'translateZ(0)' }}
             onError={(e) => {
               e.target.src = 'https://via.placeholder.com/300x300?text=Product+Image';
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         </div>
         </Link>
       </div>
@@ -162,7 +160,7 @@ const ProductCard = ({ product, hideRating = false }) => {
       {/* Product Info */}
       <div className="p-2 flex-1 flex flex-col">
         <Link to={productLink}>
-          <h3 className="font-bold text-gray-800 mb-0.5 line-clamp-2 text-xs group-hover:text-gradient transition-colors leading-tight">{product.name}</h3>
+          <h3 className="font-bold text-gray-800 mb-0.5 line-clamp-2 text-xs transition-colors leading-tight">{product.name}</h3>
         </Link>
         <p className="text-[10px] text-gray-500 mb-0.5 font-medium">{product.unit}</p>
 
@@ -212,7 +210,7 @@ const ProductCard = ({ product, hideRating = false }) => {
           className={`w-full py-1 rounded-md font-semibold text-[10px] transition-all duration-300 flex items-center justify-center gap-1 mt-auto ${
             product.stock === 'out_of_stock'
               ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              : 'gradient-green text-white hover:shadow-glow-green hover:scale-105 group/btn'
+              : 'gradient-green text-white group/btn'
           }`}
         >
           <motion.div
@@ -221,7 +219,7 @@ const ProductCard = ({ product, hideRating = false }) => {
             } : {}}
             transition={{ duration: 0.5 }}
           >
-            <FiShoppingBag className="text-xs group-hover/btn:scale-110 transition-transform" />
+            <FiShoppingBag className="text-xs transition-transform" />
           </motion.div>
           <span>{product.stock === 'out_of_stock' ? 'Out of Stock' : isAdding ? 'Adding...' : 'Add'}</span>
         </motion.button>

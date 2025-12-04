@@ -25,18 +25,18 @@ const BrandLogosScroll = () => {
                   maxWidth: 'calc((100vw - 2rem - 0.75rem * 3) / 4)',
                 }}
               >
-                <div className="bg-white rounded-xl sm:rounded-2xl p-2 sm:p-2.5 md:p-3 shadow-md hover:shadow-xl transition-all duration-300 flex items-center justify-center w-full aspect-square group cursor-pointer hover:scale-105 border border-gray-100 mb-2">
+                <div className="bg-white rounded-xl sm:rounded-2xl p-2 sm:p-2.5 md:p-3 shadow-md transition-all duration-300 flex items-center justify-center w-full aspect-square group cursor-pointer border border-gray-100 mb-2">
                   <img
                     src={brand.logo}
                     alt={brand.name}
-                    className="w-[85%] h-[85%] object-contain group-hover:scale-110 transition-transform duration-300"
+                    className="w-[85%] h-[85%] object-contain"
                     onError={(e) => {
                       e.target.src = 'https://via.placeholder.com/120x80?text=Brand';
                     }}
                     loading="lazy"
                   />
                 </div>
-                <p className="text-xs sm:text-sm font-semibold text-black text-center group-hover:text-primary-600 transition-colors truncate w-full px-1">
+                <p className="text-xs sm:text-sm font-semibold text-black text-center transition-colors truncate w-full px-1">
                   {brand.name}
                 </p>
               </motion.div>
