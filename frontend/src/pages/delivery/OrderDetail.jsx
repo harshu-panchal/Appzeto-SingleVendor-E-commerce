@@ -13,6 +13,7 @@ import {
   FiDollarSign,
 } from 'react-icons/fi';
 import PageTransition from '../../components/PageTransition';
+import { formatPrice } from '../../utils/helpers';
 
 const DeliveryOrderDetail = () => {
   const { id } = useParams();
@@ -181,7 +182,7 @@ const DeliveryOrderDetail = () => {
                   <p className="font-semibold text-gray-800">{item.name}</p>
                   <p className="text-sm text-gray-600">Quantity: {item.quantity}</p>
                 </div>
-                <p className="font-semibold text-gray-800">${item.price.toFixed(2)}</p>
+                <p className="font-semibold text-gray-800">{formatPrice(item.price)}</p>
               </div>
             ))}
           </div>
@@ -201,15 +202,15 @@ const DeliveryOrderDetail = () => {
           <div className="space-y-2">
             <div className="flex items-center justify-between text-gray-700">
               <span>Subtotal</span>
-              <span>${order.amount.toFixed(2)}</span>
+              <span>{formatPrice(order.amount)}</span>
             </div>
             <div className="flex items-center justify-between text-gray-700">
               <span>Delivery Fee</span>
-              <span>${order.deliveryFee.toFixed(2)}</span>
+              <span>{formatPrice(order.deliveryFee)}</span>
             </div>
             <div className="pt-2 border-t border-gray-200 flex items-center justify-between">
               <span className="font-bold text-gray-800">Total</span>
-              <span className="font-bold text-primary-600 text-lg">${order.total.toFixed(2)}</span>
+              <span className="font-bold text-primary-600 text-lg">{formatPrice(order.total)}</span>
             </div>
           </div>
         </motion.div>

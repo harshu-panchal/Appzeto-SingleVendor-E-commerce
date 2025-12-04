@@ -12,7 +12,8 @@ import useInfiniteScroll from '../../hooks/useInfiniteScroll';
 
 const MobileDailyDeals = () => {
   const navigate = useNavigate();
-  const allDeals = getDailyDeals();
+  // Memoize the items array to prevent infinite loops in useInfiniteScroll
+  const allDeals = useMemo(() => getDailyDeals(), []);
   const [showFilters, setShowFilters] = useState(false);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [filters, setFilters] = useState({

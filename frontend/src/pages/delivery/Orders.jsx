@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { FiPackage, FiMapPin, FiClock, FiCheckCircle, FiXCircle, FiNavigation } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import PageTransition from '../../components/PageTransition';
+import { formatPrice } from '../../utils/helpers';
 
 const DeliveryOrders = () => {
   const navigate = useNavigate();
@@ -211,11 +212,11 @@ const DeliveryOrders = () => {
                     </div>
                     <div className="flex items-center gap-1">
                       <FiNavigation />
-                      <span>{order.distance}</span>
-                    </div>
+                    <span>{order.distance}</span>
                   </div>
-                  <p className="font-bold text-primary-600">${order.amount}</p>
                 </div>
+                <p className="font-bold text-primary-600">{formatPrice(order.amount)}</p>
+              </div>
 
                 {/* Action Buttons */}
                 <div className="flex gap-2">

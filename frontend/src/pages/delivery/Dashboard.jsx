@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDeliveryAuthStore } from '../../store/deliveryAuthStore';
-import { FiPackage, FiCheckCircle, FiClock, FiDollarSign, FiMapPin, FiTruck } from 'react-icons/fi';
+import { FiPackage, FiCheckCircle, FiClock, FiMapPin, FiTruck } from 'react-icons/fi';
+import { LuIndianRupee } from 'react-icons/lu';
 import { useNavigate } from 'react-router-dom';
 import PageTransition from '../../components/PageTransition';
 import toast from 'react-hot-toast';
@@ -56,7 +57,7 @@ const DeliveryDashboard = () => {
       textColor: 'text-yellow-700',
     },
     {
-      icon: FiDollarSign,
+      icon: LuIndianRupee,
       label: 'Earnings',
       value: `$${stats.earnings}`,
       color: 'bg-purple-500',

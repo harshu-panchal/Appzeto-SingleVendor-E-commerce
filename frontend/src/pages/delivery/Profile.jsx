@@ -5,6 +5,7 @@ import { useDeliveryAuthStore } from '../../store/deliveryAuthStore';
 import { FiUser, FiMail, FiPhone, FiTruck, FiEdit2, FiSave, FiX, FiLogOut } from 'react-icons/fi';
 import PageTransition from '../../components/PageTransition';
 import toast from 'react-hot-toast';
+import { formatPrice } from '../../utils/helpers';
 
 const DeliveryProfile = () => {
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ const DeliveryProfile = () => {
     { label: 'Total Deliveries', value: '156' },
     { label: 'Completed Today', value: '8' },
     { label: 'Rating', value: '4.8' },
-    { label: 'Earnings', value: '$2,450' },
+    { label: 'Earnings', value: formatPrice(2450) },
   ];
 
   return (

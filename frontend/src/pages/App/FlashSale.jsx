@@ -12,7 +12,8 @@ import useInfiniteScroll from '../../hooks/useInfiniteScroll';
 
 const MobileFlashSale = () => {
   const navigate = useNavigate();
-  const allFlashSale = getFlashSale();
+  // Memoize the items array to prevent infinite loops in useInfiniteScroll
+  const allFlashSale = useMemo(() => getFlashSale(), []);
   const [showFilters, setShowFilters] = useState(false);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' or 'list'
   const [filters, setFilters] = useState({

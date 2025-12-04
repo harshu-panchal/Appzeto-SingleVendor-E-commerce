@@ -6,11 +6,20 @@ const useInfiniteScroll = (items, itemsPerPage = 12, initialCount = 12) => {
   const [isLoading, setIsLoading] = useState(false);
   const observerRef = useRef(null);
   const loadMoreRef = useRef(null);
+  const prevItemsLengthRef = useRef(items?.length || 0);
+  const prevInitialCountRef = useRef(initialCount);
 
-  // Reset when items change
+  // Reset when items change (compare by length to avoid infinite loops from new array references)
   useEffect(() => {
-    setDisplayedItems(items.slice(0, initialCount));
-    setHasMore(items.length > initialCount);
+    const itemsLength = items?.length || 0;
+    const itemsChanged = itemsLength !== prevItemsLengthRef.current || initialCount !== prevInitialCountRef.current;
+    
+    if (itemsChanged && items) {
+      prevItemsLengthRef.current = itemsLength;
+      prevInitialCountRef.current = initialCount;
+      setDisplayedItems(items.slice(0, initialCount));
+      setHasMore(itemsLength > initialCount);
+    }
   }, [items, initialCount]);
 
   const loadMore = useCallback(() => {
