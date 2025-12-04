@@ -212,11 +212,11 @@ const DeliveryOrders = () => {
                     </div>
                     <div className="flex items-center gap-1">
                       <FiNavigation />
-                    <span>{order.distance}</span>
+                      <span>{order.distance}</span>
+                    </div>
                   </div>
+                  <p className="font-bold text-primary-600">{formatPrice(order.amount)}</p>
                 </div>
-                <p className="font-bold text-primary-600">{formatPrice(order.amount)}</p>
-              </div>
 
                 {/* Action Buttons */}
                 <div className="flex gap-2">

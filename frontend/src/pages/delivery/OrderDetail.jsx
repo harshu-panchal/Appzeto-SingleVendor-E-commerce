@@ -10,7 +10,7 @@ import {
   FiNavigation,
   FiCheckCircle,
   FiUser,
-  FiDollarSign,
+  FiTrendingUp,
 } from 'react-icons/fi';
 import PageTransition from '../../components/PageTransition';
 import { formatPrice } from '../../utils/helpers';
@@ -196,7 +196,7 @@ const DeliveryOrderDetail = () => {
           className="bg-white rounded-2xl p-4 shadow-sm"
         >
           <h2 className="text-lg font-bold text-gray-800 mb-3 flex items-center gap-2">
-            <FiDollarSign />
+            <FiTrendingUp />
             Order Summary
           </h2>
           <div className="space-y-2">
@@ -254,4 +254,6 @@ const DeliveryOrderDetail = () => {
 };
 
 export default DeliveryOrderDetail;
+
+
 

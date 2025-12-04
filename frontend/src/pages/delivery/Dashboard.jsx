@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDeliveryAuthStore } from '../../store/deliveryAuthStore';
-import { FiPackage, FiCheckCircle, FiClock, FiMapPin, FiTruck } from 'react-icons/fi';
-import { LuIndianRupee } from 'react-icons/lu';
+import { FiPackage, FiCheckCircle, FiClock, FiTrendingUp, FiMapPin, FiTruck } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import PageTransition from '../../components/PageTransition';
 import toast from 'react-hot-toast';
+import { formatPrice } from '../../utils/helpers';
 
 const DeliveryDashboard = () => {
   const { deliveryBoy, updateStatus } = useDeliveryAuthStore();
@@ -57,9 +57,9 @@ const DeliveryDashboard = () => {
       textColor: 'text-yellow-700',
     },
     {
-      icon: LuIndianRupee,
+      icon: FiTrendingUp,
       label: 'Earnings',
-      value: `$${stats.earnings}`,
+      value: formatPrice(stats.earnings),
       color: 'bg-purple-500',
       bgColor: 'bg-purple-50',
       textColor: 'text-purple-700',
@@ -264,7 +264,7 @@ const DeliveryDashboard = () => {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm text-gray-600">Distance: {order.distance}</span>
-                  <span className="font-bold text-primary-600">${order.amount}</span>
+                  <span className="font-bold text-primary-600">{formatPrice(order.amount)}</span>
                 </div>
               </motion.div>
             ))}
