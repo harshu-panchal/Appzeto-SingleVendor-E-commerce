@@ -107,10 +107,10 @@ const MobileCategories = () => {
         <div className="w-full">
           {/* Dual-Pane Layout */}
           <div className="flex" style={{ minHeight: panelHeight }}>
-            {/* Left Panel - Category List (30%) */}
+            {/* Left Panel - Category List (22%) */}
             <div
               ref={categoryListRef}
-              className="w-[30%] bg-gray-50 border-r border-gray-200 overflow-y-auto flex-shrink-0"
+              className="w-[22%] bg-gray-50 border-r border-gray-200 overflow-y-auto flex-shrink-0"
               style={{ 
                 maxHeight: panelHeight,
                 position: 'sticky',
@@ -132,15 +132,15 @@ const MobileCategories = () => {
                     >
                       <button
                         onClick={() => handleCategorySelect(category.id)}
-                        className={`w-full px-3 py-4 text-left transition-all duration-200 relative ${
+                        className={`w-full px-2 py-3 text-left transition-all duration-200 relative ${
                           isActive
                             ? "bg-white shadow-sm"
                             : "hover:bg-gray-100"
                         }`}
                       >
-                        <div className="flex flex-col items-center gap-2">
+                        <div className="flex flex-col items-center gap-1.5">
                           <div
-                            className={`w-12 h-12 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 transition-all duration-200 ${
+                            className={`w-10 h-10 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 transition-all duration-200 ${
                               isActive ? "ring-2 ring-primary-500 ring-offset-1 scale-105" : ""
                             }`}
                           >
@@ -155,7 +155,7 @@ const MobileCategories = () => {
                             />
                           </div>
                           <span
-                            className={`text-xs font-semibold text-center leading-tight transition-colors ${
+                            className={`text-[10px] font-semibold text-center leading-tight transition-colors ${
                               isActive
                                 ? "text-primary-600"
                                 : "text-gray-700"
@@ -179,9 +179,9 @@ const MobileCategories = () => {
               </div>
             </div>
 
-            {/* Right Panel - Products Grid (70%) */}
+            {/* Right Panel - Products Grid (78%) */}
             <div
-              className="w-[70%] overflow-y-auto bg-white flex-shrink-0"
+              className="w-[78%] overflow-y-auto bg-white flex-shrink-0"
               style={{ maxHeight: panelHeight }}
             >
               <div className="p-3">
