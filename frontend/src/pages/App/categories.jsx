@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import MobileLayout from "../../components/Layout/Mobile/MobileLayout";
 import { categories } from "../../data/categories";
 import { products } from "../../data/products";
@@ -15,6 +15,7 @@ const MobileCategories = () => {
   );
   const categoryListRef = useRef(null);
   const activeCategoryRef = useRef(null);
+  const [isInitialMount, setIsInitialMount] = useState(true);
 
   // Category to product keywords mapping
   const categoryMap = {
@@ -50,7 +51,17 @@ const MobileCategories = () => {
     });
   }, [selectedCategoryId]);
 
-  // Scroll active category into view
+  // Mark initial mount as complete after first render
+  useEffect(() => {
+    if (isInitialMount) {
+      // Use requestAnimationFrame to ensure smooth initial render
+      requestAnimationFrame(() => {
+        setIsInitialMount(false);
+      });
+    }
+  }, [isInitialMount]);
+
+  // Scroll active category into view (optimized with requestAnimationFrame)
   useEffect(() => {
     if (activeCategoryRef.current && categoryListRef.current) {
       const categoryElement = activeCategoryRef.current;
@@ -63,9 +74,12 @@ const MobileCategories = () => {
       
       // Check if element is not fully visible
       if (elementTop < scrollTop || elementTop + elementHeight > scrollTop + containerHeight) {
-        listContainer.scrollTo({
-          top: elementTop - listContainer.offsetTop - 10,
-          behavior: 'smooth'
+        // Use requestAnimationFrame for smoother scrolling
+        requestAnimationFrame(() => {
+          listContainer.scrollTo({
+            top: elementTop - listContainer.offsetTop - 10,
+            behavior: 'smooth'
+          });
         });
       }
     }
@@ -119,30 +133,36 @@ const MobileCategories = () => {
               }}
             >
               <div className="py-2">
-                {categories.map((category, index) => {
+                {categories.map((category) => {
                   const isActive = category.id === selectedCategoryId;
                   return (
-                    <motion.div
+                    <div
                       key={category.id}
                       ref={isActive ? activeCategoryRef : null}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05 }}
-                      whileTap={{ scale: 0.95 }}
+                      style={{ 
+                        willChange: isActive ? 'transform' : 'auto',
+                        transform: 'translateZ(0)'
+                      }}
                     >
-                      <button
+                      <motion.button
                         onClick={() => handleCategorySelect(category.id)}
+                        initial={isInitialMount ? { opacity: 0 } : false}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.2 }}
+                        whileTap={{ scale: 0.95 }}
                         className={`w-full px-2 py-3 text-left transition-all duration-200 relative ${
                           isActive
                             ? "bg-white shadow-sm"
                             : "hover:bg-gray-100"
                         }`}
+                        style={{ willChange: 'transform' }}
                       >
                         <div className="flex flex-col items-center gap-1.5">
                           <div
                             className={`w-10 h-10 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0 transition-all duration-200 ${
                               isActive ? "ring-2 ring-primary-500 ring-offset-1 scale-105" : ""
                             }`}
+                            style={{ willChange: isActive ? 'transform' : 'auto' }}
                           >
                             <LazyImage
                               src={category.image}
@@ -164,8 +184,8 @@ const MobileCategories = () => {
                             {category.name}
                           </span>
                         </div>
-                      </button>
-                    </motion.div>
+                      </motion.button>
+                    </div>
                   );
                 })}
               </div>
@@ -179,9 +199,8 @@ const MobileCategories = () => {
               <div className="p-3">
                 {/* Category Header */}
                 {selectedCategory && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
+                  <div
+                    key={`header-${selectedCategoryId}`}
                     className="mb-4 pb-3 border-b border-gray-200"
                   >
                     <h2 className="text-lg font-bold text-gray-800 mb-1">
@@ -191,50 +210,43 @@ const MobileCategories = () => {
                       {filteredProducts.length} product
                       {filteredProducts.length !== 1 ? "s" : ""} available
                     </p>
-                  </motion.div>
+                  </div>
                 )}
 
                 {/* Products Grid */}
-                <AnimatePresence mode="wait">
-                  {filteredProducts.length === 0 ? (
-                    <motion.div
-                      key="empty"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="text-center py-12"
-                    >
-                      <div className="text-6xl text-gray-300 mx-auto mb-4">📦</div>
-                      <h3 className="text-lg font-bold text-gray-800 mb-2">
-                        No products found
-                      </h3>
-                      <p className="text-sm text-gray-600">
-                        There are no products available in this category at the
-                        moment.
-                      </p>
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key={selectedCategoryId}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      transition={{ duration: 0.3 }}
-                      className="grid grid-cols-2 gap-2"
-                    >
-                      {filteredProducts.map((product, index) => (
-                        <motion.div
-                          key={product.id}
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: index * 0.05 }}
-                        >
-                          <ProductCard product={product} />
-                        </motion.div>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {filteredProducts.length === 0 ? (
+                  <div
+                    key="empty"
+                    className="text-center py-12"
+                  >
+                    <div className="text-6xl text-gray-300 mx-auto mb-4">📦</div>
+                    <h3 className="text-lg font-bold text-gray-800 mb-2">
+                      No products found
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                      There are no products available in this category at the
+                      moment.
+                    </p>
+                  </div>
+                ) : (
+                  <motion.div
+                    key={`products-${selectedCategoryId}`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.15, ease: 'easeOut' }}
+                    className="grid grid-cols-2 gap-2"
+                    style={{ 
+                      willChange: 'opacity',
+                      transform: 'translateZ(0)'
+                    }}
+                  >
+                    {filteredProducts.map((product) => (
+                      <div key={product.id}>
+                        <ProductCard product={product} />
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
               </div>
             </div>
           </div>
