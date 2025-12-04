@@ -291,24 +291,24 @@ const CartDrawer = () => {
 
             {/* Footer */}
             {items.length > 0 && (
-              <div className="border-t border-gray-200 p-4 sm:p-6 bg-gray-50">
-                <div className="flex items-center justify-between mb-4">
-                  <span className="text-lg font-semibold text-gray-800">Total:</span>
-                  <span className="text-2xl font-bold text-primary-600">
+              <div className="border-t border-gray-200 p-3 sm:p-6 bg-gray-50">
+                <div className="flex items-center justify-between mb-2 sm:mb-4">
+                  <span className="text-sm sm:text-lg font-semibold text-gray-800">Total:</span>
+                  <span className="text-lg sm:text-2xl font-bold text-primary-600">
                     {formatPrice(total)}
                   </span>
                 </div>
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-1.5 sm:gap-2">
                   <Link
                     to={checkoutLink}
                     onClick={toggleCart}
-                    className="w-full gradient-green text-white py-3 rounded-xl font-semibold text-center hover:shadow-glow-green transition-all duration-300 hover:scale-105"
+                    className="w-full gradient-green text-white py-2 sm:py-3 rounded-xl font-semibold text-sm sm:text-base text-center"
                   >
                     Proceed to Checkout
                   </Link>
                   <button
                     onClick={clearCart}
-                    className="w-full py-2 text-gray-600 hover:text-red-600 font-medium transition-colors"
+                    className="w-full py-1.5 sm:py-2 text-sm sm:text-base text-gray-600 hover:text-red-600 font-medium transition-colors"
                   >
                     Clear Cart
                   </button>

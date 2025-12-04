@@ -2,7 +2,7 @@ import { FiCheck } from 'react-icons/fi';
 
 const MobileCheckoutSteps = ({ currentStep, totalSteps = 3 }) => {
   return (
-    <div className="flex items-center justify-center mb-6 px-4">
+    <div className="flex items-center justify-center mb-0">
       <div className="flex items-center gap-2 w-full max-w-md">
         {Array.from({ length: totalSteps }, (_, index) => {
           const step = index + 1;
