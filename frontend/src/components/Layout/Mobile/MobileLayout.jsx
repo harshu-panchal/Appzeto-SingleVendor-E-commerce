@@ -11,6 +11,8 @@ const MobileLayout = ({ children, showBottomNav = true, showCartBar = true }) =>
   const headerHeight = useMobileHeaderHeight();
   // Always show bottom nav on /app routes
   const shouldShowBottomNav = location.pathname.startsWith('/app') ? true : showBottomNav;
+  // Hide header on categories page
+  const shouldShowHeader = location.pathname !== '/app/categories';
   
   // Ensure body scroll is restored when component mounts
   useEffect(() => {
@@ -22,10 +24,10 @@ const MobileLayout = ({ children, showBottomNav = true, showCartBar = true }) =>
 
   return (
     <>
-      <MobileHeader />
+      {shouldShowHeader && <MobileHeader />}
       <main 
         className={`min-h-screen w-full overflow-x-hidden ${shouldShowBottomNav ? 'pb-20' : ''} ${showCartBar ? 'pb-24' : ''}`}
-        style={{ paddingTop: `${headerHeight}px` }}
+        style={{ paddingTop: shouldShowHeader ? `${headerHeight}px` : '0px' }}
       >
         {children}
       </main>

@@ -1,5 +1,7 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
+import { useLocation, useNavigate } from "react-router-dom";
+import { FiArrowLeft } from "react-icons/fi";
 import MobileLayout from "../../components/Layout/Mobile/MobileLayout";
 import { categories } from "../../data/categories";
 import { products } from "../../data/products";
@@ -9,7 +11,11 @@ import ProductCard from "../../components/ProductCard";
 import useMobileHeaderHeight from "../../hooks/useMobileHeaderHeight";
 
 const MobileCategories = () => {
-  const headerHeight = useMobileHeaderHeight();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const defaultHeaderHeight = useMobileHeaderHeight();
+  // Header is hidden on categories page, so use 0
+  const headerHeight = location.pathname === '/app/categories' ? 0 : defaultHeaderHeight;
   const [selectedCategoryId, setSelectedCategoryId] = useState(
     categories[0]?.id || null
   );
@@ -152,7 +158,7 @@ const MobileCategories = () => {
     }
   }, [isInitialMount]);
 
-  // Scroll active category into view (optimized with requestAnimationFrame)
+  // Scroll active category into view (optimized with requestAnimationFrame) - Vertical scroll
   useEffect(() => {
     if (activeCategoryRef.current && categoryListRef.current) {
       const categoryElement = activeCategoryRef.current;
@@ -187,8 +193,8 @@ const MobileCategories = () => {
     (cat) => cat.id === selectedCategoryId
   );
 
-  // Calculate available height for panels (accounting for header, bottom nav, and cart bar)
-  const panelHeight = `calc(100vh - ${headerHeight}px - 80px)`;
+  // Calculate available height for content (accounting for bottom nav and cart bar)
+  const contentHeight = `calc(100vh - 80px)`;
 
   // Handle empty categories
   if (categories.length === 0) {
@@ -211,21 +217,43 @@ const MobileCategories = () => {
     );
   }
 
+  // Calculate header height for layout calculations
+  const headerSectionHeight = 80;
+
   return (
     <PageTransition>
       <MobileLayout showBottomNav={true} showCartBar={true}>
-        <div className="w-full">
-          {/* Dual-Pane Layout */}
-          <div className="flex" style={{ minHeight: panelHeight }}>
-            {/* Left Panel - Category List (22%) */}
+        <div className="w-full flex flex-col" style={{ minHeight: contentHeight }}>
+          {/* Category Header - Fixed at top */}
+          {selectedCategory && (
+            <div className="sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-3">
+              <div key={`header-${selectedCategoryId}`} className="flex items-center gap-3">
+                <button
+                  onClick={() => navigate(-1)}
+                  className="p-2 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0">
+                  <FiArrowLeft className="text-xl text-gray-700" />
+                </button>
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-lg font-bold text-gray-800 mb-1">
+                    {selectedCategory.name}
+                  </h2>
+                  <p className="text-xs text-gray-600">
+                    {filteredProducts.length} product
+                    {filteredProducts.length !== 1 ? "s" : ""} available
+                  </p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Main Content Area - Sidebar and Products */}
+          <div className="flex flex-1" style={{ minHeight: `calc(${contentHeight} - ${headerSectionHeight}px)` }}>
+            {/* Left Panel - Vertical Category Sidebar */}
             <div
               ref={categoryListRef}
               className="w-[22%] bg-gray-50 border-r border-gray-200 overflow-y-auto flex-shrink-0"
               style={{
-                maxHeight: panelHeight,
-                position: "sticky",
-                top: `${headerHeight}px`,
-                alignSelf: "flex-start",
+                maxHeight: `calc(${contentHeight} - ${headerSectionHeight}px)`,
               }}>
               <div className="pb-[190px]">
                 {categories.map((category) => {
@@ -282,38 +310,23 @@ const MobileCategories = () => {
               </div>
             </div>
 
-            {/* Right Panel - Products Grid (78%) */}
+            {/* Right Panel - Products Grid */}
             <div
               className="w-[78%] overflow-y-auto bg-white flex-shrink-0"
-              style={{ maxHeight: panelHeight }}>
+              style={{ maxHeight: `calc(${contentHeight} - ${headerSectionHeight}px)` }}>
               <div className="p-3">
-                {/* Category Header */}
-                {selectedCategory && (
-                  <div
-                    key={`header-${selectedCategoryId}`}
-                    className="mb-4">
-                    <h2 className="text-lg font-bold text-gray-800 mb-1">
-                      {selectedCategory.name}
-                    </h2>
-                    <p className="text-xs text-gray-600">
-                      {filteredProducts.length} product
-                      {filteredProducts.length !== 1 ? "s" : ""} available
-                    </p>
-                  </div>
-                )}
-
-                {/* Subcategory Selector */}
+                {/* Subcategory Selector - Above product cards */}
                 {selectedCategoryId &&
                   subcategories[selectedCategoryId] &&
                   subcategories[selectedCategoryId].length > 0 && (
-                    <div className="mb-3 -mt-2.5 pb-3 border-b border-gray-200">
+                    <div className="mb-3 pb-3 border-b border-gray-200">
                       <div
                         className="overflow-x-auto scrollbar-hide -mx-3 px-3"
                         style={{
                           scrollBehavior: "smooth",
                           WebkitOverflowScrolling: "touch",
                         }}>
-                        <div className="flex gap-1.5 pb-1">
+                        <div className="flex gap-1.5">
                           {subcategories[selectedCategoryId].map(
                             (subcategory) => {
                               const isActive =
@@ -341,7 +354,6 @@ const MobileCategories = () => {
                     </div>
                   )}
 
-                {/* Products Grid */}
                 {filteredProducts.length === 0 ? (
                   <div key="empty" className="text-center py-12">
                     <div className="text-6xl text-gray-300 mx-auto mb-4">
