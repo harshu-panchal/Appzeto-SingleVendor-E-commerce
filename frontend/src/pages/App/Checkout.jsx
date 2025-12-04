@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { FiMapPin, FiPhone, FiMail, FiCreditCard, FiTruck, FiCheck, FiX, FiPlus, FiArrowLeft } from 'react-icons/fi';
+import { FiMapPin, FiCreditCard, FiTruck, FiCheck, FiX, FiPlus, FiArrowLeft } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCartStore } from '../../store/useStore';
 import { useAuthStore } from '../../store/authStore';
@@ -161,8 +161,6 @@ const MobileCheckout = () => {
     if (step === 1) {
       setStep(2);
     } else if (step === 2) {
-      setStep(3);
-    } else {
       const order = createOrder({
         userId: isAuthenticated ? user?.id : null,
         items: items,
@@ -206,7 +204,7 @@ const MobileCheckout = () => {
               </button>
               <h1 className="text-xl font-bold text-gray-800">Checkout</h1>
             </div>
-            <MobileCheckoutSteps currentStep={step} totalSteps={3} />
+            <MobileCheckoutSteps currentStep={step} totalSteps={2} />
           </div>
 
           {/* Guest Checkout Option */}
@@ -555,59 +553,6 @@ const MobileCheckout = () => {
               </motion.div>
             )}
 
-            {/* Step 3: Review */}
-            {step === 3 && (
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="px-4 py-4"
-              >
-                <h2 className="text-lg font-bold text-gray-800 mb-4">Order Review</h2>
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-start gap-3 p-3 bg-gray-50 rounded-xl">
-                    <FiMapPin className="text-primary-600 text-xl flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="font-semibold text-gray-800 text-sm">{formData.address}</p>
-                      <p className="text-xs text-gray-600">
-                        {formData.city}, {formData.zipCode}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                    <FiPhone className="text-primary-600 text-xl" />
-                    <p className="font-semibold text-gray-800 text-sm">{formData.phone}</p>
-                  </div>
-                  <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                    <FiMail className="text-primary-600 text-xl" />
-                    <p className="font-semibold text-gray-800 text-sm">{formData.email}</p>
-                  </div>
-                </div>
-                <div className="mb-6">
-                  <h3 className="font-bold text-gray-800 mb-3 text-base">Order Items</h3>
-                  <div className="space-y-2">
-                    {items.map((item) => (
-                      <div key={item.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-xl">
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="w-12 h-12 rounded-lg object-cover"
-                        />
-                        <div className="flex-1">
-                          <p className="font-semibold text-gray-800 text-sm">{item.name}</p>
-                          <p className="text-xs text-gray-600">
-                            {formatPrice(item.price)} × {item.quantity}
-                          </p>
-                        </div>
-                        <p className="font-bold text-gray-800 text-sm">
-                          {formatPrice(item.price * item.quantity)}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
             {/* Navigation Buttons */}
             <div className="fixed bottom-16 left-0 right-0 bg-white border-t border-gray-200 p-4 z-40 safe-area-bottom">
               <div className="flex gap-3">
@@ -624,7 +569,7 @@ const MobileCheckout = () => {
                   type="submit"
                   className="flex-1 gradient-green text-white py-3 rounded-xl font-semibold hover:shadow-glow-green transition-all duration-300"
                 >
-                  {step === 3 ? 'Place Order' : 'Continue'}
+                  {step === 2 ? 'Place Order' : 'Continue'}
                 </button>
               </div>
             </div>
