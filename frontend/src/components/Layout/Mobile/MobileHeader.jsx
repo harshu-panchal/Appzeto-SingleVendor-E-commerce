@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { createPortal } from "react-dom";
 import {
   FiShoppingBag,
@@ -63,8 +63,8 @@ const MobileHeader = () => {
 
   const currentCategoryId = getCurrentCategoryId();
   
-  // Get gradient background style - More intense at top, fading to white at bottom (fully opaque, moderate intensity)
-  const getHeaderBackground = () => {
+  // Memoize gradient background style to prevent unnecessary re-renders
+  const headerBackground = useMemo(() => {
     if (currentCategoryId) {
       // More intense at top (0%), medium at middle (50%), fading to white at bottom (100%) - fully opaque, moderate colors
       const gradientMap = {
@@ -78,7 +78,7 @@ const MobileHeader = () => {
       return gradientMap[currentCategoryId] || 'linear-gradient(to bottom, #D1E1FD 0%, #F5F8FF 50%, #FFFFFF 100%)';
     }
     return 'linear-gradient(to bottom, #D1E1FD 0%, #F5F8FF 50%, #FFFFFF 100%)';
-  };
+  }, [currentCategoryId]);
 
   // Close menus when clicking outside
   useEffect(() => {
@@ -234,9 +234,10 @@ const MobileHeader = () => {
 
   const headerContent = (
     <motion.header 
+      key="mobile-header" // Stable key to prevent re-mounting
       className="fixed top-0 left-0 right-0 z-[9999] shadow-lg overflow-visible"
       style={{
-        background: getHeaderBackground(),
+        background: headerBackground,
         transition: 'background 0.5s ease-in-out',
       }}
       initial={false}

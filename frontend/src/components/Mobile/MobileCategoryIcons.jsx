@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { categories } from "../../data/categories";
 import { FiPackage, FiShoppingBag, FiStar, FiTag, FiZap } from "react-icons/fi";
 import { IoShirtOutline, IoBagHandleOutline } from "react-icons/io5";
@@ -20,6 +20,15 @@ const MobileCategoryIcons = () => {
   const [isScrolling, setIsScrolling] = useState(false);
   const scrollYRef = useRef(0);
   const location = useLocation();
+  const categoryRefs = useRef({});
+  const containerRef = useRef(null);
+  const scrollContainerRef = useRef(null);
+  const [activeLineStyle, setActiveLineStyle] = useState({});
+  const [isLineVisible, setIsLineVisible] = useState(false);
+  const [shouldTransition, setShouldTransition] = useState(false);
+  const previousCategoryIdRef = useRef(null);
+  const isScrollingRef = useRef(false);
+  const scrollTimeoutRef = useRef(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -61,6 +70,104 @@ const MobileCategoryIcons = () => {
   };
 
   const currentCategoryId = getCurrentCategoryId();
+
+  // Update line position when active category changes or container scrolls
+  const updateLinePosition = (isScroll = false) => {
+    if (currentCategoryId && categoryRefs.current[currentCategoryId] && containerRef.current && scrollContainerRef.current) {
+      const activeElement = categoryRefs.current[currentCategoryId];
+      const container = containerRef.current;
+      const scrollContainer = scrollContainerRef.current;
+      const containerRect = container.getBoundingClientRect();
+      const elementRect = activeElement.getBoundingClientRect();
+      
+      const elementWidth = elementRect.width;
+      const lineWidth = 48; // Line width (48px)
+      const left = elementRect.left - containerRect.left + (elementWidth - lineWidth) / 2; // Center the line
+      
+      // If scrolling, disable transition for instant updates
+      if (isScroll) {
+        isScrollingRef.current = true;
+        setShouldTransition(false);
+        
+        // Clear any existing timeout
+        if (scrollTimeoutRef.current) {
+          clearTimeout(scrollTimeoutRef.current);
+        }
+        
+        // Re-enable transition after scrolling stops
+        scrollTimeoutRef.current = setTimeout(() => {
+          isScrollingRef.current = false;
+        }, 200);
+      }
+      
+      setActiveLineStyle({
+        left: `${left}px`,
+        width: `${lineWidth}px`,
+      });
+    }
+  };
+
+  // Handle category changes with smooth transition
+  useEffect(() => {
+    const prevCategoryId = previousCategoryIdRef.current;
+    const categoryChanged = prevCategoryId !== null && prevCategoryId !== currentCategoryId;
+    
+    if (currentCategoryId) {
+      setIsLineVisible(true);
+      
+      // If category changed (not just initial load), enable smooth transition
+      if (categoryChanged) {
+        // Enable transition first
+        setShouldTransition(true);
+        // Small delay to ensure transition CSS is applied before position change
+        setTimeout(() => {
+          updateLinePosition(false);
+        }, 10);
+      } else {
+        // Initial load - no transition
+        setShouldTransition(false);
+        updateLinePosition(false);
+      }
+      
+      previousCategoryIdRef.current = currentCategoryId;
+    } else {
+      setIsLineVisible(false);
+    }
+  }, [currentCategoryId, location.pathname]);
+
+  // Handle scroll with instant updates
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      let rafId = null;
+      const handleScroll = () => {
+        if (rafId === null) {
+          rafId = requestAnimationFrame(() => {
+            updateLinePosition(true); // Pass true to indicate this is a scroll event
+            rafId = null;
+          });
+        }
+      };
+      
+      scrollContainerRef.current.addEventListener('scroll', handleScroll, { passive: true });
+      return () => {
+        if (scrollContainerRef.current) {
+          scrollContainerRef.current.removeEventListener('scroll', handleScroll);
+        }
+        if (rafId !== null) {
+          cancelAnimationFrame(rafId);
+        }
+      };
+    }
+  }, []);
+
+  // Update on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      setTimeout(updateLinePosition, 100);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [currentCategoryId]);
 
   // Category color mapping - matching the gradient colors
   const categoryColors = {
@@ -115,43 +222,33 @@ const MobileCategoryIcons = () => {
   };
 
   return (
-    <motion.div
-      className="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4"
-      style={{
-        scrollBehavior: "smooth",
-        WebkitOverflowScrolling: "touch",
-      }}>
-      {categories.map((category, index) => {
-        const IconComponent = categoryIcons[category.name] || IoShirtOutline;
-        const isActive = isActiveCategory(category.id);
-        const activeColors =
-          currentCategoryId && currentCategoryId === category.id
-            ? getActiveColor(category.id)
-            : null;
-        return (
-          <motion.div
-            key={category.id}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{
-              delay: index * 0.05,
-              duration: 0.3,
-              ease: [0.25, 0.1, 0.25, 1],
-            }}
-            className="flex-shrink-0">
-            <Link
-              to={`/app/category/${category.id}`}
-              className="flex flex-col items-center gap-1.5 w-16 relative">
-              <AnimatePresence mode="wait">
+    <div className="relative" ref={containerRef}>
+      <motion.div
+        ref={scrollContainerRef}
+        className="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4"
+        style={{
+          scrollBehavior: "smooth",
+          WebkitOverflowScrolling: "touch",
+        }}>
+        {categories.map((category, index) => {
+          const IconComponent = categoryIcons[category.name] || IoShirtOutline;
+          const isActive = isActiveCategory(category.id);
+          const activeColors =
+            currentCategoryId && currentCategoryId === category.id
+              ? getActiveColor(category.id)
+              : null;
+          return (
+            <div
+              key={category.id}
+              ref={(el) => {
+                if (el) categoryRefs.current[category.id] = el;
+              }}
+              className="flex-shrink-0">
+              <Link
+                to={`/app/category/${category.id}`}
+                className="flex flex-col items-center gap-1.5 w-16 relative">
                 {!isScrolling && (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.8, y: -5 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.8, y: -5 }}
-                    transition={{
-                      duration: 0.3,
-                      ease: [0.25, 0.1, 0.25, 1],
-                    }}>
+                  <div>
                     <IconComponent
                       className={`text-lg transition-colors duration-300 ${
                         isActive && activeColors
@@ -168,46 +265,39 @@ const MobileCategoryIcons = () => {
                             : 2,
                       }}
                     />
-                  </motion.div>
+                  </div>
                 )}
-              </AnimatePresence>
-              <motion.span
-                className={`text-[10px] font-semibold text-center line-clamp-1 transition-colors duration-300 ${
-                  isActive && activeColors
-                    ? activeColors.text
-                    : isActive
-                    ? "text-primary-500"
-                    : "text-gray-700"
-                }`}
-                animate={{
-                  y: isScrolling ? -2 : 0,
-                  opacity: 1,
-                }}
-                transition={{
-                  duration: 0.25,
-                  ease: [0.16, 1, 0.3, 1], // Even smoother easing
-                }}>
-                {category.name}
-              </motion.span>
-              {/* Category-colored indicator line */}
-              {isActive && (
-                <motion.div
-                  initial={{ scaleX: 0 }}
-                  animate={{ scaleX: 1 }}
-                  transition={{
-                    duration: 0.3,
-                    ease: [0.25, 0.1, 0.25, 1],
-                  }}
-                  className={`absolute -bottom-1 left-0 right-0 h-0.5 rounded-full transition-colors duration-300 ${
-                    activeColors ? activeColors.indicator : "bg-primary-500"
-                  }`}
-                />
-              )}
-            </Link>
-          </motion.div>
-        );
-      })}
-    </motion.div>
+                <span
+                  className={`text-[10px] font-semibold text-center line-clamp-1 transition-colors duration-300 ${
+                    isActive && activeColors
+                      ? activeColors.text
+                      : isActive
+                      ? "text-primary-500"
+                      : "text-gray-700"
+                  }`}>
+                  {category.name}
+                </span>
+              </Link>
+            </div>
+          );
+        })}
+      </motion.div>
+      {/* Blue indicator line at bottom edge of header for selected category */}
+      {isLineVisible && currentCategoryId && (
+        <div
+          className="absolute h-1 bg-blue-500 rounded-full"
+          style={{
+            ...activeLineStyle,
+            bottom: '-12px', // Position at bottom edge of header (accounting for header py-3 padding)
+            transformOrigin: 'left center',
+            // Smooth transition when category changes, instant during scroll
+            transition: shouldTransition && !isScrollingRef.current
+              ? 'left 0.4s cubic-bezier(0.25, 0.1, 0.25, 1), width 0.4s cubic-bezier(0.25, 0.1, 0.25, 1)'
+              : 'none',
+          }}
+        />
+      )}
+    </div>
   );
 };
 
