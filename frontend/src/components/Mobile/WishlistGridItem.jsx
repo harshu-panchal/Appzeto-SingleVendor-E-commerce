@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { FiShoppingBag, FiTrash2 } from 'react-icons/fi';
+import { FiShoppingBag, FiTrash2, FiStar, FiHeart } from 'react-icons/fi';
 import { formatPrice } from '../../utils/helpers';
 import LazyImage from '../LazyImage';
 
@@ -15,51 +15,95 @@ const WishlistGridItem = ({ item, index, onMoveToCart, onRemove }) => {
         stiffness: 200,
         damping: 20,
       }}
-      className="relative"
+      whileTap={{ scale: 0.98 }}
+      style={{ willChange: 'transform', transform: 'translateZ(0)' }}
+      className="glass-card rounded-lg overflow-hidden group cursor-pointer h-full flex flex-col"
     >
-      <div className="glass-card rounded-2xl overflow-hidden h-full flex flex-col">
+      <div className="relative">
+        {/* Favorite Icon - Always filled since it's in wishlist */}
+        <div className="absolute top-1.5 right-1.5 z-10">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemove(item.id);
+            }}
+            className="p-1 glass rounded-full shadow-lg transition-all duration-300 group"
+          >
+            <FiHeart className="text-xs transition-all duration-300 text-red-500 fill-red-500 scale-110" />
+          </button>
+        </div>
+
         {/* Product Image */}
-        <Link to={`/app/product/${item.id}`} className="block">
-          <div className="w-full h-40 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden relative">
+        <Link to={`/app/product/${item.id}`}>
+          <div className="w-full h-32 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center overflow-hidden relative">
             <LazyImage
               src={item.image}
               alt={item.name}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain p-2"
+              style={{ willChange: 'transform', transform: 'translateZ(0)' }}
               onError={(e) => {
-                e.target.src = 'https://via.placeholder.com/300x300?text=Product';
+                e.target.src = 'https://via.placeholder.com/300x300?text=Product+Image';
               }}
             />
           </div>
         </Link>
+      </div>
 
-        {/* Product Info */}
-        <div className="p-3 flex-1 flex flex-col">
-          <Link to={`/app/product/${item.id}`}>
-            <h3 className="font-bold text-gray-800 text-sm mb-1 line-clamp-2 min-h-[2.5rem]">
-              {item.name}
-            </h3>
-          </Link>
-          <p className="text-base font-bold text-primary-600 mb-3">
-            {formatPrice(item.price)}
-          </p>
+      {/* Product Info */}
+      <div className="p-2 flex-1 flex flex-col">
+        <Link to={`/app/product/${item.id}`}>
+          <h3 className="font-bold text-gray-800 mb-0.5 line-clamp-2 text-xs transition-colors leading-tight">{item.name}</h3>
+        </Link>
+        {item.unit && (
+          <p className="text-[10px] text-gray-500 mb-0.5 font-medium">{item.unit}</p>
+        )}
 
-          {/* Action Buttons */}
-          <div className="flex gap-2 mt-auto">
-            <button
-              onClick={() => onMoveToCart(item)}
-              className="flex-1 py-2 gradient-green text-white rounded-lg font-semibold text-xs flex items-center justify-center gap-1.5 hover:shadow-glow-green transition-all"
-            >
-              <FiShoppingBag className="text-sm" />
-              <span>Add</span>
-            </button>
-            <button
-              onClick={() => onRemove(item.id)}
-              className="p-2 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition-colors"
-            >
-              <FiTrash2 className="text-sm" />
-            </button>
+        {/* Rating */}
+        {item.rating && (
+          <div className="flex items-center gap-0.5 mb-0.5">
+            <div className="flex items-center">
+              {[...Array(5)].map((_, i) => (
+                <FiStar
+                  key={i}
+                  className={`text-[8px] ${
+                    i < Math.floor(item.rating)
+                      ? 'text-yellow-400 fill-yellow-400'
+                      : 'text-gray-300'
+                  }`}
+                />
+              ))}
+            </div>
+            <span className="text-[9px] text-gray-600 font-medium">
+              {item.rating}
+            </span>
           </div>
+        )}
+
+        {/* Price */}
+        <div className="flex items-center gap-1.5 mb-1">
+          <span className="text-xs font-bold text-gray-800">
+            {formatPrice(item.price)}
+          </span>
+          {item.originalPrice && (
+            <span className="text-[9px] text-gray-400 line-through font-medium">
+              {formatPrice(item.originalPrice)}
+            </span>
+          )}
         </div>
+
+        {/* Add Button */}
+        <motion.button
+          onClick={(e) => {
+            e.stopPropagation();
+            onMoveToCart(item);
+          }}
+          whileTap={{ scale: 0.95 }}
+          style={{ willChange: 'transform', transform: 'translateZ(0)' }}
+          className="w-full py-1 rounded-md font-semibold text-[10px] transition-all duration-300 flex items-center justify-center gap-1 mt-auto gradient-green text-white group/btn"
+        >
+          <FiShoppingBag className="text-xs transition-transform" />
+          <span>Add</span>
+        </motion.button>
       </div>
     </motion.div>
   );
