@@ -42,7 +42,7 @@ const MobileFilterPanel = ({ isOpen, onClose, filters, onFilterChange, onClearFi
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/50 z-50"
+            className="fixed inset-0 bg-black/50 z-[10000]"
           />
 
           {/* Filter Panel - Bottom Sheet */}
@@ -52,7 +52,7 @@ const MobileFilterPanel = ({ isOpen, onClose, filters, onFilterChange, onClearFi
             animate={{ y: dragY > 0 ? dragY : 0 }}
             exit={{ y: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-            className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl z-50 flex flex-col max-h-[90vh]"
+            className="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl z-[10001] flex flex-col max-h-[90vh]"
             onTouchStart={swipeHandlers.onTouchStart}
             onTouchMove={(e) => {
               if (swipeHandlers.swipeState.isSwiping && swipeHandlers.swipeState.offset > 0) {
