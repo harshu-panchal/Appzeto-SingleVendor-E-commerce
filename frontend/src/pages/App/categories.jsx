@@ -16,6 +16,7 @@ const MobileCategories = () => {
   const categoryListRef = useRef(null);
   const activeCategoryRef = useRef(null);
   const [isInitialMount, setIsInitialMount] = useState(true);
+  const [selectedSubcategory, setSelectedSubcategory] = useState(null);
 
   // Category to product keywords mapping
   const categoryMap = {
@@ -40,16 +41,106 @@ const MobileCategories = () => {
     6: ["athletic", "running", "track", "sporty"],
   };
 
-  // Filter products based on selected category
+  // Subcategories mapping for each category
+  const subcategories = {
+    1: [
+      "T-Shirts & Tops",
+      "Jeans & Trousers",
+      "Dresses & Kurtis",
+      "Hoodies & Jackets",
+    ],
+    2: [
+      "Sneakers",
+      "Sandals & Slippers",
+      "Formal Shoes",
+      "Sports Shoes",
+    ],
+    3: [
+      "Backpacks",
+      "Handbags",
+      "Sling Bags",
+      "Travel & Duffel Bags",
+    ],
+    4: [
+      "Necklaces",
+      "Earrings",
+      "Rings",
+      "Bracelets & Bangles",
+    ],
+    5: [
+      "Watches",
+      "Sunglasses",
+      "Belts",
+      "Wallets",
+    ],
+    6: [
+      "Gym Wear",
+      "Sports Shoes",
+      "Fitness Accessories",
+      "Yoga & Training Gear",
+    ],
+  };
+
+  // Subcategory to keywords mapping for product filtering
+  const subcategoryKeywords = {
+    "T-Shirts & Tops": ["t-shirt", "shirt", "top", "tee"],
+    "Jeans & Trousers": ["jeans", "trouser", "pants", "denim"],
+    "Dresses & Kurtis": ["dress", "kurti", "gown", "maxi"],
+    "Hoodies & Jackets": ["hoodie", "jacket", "blazer", "cardigan", "sweater"],
+    "Sneakers": ["sneaker", "sneakers"],
+    "Sandals & Slippers": ["sandal", "slipper", "flip"],
+    "Formal Shoes": ["formal", "oxford", "loafer", "dress shoe"],
+    "Sports Shoes": ["sport", "athletic", "running", "training"],
+    "Backpacks": ["backpack", "rucksack"],
+    "Handbags": ["handbag", "bag", "purse", "tote"],
+    "Sling Bags": ["sling", "crossbody", "messenger"],
+    "Travel & Duffel Bags": ["travel", "duffel", "duffle", "luggage"],
+    "Necklaces": ["necklace", "pendant", "chain"],
+    "Earrings": ["earring", "ear ring"],
+    "Rings": ["ring"],
+    "Bracelets & Bangles": ["bracelet", "bangle", "cuff"],
+    "Watches": ["watch", "wristwatch", "timepiece"],
+    "Sunglasses": ["sunglass", "sunglasses", "shades"],
+    "Belts": ["belt"],
+    "Wallets": ["wallet", "purse"],
+    "Gym Wear": ["gym", "athletic", "workout", "training"],
+    "Fitness Accessories": ["fitness", "gym", "workout", "resistance"],
+    "Yoga & Training Gear": ["yoga", "mat", "training", "fitness"],
+  };
+
+  // Reset selected subcategory when category changes
+  useEffect(() => {
+    if (selectedCategoryId && subcategories[selectedCategoryId]) {
+      const firstSubcategory = subcategories[selectedCategoryId][0];
+      setSelectedSubcategory(firstSubcategory);
+    } else {
+      setSelectedSubcategory(null);
+    }
+  }, [selectedCategoryId]);
+
+  // Filter products based on selected category and subcategory
   const filteredProducts = useMemo(() => {
     if (!selectedCategoryId) return [];
 
-    const keywords = categoryMap[selectedCategoryId] || [];
-    return products.filter((product) => {
+    const categoryKeywords = categoryMap[selectedCategoryId] || [];
+    let filtered = products.filter((product) => {
       const productName = product.name.toLowerCase();
-      return keywords.some((keyword) => productName.includes(keyword));
+      return categoryKeywords.some((keyword) => productName.includes(keyword));
     });
-  }, [selectedCategoryId]);
+
+    // Further filter by subcategory if one is selected
+    if (selectedSubcategory && subcategoryKeywords[selectedSubcategory]) {
+      const subcategoryKeywordsList = subcategoryKeywords[selectedSubcategory];
+      filtered = filtered.filter((product) => {
+        const productName = product.name.toLowerCase();
+        return subcategoryKeywordsList.some((keyword) =>
+          productName.includes(keyword)
+        );
+      });
+    }
+
+    return filtered;
+  }, [selectedCategoryId, selectedSubcategory]);
 
   // Mark initial mount as complete after first render
   useEffect(() => {
@@ -210,6 +301,45 @@ const MobileCategories = () => {
                     </p>
                   </div>
                 )}
+
+                {/* Subcategory Selector */}
+                {selectedCategoryId &&
+                  subcategories[selectedCategoryId] &&
+                  subcategories[selectedCategoryId].length > 0 && (
+                    <div className="mb-3">
+                      <div
+                        className="overflow-x-auto scrollbar-hide -mx-3 px-3"
+                        style={{
+                          scrollBehavior: "smooth",
+                          WebkitOverflowScrolling: "touch",
+                        }}>
+                        <div className="flex gap-1.5 pb-1">
+                          {subcategories[selectedCategoryId].map(
+                            (subcategory) => {
+                              const isActive =
+                                selectedSubcategory === subcategory;
+                              return (
+                                <motion.button
+                                  key={subcategory}
+                                  onClick={() =>
+                                    setSelectedSubcategory(subcategory)
+                                  }
+                                  whileTap={{ scale: 0.97 }}
+                                  className={`flex-shrink-0 px-2.5 py-1 rounded-lg text-xs font-medium transition-all duration-200 whitespace-nowrap border ${
+                                    isActive
+                                      ? "bg-white text-primary-600 border-primary-200 shadow-sm"
+                                      : "bg-gray-50 text-gray-600 border-gray-200 active:bg-gray-100"
+                                  }`}
+                                  style={{ willChange: "transform" }}>
+                                  {subcategory}
+                                </motion.button>
+                              );
+                            }
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                 {/* Products Grid */}
                 {filteredProducts.length === 0 ? (
