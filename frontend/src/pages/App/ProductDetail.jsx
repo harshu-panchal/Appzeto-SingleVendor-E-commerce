@@ -78,7 +78,6 @@ const MobileProductDetail = () => {
       quantity: quantity,
       variant: selectedVariant,
     });
-    toast.success(`Added ${quantity} item(s) to cart!`);
   };
 
   const handleFavorite = () => {

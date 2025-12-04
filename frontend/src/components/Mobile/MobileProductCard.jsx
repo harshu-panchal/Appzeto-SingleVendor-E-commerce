@@ -68,7 +68,6 @@ const MobileProductCard = ({ product }) => {
       quantity: 1,
     });
     triggerCartAnimation();
-    toast.success('Added to cart!');
   };
 
   const handleFavorite = (e) => {

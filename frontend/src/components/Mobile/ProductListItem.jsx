@@ -30,7 +30,6 @@ const ProductListItem = ({ product, index }) => {
       quantity: 1,
     });
     triggerCartAnimation();
-    toast.success('Added to cart!');
   };
 
   const handleFavorite = (e) => {
